@@ -10,7 +10,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        roboto: ['Lato', 'Roboto', 'sans-serif'],
+        sans: ['Lato', 'sans-serif'],
       },
       fontWeight: {
         '570': 570,

@@ -64,7 +64,7 @@ const CardProductVertical = ({
                     )}
                 </div>
                 {canAdd && <div className="mr px-0 py-0 min-w-0 w-[20px] h-[20px]">
-               <Icon icon="zi-plus-circle-solid" className="text-[#1677ff]" size={25}  />
+               <Icon icon="zi-plus-circle-solid" className="text-[#00884880]" size={27}  />
                     </div>}
                 {/*{canAdd && <span className=" px-0 py-0 min-w-0 w-[20px] h-[20px]">*/}
                 {/*        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"*/}

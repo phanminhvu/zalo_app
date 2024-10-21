@@ -27,7 +27,7 @@ const typeColor = {
     size: 20
   },
   homeTrans: {
-    headerColor: "bg-transparent",
+    headerColor: "bg-white/0",
     textColor: "text-black",
     iconColor: "text-black",
     size: 20
@@ -47,8 +47,8 @@ const Header = () => {
   return (
     <div
       className={cx(
-        "fixed top-0 z-50 w-screen h-header flex items-center",
-        headerColor,
+        "fixed top-0 z-50 w-screen h-header flex items-center bg-white",
+
         textColor
       )}
     >

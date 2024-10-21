@@ -59,11 +59,11 @@ const ProductPicker = () => {
     () => (
       <>
         <Text className="text-sm text-black">Ghi chú</Text>
-        <div className="my-[2rem]">
+        <div className="mb-[2rem]">
           <Input
             type="text"
             size={"small"}
-            placeholder="Nhập ghi chú"
+            placeholder="Nhập thông tin ghi chú..."
             clearable
             name="note"
             value={note}
@@ -76,6 +76,116 @@ const ProductPicker = () => {
     ),
     [note]
   );
+
+  const buttonAdd = () => {
+    let button = <></>;
+    if(cart?.cartItems?.some(cI =>cI.product_id === product.id) ){
+      if(quantity === 0) {
+        button =  <Button
+           style={{backgroundColor: '#f0f0f0', color: '#000'}}
+            size="medium"
+            onClick={
+              async ()=>{
+                await setCart((oldCart)=>{
+                  let nCart = { ...oldCart };
+                  nCart.cartItems = nCart.cartItems.filter(item => (item.product_id !== product.id && item.parent !== product.id))
+                  nCart.totalCart = 0;
+                  if(nCart.cartItems && nCart.cartItems?.length > 0){
+                    nCart.cartItems.map((cItem,cIndex) => {
+                      const aPrice = (cItem?.sale_price && cItem?.sale_price > 0 ) ? Number(cItem.sale_price) * cItem.quantity : Number(cItem.price) * cItem.quantity;
+                      nCart.totalCart += aPrice;
+                    });
+                  }
+                  saveCartToCache(nCart);
+                  return nCart;
+                })
+
+                setOpenSheet(false);
+              }
+            }
+        >
+          {`Xóa khỏi giỏ hàng`}
+        </Button>
+      }else {
+        button =  <Button
+            disabled={quantity == 0}
+            variant={'primary'}
+            size="medium"
+            onClick={
+              ()=>{
+                if(quantity > 0){
+                  addProductToCart({
+                    productCart: {
+                      product_id: product.id,
+                      name:  product.name,
+                      image: product.image,
+                      price: product.price ,
+                      sale_price: product.sale_price,
+                      quantity,
+                      parent: 0,
+                      user_note: note
+                    } as CartProduct,
+                    isEdit: currentItem && product && currentItem?.product_id == product.id,
+                    childProductCarts: relateItems
+                  });
+                  setOpenSheet(false);
+                }else{
+                  setErrMsg(oldMsg => {
+                    return {
+                      ...oldMsg,
+                      errMsg: "Bạn cần thêm số lượng cần mua"
+                    }
+                  })
+                }
+              }
+            }
+        >
+          {`Cập nhật giỏ hàng`}
+        </Button>
+      }
+    } else {
+      button = <Button
+          disabled={quantity == 0}
+          variant={'primary'}
+          size="medium"
+          onClick={
+            ()=>{
+              if(quantity > 0){
+                addProductToCart({
+                  productCart: {
+                    product_id: product.id,
+                    name:  product.name,
+                    image: product.image,
+                    price: product.price ,
+                    sale_price: product.sale_price,
+                    quantity,
+                    parent: 0,
+                    user_note: note
+                  } as CartProduct,
+                  isEdit: currentItem && product && currentItem?.product_id == product.id,
+                  childProductCarts: relateItems
+                });
+                setOpenSheet(false);
+              }else{
+                setErrMsg(oldMsg => {
+                  return {
+                    ...oldMsg,
+                    errMsg: "Bạn cần thêm số lượng cần mua"
+                  }
+                })
+              }
+            }
+          }
+      >
+        {`Thêm vào giỏ hàng`}
+      </Button>
+    }
+
+    return button
+  }
+
+
+  console.log("product",product)
   return (
     <>
       {product && (
@@ -109,14 +219,16 @@ const ProductPicker = () => {
                   </div>
                 </div>
                 <div className=" py-[2rem] pr-0">
-                  <div className="line-clamp-2 text-base text-black break-words font-semibold">
+                  <div className="text-base text-black break-words font-bold font-lato">
                     {product.name}
                   </div>
-                  <div className="items-center mt-[2rem]">
-                    {(product.on_sale && product.sale_price) && <del className=" mr-2">
-                      <p className="text-xs text-slate-400 cursor-auto ">{convertPrice(product.price || 0)} đ</p>
-                    </del>}
-                    <p className="text-sm text-black cursor-auto">{convertPrice((product.on_sale == 1 && product.sale_price > 0) ? product.sale_price : product.price)} đ</p>
+                  <div className="items-center ">
+                    {(product.on_sale && product.sale_price) ? <del className="mr-2">
+                      <p className="text-xs text-slate-400 font-lato">{convertPrice(product.price || 0)}đ</p>
+                    </del> : ''}
+                    <p className="text-sm font-lato text-black ">
+                      {convertPrice((product.on_sale == 1 && product.sale_price > 0) ? product.sale_price : product.price)}đ
+                    </p>
                   </div>
                 </div>
               </div>
@@ -155,83 +267,22 @@ const ProductPicker = () => {
                     variant="tertiary"
                     size="medium"
                     icon={
-                      <div className="w-full h-full flex justify-center items-center rounded-full carticonback">
-                        <div className="border-t border-white w-full mx-1" />
-                      </div>
+                      <Icon icon="zi-minus-circle-solid" className="text-[#00884880]" size={27}  />
                     }
                     onClick={() => {
                       if (quantity > 0) setQuantity((q) => q - 1);
                     }}
                 />
-                <Text className="mx-4 qtytext">{quantity}</Text>
+                <Text className="mx-7 mt-1 font-bold qtytext">{quantity}</Text>
                 <Button
                     variant="tertiary"
                     size="medium"
-                    icon={<div className="rounded-full carticonback"><Icon icon="zi-plus" /></div>}
+                    icon={  <Icon icon="zi-plus-circle-solid" className="text-[#00884880]" size={27}  />}
                     onClick={() => setQuantity((q) => q + 1)}
                 />
 
               </Box>
-              <Button
-                variant={'primary'}
-                size="medium"
-                onClick={
-                  ()=>{
-                    if(quantity > 0){
-                        addProductToCart({
-                          productCart: {
-                            product_id: product.id,
-                            name:  product.name,
-                            image: product.image,
-                            price: product.price ,
-                            sale_price: product.sale_price,
-                            quantity,
-                            parent: 0,
-                            user_note: note
-                          } as CartProduct,
-                          isEdit: currentItem && product && currentItem?.product_id == product.id,
-                          childProductCarts: relateItems
-                        });
-                        setOpenSheet(false);
-                    }else{
-                      setErrMsg(oldMsg => {
-                        return {
-                          ...oldMsg,
-                          errMsg: "Bạn cần thêm số lượng cần mua"
-                        }
-                      })
-                    }
-                  }
-                }
-              >
-                {`Thêm vào giỏ`}
-              </Button>
-              {(cart?.cartItems?.some(cI =>cI.product_id === product.id) ) && <Button
-                  variant={'tertiary'}
-                  size="small"
-                  className={"p-0 min-w-0"}
-                  onClick={
-                    async ()=>{
-                      await setCart((oldCart)=>{
-                        let nCart = { ...oldCart };
-                        nCart.cartItems = nCart.cartItems.filter(item => (item.product_id !== product.id && item.parent !== product.id))
-                        nCart.totalCart = 0;
-                        if(nCart.cartItems && nCart.cartItems?.length > 0){
-                          nCart.cartItems.map((cItem,cIndex) => {
-                            const aPrice = (cItem?.sale_price && cItem?.sale_price > 0 ) ? Number(cItem.sale_price) * cItem.quantity : Number(cItem.price) * cItem.quantity;
-                            nCart.totalCart += aPrice;
-                          });
-                        }
-                        saveCartToCache(nCart);
-                        return nCart;
-                      })
-
-                      setOpenSheet(false);
-                    }
-                  }
-              >
-                <Icon icon={"zi-delete"} size={24}/>
-              </Button>}
+              {buttonAdd()}
             </div>
 
           </div>
