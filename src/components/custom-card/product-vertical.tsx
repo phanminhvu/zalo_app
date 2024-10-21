@@ -47,17 +47,17 @@ const CardProductVertical = ({
             <div className="flex px-3 py-2">
                 {/*} <span className="text-gray-400 mr-3 uppercase text-xs">Brand</span>*/}
                 <div className={"flex-1"}>
-                    <p className="text-sm text-black font-roboto">{product.name}</p>
+                    <p className="text-sm text-black font-lato">{product.name}</p>
                     {(parseFloat(product.sale_price) > 0 || (parseFloat(product.price) > 0)) && (
                         <div className="flex items-center">
                             {(product.on_sale == 1 && product.sale_price > 0) && (
                                 <del className="mr-2">
-                                    <p className="text-xs text-gray-600 cursor-auto font-roboto">
+                                    <p className="text-xs text-gray-600 cursor-auto font-lato ">
                                         {convertPrice(product.price || 0)}đ
                                     </p>
                                 </del>
                             )}
-                            <p className="text-xs text-sky-800 cursor-auto font-roboto font-[570]">
+                            <p className="text-xs text-[#1677ff] cursor-auto font-lato font-[570]">
                                 {convertPrice((product.on_sale == 1 && product.sale_price > 0) ? product.sale_price : product.price)}đ
                             </p>
                         </div>
