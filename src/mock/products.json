@@ -1,0 +1,133 @@
+[
+  {
+    "id": 1,
+    "name":"Nem sống 0.5kg",
+    "image":"https://theme.hstatic.net/200000370513/1000940538/14/no_image.jpg?v=46",
+    "category_id": 2,
+    "price": 125000,
+    "sale_price":0,
+    "on_sale":0,
+    "description":"",
+    "related_products":[7,8,9,10,11,13]
+  },{
+  "id": 2,
+  "name":"Gia đình nhỏ 0.5kg",
+  "image":"https://product.hstatic.net/200000370513/product/1_71df8eadd3084cc2aa5df2f68386ba86_large.jpg",
+  "category_id": 1,
+  "price": 290000,
+  "sale_price":240000,
+  "on_sale":1,
+  "description":"",
+  "related_products":[7,8,9,10,11,13]
+},{
+  "id": 3,
+  "name":"Hợp lý 700g",
+  "image":"https://product.hstatic.net/200000370513/product/3_8217e4b7301742ffbbdfaf38c645b3b1_d76e50681f2d440eaf4733fc6e9bebcc_large.jpg",
+  "category_id": 1,
+  "price": 400000,
+  "sale_price":350000,
+  "on_sale":1,
+  "description":"",
+  "related_products":[7,8,9,10,11,13]
+},{
+  "id": 4,
+  "name":"Nem nướng 0.5kg (không gồm rau, nước chấm, bún...)",
+  "image":"https://product.hstatic.net/200000370513/product/f_d6df9db680f5443dbd26b5e66178cb5b_7fe0f78c288e4660883fa2c96dade758_large.jpg",
+  "category_id": 1,
+  "price": 150000,
+  "sale_price":0,
+  "on_sale":0,
+  "description":"",
+  "related_products":[7,8,9,10,11,13]
+},{
+  "id": 5,
+  "name":"Sẻ Chia 1kg (thành 2 phần nhỏ)",
+  "image":"https://product.hstatic.net/200000370513/product/5_a63410dc52014e2bba5cc2434deac20c_large.jpg",
+  "category_id": 1,
+  "price": 580000,
+  "sale_price":480000,
+  "on_sale":1,
+  "description":"",
+  "related_products":[7,8,9,10,11,13]
+},{
+  "id": 6,
+  "name":"Sum họp 1kg",
+  "image":"https://product.hstatic.net/200000370513/product/5_a63410dc52014e2bba5cc2434deac20c_large.jpg",
+  "category_id": 1,
+  "price": 550000,
+  "sale_price":450000,
+  "on_sale":1,
+  "description":"",
+  "related_products":[7,8,9,10,11,13]
+},{
+  "id": 7,
+  "name":"Bánh Giòn 100g",
+  "image":"https://product.hstatic.net/200000370513/product/ban_don_755940e5152246c29ff03b9455c683bd_31bbe61eb76243adafc1b2113bb16e66_large.jpg",
+  "category_id": 3,
+  "price": 30000,
+  "sale_price":0,
+  "on_sale":0,
+  "description":"",
+  "related_products":[]
+},{
+  "id": 8,
+  "name":"Bánh Tráng Cuốn 100g",
+  "image":"https://product.hstatic.net/200000370513/product/ban_trang_cuon_d9e24a26eaf94495b0a4da6b97eaf529_2327dfc152af49c785581813a84aa2f7_large.jpg",
+  "category_id": 3,
+  "price": 10000,
+  "sale_price":0,
+  "on_sale":0,
+  "description":"",
+  "related_products":[]
+},{
+  "id": 9,
+  "name":"Bún tươi 0.5kg",
+  "image":"https://product.hstatic.net/200000370513/product/bun_08f53b1766be49d6b762e17570850877_f743267342f7478dbd7d13d0b5b7ea9f_large.jpg",
+  "category_id": 3,
+  "price": 10000,
+  "sale_price":0,
+  "on_sale":0,
+  "description":"",
+  "related_products":[]
+},{
+  "id": 10,
+  "name":"Đồ chua, Dưa Leo & Xoài",
+  "image":"https://product.hstatic.net/200000370513/product/do_chua_0c538403cf9c44cf9bb88d88b87d8d97_066a10954dd34b38aa0f95f872787b93_large.jpg",
+  "category_id": 3,
+  "price": 15000,
+  "sale_price":0,
+  "on_sale":0,
+  "description":"",
+  "related_products":[]
+},{
+  "id": 11,
+  "name":"Nước chấm 400g",
+  "image":"https://product.hstatic.net/200000370513/product/nuoc_cham_7308c293ead34ea4b33887090d73c0f4_50857ccb3d8c4da08aec75175392a3d9_large.jpg",
+  "category_id": 3,
+  "price": 30000,
+  "sale_price":0,
+  "on_sale":0,
+  "description":"",
+  "related_products":[]
+},{
+  "id": 12,
+  "name":"Ớt satế",
+  "image":"https://product.hstatic.net/200000370513/product/ot_sate_7ab72e54b3dd45129c71adc28dcbd5ad_9d6d9b8f68714562914de5c688d8e77c_large.jpg",
+  "category_id": 3,
+  "price": 0,
+  "sale_price":0,
+  "on_sale":0,
+  "description":"",
+  "related_products":[]
+},{
+  "id": 13,
+  "name":"Rau Sống & Rau Thơm",
+  "image":"https://product.hstatic.net/200000370513/product/rau_song_46c9bb8f4d4e4b3b84ddbba65deb492b_5819df04b3ed4ca29fa86c116b49d3da_large.jpg",
+  "category_id": 3,
+  "price": 0,
+  "sale_price":0,
+  "on_sale":0,
+  "description":"",
+  "related_products":[]
+}
+]

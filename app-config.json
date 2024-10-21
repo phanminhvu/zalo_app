@@ -1,0 +1,21 @@
+{
+  "app": {
+    "title": "Nem nướng Quế Quân",
+    "headerColor": "",
+    "textColor": "white",
+    "statusBarColor": "#008848",
+    "leftButton": "none"
+  },
+  "debug": false,
+  "listCSS": [],
+  "listSyncJS": [],
+  "listAsyncJS": [],
+  "pages": [],
+  "template": {
+    "primaryColor": "#008848",
+    "searchBar": true,
+    "orderValue": "500000",
+    "oaIDtoOpenChat": "",
+    "shippingFee": "30000"
+  }
+}

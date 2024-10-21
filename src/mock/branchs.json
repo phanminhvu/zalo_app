@@ -1,0 +1,39 @@
+[
+  {
+    "id":1125698,
+    "district":5,
+    "province": 1,
+    "name":"Thảo Điền",
+    "address":"110 Quốc Hương, Phường Thảo Điền, Thành phố Thủ Đức"
+  },{
+  "id":1175186,
+  "district":4,
+  "province": 1,
+  "name":"Đồng Đen",
+  "address":"74/32 Đồng Đen, Phường 14, Quận Tân Bình"
+},{
+  "id":1201872,
+  "district":3,
+  "province": 1,
+  "name":"Gò Vấp",
+  "address":"679/15 Phạm Văn Chiêu, Phường 13, Quận Gò Vấp"
+},{
+  "id":1201875,
+  "district":5,
+  "province": 1,
+  "name":"Thủ Đức",
+  "address":"36A đường số 9, Phường Tam Phú, Thành phố Thủ Đức"
+},{
+  "id":1347325,
+  "district":1,
+  "province": 1,
+  "name":"Quận 1",
+  "address":"B51A Nguyễn Trãi, Phường Nguyễn Cư Trinh, Quận 1"
+},{
+  "id":1436317,
+  "district":2,
+  "province": 1,
+  "name":"Quận 7",
+  "address":"70 đường 37, Phường Tân Kiểng, Quận 7"
+}
+]
