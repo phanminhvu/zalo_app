@@ -57,8 +57,8 @@ const Header = () => {
         {showAvatar && <Box flex py={0}>
           <Avatar size={36} src={authDt.profile.avatar}/>
           <div className={"ml-4"}>
-            <Text bold size={'small'}>{authDt.profile.name}</Text>
-            <Text size={'xxSmall'} >{`Ngày mới tốt lành `}</Text>
+            <Text bold size={'small'}>Xin chào, {authDt.profile.name}</Text>
+            <Text size={'xxSmall'} >Chúc ngày mới tốt lành!</Text>
           </div>
         </Box>}
         {!showAvatar && <div className="w-full flex flex-row items-center pr-14 truncate ...">

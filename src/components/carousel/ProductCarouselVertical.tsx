@@ -18,7 +18,7 @@ const ProductCarouselVertical = ({products}) => {
           <CardProductVertical
               key={`pp${pIndex}`}
               product={product}
-              canAdd={true}
+              canAdd={false}
           />
       ))}
       </Glider>)

@@ -9,6 +9,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        roboto: ['Roboto', 'sans-serif'],
+      },
+      fontWeight: {
+        '570': 570,
+      },
       aspectRatio: {
         cinema: "21/9",
         card: "4/3",

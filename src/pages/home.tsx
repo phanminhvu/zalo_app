@@ -146,8 +146,8 @@ const HomeMain: React.FunctionComponent = () =>{
                 style={{ marginBottom: "0px" }}
 
             >
-            <div className={' relative px-4 pt-4 pb-3  mt-4 bg-white leading-none  items-top justify-start'}>
-                <div className="px-0 ">
+            <div className={' relative px-4 pb-3 bg-white leading-none  items-top justify-start'}>
+                <div>
                     <Input.Search
                         label=""
                         helperText=""
@@ -157,7 +157,7 @@ const HomeMain: React.FunctionComponent = () =>{
                         onInputTriggerClick={() => {
                             navigate(`/search`)
                         }}
-                        size={'large'}
+                        size={'medium'}
                         readOnly
                     />
                 </div>
@@ -181,26 +181,27 @@ const HomeMain: React.FunctionComponent = () =>{
                   m={0}
                   px={4}
                   py={4}
-                  className="bg-white leading-none  items-top justify-start mt-4 productcarousefull"
+                  className="bg-white leading-none  items-top justify-start mt-2 productcarousefull"
               >
                 <Text bold size={'large'} className={`mb-2`}>{`Đang có ưu đãi`}</Text>
                 <ProductCarouselVertical products={featuredProducts}/>
             </Box>}
-            <Box
-                  m={0}
-                  px={4}
-                  py={5}
-                  className="bg-white leading-none  items-top justify-start mt-4"
-              >
-                <div id='oaWidget' />
-              </Box>
+            {/*<Box*/}
+            {/*      m={0}*/}
+            {/*      px={4}*/}
+            {/*      py={5}*/}
+            {/*      className="bg-white leading-none  items-top justify-start mt-4"*/}
+            {/*  >*/}
+            {/*    /!*<div id='oaWidget' />*!/*/}
+            {/*  </Box>*/}
+
                 {(products) && <Box m={0}
                   px={4}
-                  py={4} className="bg-white leading-none  items-top justify-start mt-4">
+                  py={4} className="bg-white leading-none  items-top justify-start mt-2">
                     <Text bold size={'large'} className={`mb-2`}>{`Danh sách sản phẩm`}</Text>
                     <section className="w-fit mx-auto grid grid-cols-2 gap-3 mb-5">
                         {products && products.map((product) => (
-                            <CardProductVertical product={product} key={product.id} grid/>
+                            <CardProductVertical product={product} key={product.id} canAdd={true} grid/>
                         ))}
                     </section>
                 </Box>}
