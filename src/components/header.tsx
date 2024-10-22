@@ -45,31 +45,40 @@ const Header = () => {
   const navigate = useNavigate();
 
   return (
-    <div
-      className={cx(
-        "fixed top-0 z-50 w-screen h-header flex items-center bg-white",
+      <div
+          className={cx(
+              "fixed top-0 z-50 w-screen h-header flex items-center bg-white",
 
-        textColor
-      )}
-    >
-      <div className=" flex items-start px-4 w-full justify-between">
-
-        {showAvatar && <Box flex py={0}>
-          <Avatar size={36} src={authDt.profile.avatar}/>
-          <div className={"ml-4"}>
-            <Text bold size={'small'}>Xin chào, {authDt.profile.name}</Text>
-            <Text size={'xxSmall'} >Chúc ngày mới tốt lành!</Text>
-          </div>
-        </Box>}
-        {!showAvatar && <div className="w-full flex flex-row items-center pr-14 truncate ...">
-          {hasLeftIcon && (
-            <span onClick={() => (route ? navigate(route) : navigate(-1))}>
-              <Icon icon="zi-arrow-left" className={iconColor} size={size} />
-            </span>
+              textColor
           )}
-          {showSearch && <Box py={0} className={"w-full"}>
-            <div className={'rounded-lg border border-slate-200'}>
-              <Input
+      >
+        <div className="flex flex-col w-full px-4">
+          <div className="flex items-center justify-between w-full">
+            {showAvatar && <Box flex py={0}>
+              <Avatar size={36} src={authDt.profile.avatar}/>
+              <div className={"ml-4"}>
+                <Text bold size={'small'}>Xin chào, {authDt.profile.name}</Text>
+                <Text size={'xxSmall'}>Chúc ngày mới tốt lành!</Text>
+              </div>
+            </Box>}
+            {!showAvatar &&
+              <Text bold className='mt-10' size={'xLarge'} >
+                {hasLeftIcon && (
+
+                    <Icon icon="zi-chevron-left-header" onClick={() => (route ? navigate(route) : navigate(-1))} className={iconColor} size={size}/>
+                )}
+                <span  className='ml-4'>
+                  {customTitle ? customTitle : title}
+                </span>
+               </Text>
+           }
+          </div>
+
+
+
+          {showSearch && <Box  py={0} className={"w-full"}>
+            <div className={'rounded-lg border mt-3 border-slate-200'}>
+              <Input.Search
                   label=""
                   helperText=""
                   placeholder="Tìm kiếm"
@@ -80,19 +89,19 @@ const Header = () => {
             </div>
 
           </Box>}
-          {customTitle ? customTitle : title}
-        </div>}
-        {rightIcon || " "}
-        {showCart && <div
-            onClick={() =>{
-              navigate(`/cart`);
-            } }
-        >
-          <HiShoppingCart className="mr-2 h-5 w-5" />
-        </div>}
-      </div>
-    </div>
-  );
-};
+            {rightIcon || " "}
 
-export default Header;
+            {showCart && <div
+                onClick={() => {
+                  navigate(`/cart`);
+                }}
+            >
+              <HiShoppingCart className="mr-2 h-5 w-5"/>
+            </div>}
+
+        </div>
+        </div>
+        );
+        };
+
+        export default Header;

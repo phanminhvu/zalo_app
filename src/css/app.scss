@@ -54,7 +54,9 @@
     background: rgba(var(--zmp-primary-color-rgb), 0.2);
   }
 }
-
+.break-words {
+  overflow-wrap: break-word;
+}
 .zaui-spinner-ring {
   background: conic-gradient(
     from 90deg at 50% 50%,
