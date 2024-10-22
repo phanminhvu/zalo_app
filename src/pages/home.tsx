@@ -82,7 +82,7 @@ const HomeMain: React.FunctionComponent = () =>{
                     });
                     saveUserToCache(userInfo);
                 }
-                /*setAuthDt({
+           setAuthDt({
                     ...authDt,
                     profile: {
                         birthday:"",
@@ -100,7 +100,7 @@ const HomeMain: React.FunctionComponent = () =>{
                         },zalo_id: "4855948733451676664"
                     },
                     token:"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2N0eWdyYW0uY29tIiwiaWF0IjoxNzI3MjAwMDI0LCJuYmYiOjE3MjcyMDAwMjQsImV4cCI6MTcyNzgwNDgyNCwiZGF0YSI6eyJ1c2VyIjp7ImlkIjoyNn19fQ.MuI5JUapLwVev9uUzb4HRhg6CbejV26gQipZ0FaeK30"
-                });*/
+                });
             }
 
 
@@ -186,14 +186,14 @@ const HomeMain: React.FunctionComponent = () =>{
                 <Text bold size={'large'} className={`mb-2`}>{`Đang có ưu đãi`}</Text>
                 <ProductCarouselVertical products={featuredProducts}/>
             </Box>}
-            {/*<Box*/}
-            {/*      m={0}*/}
-            {/*      px={4}*/}
-            {/*      py={5}*/}
-            {/*      className="bg-white leading-none  items-top justify-start mt-4"*/}
-            {/*  >*/}
-            {/*    /!*<div id='oaWidget' />*!/*/}
-            {/*  </Box>*/}
+            <Box
+                  m={0}
+                  px={4}
+                  py={5}
+                  className="bg-white leading-none  items-top justify-start mt-4"
+              >
+                <div id='oaWidget' />
+              </Box>
 
                 {(products) && <Box m={0}
                   px={4}
