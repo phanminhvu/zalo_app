@@ -185,7 +185,6 @@ const ProductPicker = () => {
   }
 
 
-  console.log("product",product)
   return (
     <>
       {product && (

@@ -40,6 +40,9 @@ const UserAddresses: React.FunctionComponent = () =>{
         gAddresses();
     },[])
 
+
+    console.log(userAddresses)
+
     const { Item } = List;
     return (<Container><div
         className="p-0 zui-container-background-color"

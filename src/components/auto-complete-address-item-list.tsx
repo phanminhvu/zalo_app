@@ -47,12 +47,18 @@ const AddressSearchItemList = () => {
         {/*loading && <div className={'w-full text-center my-2'}><Spinner visible logo={"https://theme.hstatic.net/200000370513/1000940538/14/logo.png"} /></div>*/}
         {(searchList && searchList?.length > 0) && <div className={"list"}>
             {searchList.map( (v) => {
-                console.log("me nos",v);
+                // console.log("me nos",v);
                 return <Button
-                onClick={() => {
+                onClick={async () => {
+
+
+                    const placeResponse = await vietmapApi.place({refId: v.ref_id, apikey: VIET_MAP_KEY})
+
                     setUserEditingAddress(old=>({
                         ...old,
-                            address: v.display
+                        address: v.display,
+                        lng: placeResponse.lng,
+                        lat: placeResponse.lat
                     }))
                     setAddressAuto(false);
                 }}

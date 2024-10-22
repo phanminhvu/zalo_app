@@ -14,6 +14,9 @@ import {convertPrice} from "../../utils";
 import {Address, Branch, Coupon, PaymentMethod, Product, ProductInfoPicked, ShippingDate} from "../../models";
 import {useAddProductToCart} from "../../hooks";
 import {
+    branchLatState,
+    branchLngState,
+    branchPointState,
     branchTypeState,
     branchValState,
     openCouponPickerState,
@@ -22,16 +25,19 @@ import {
     openProductsPickerState,
     openStoresPickerState,
     pageGlobalState,
-    productInfoPickedState
+    productInfoPickedState, userEditingAddressState
 } from "../../state";
 import Container from "../../components/layout/Container";
 import {branchsState, couponsState, homeProductsState} from "../../states/home";
 import ArrowObject from "../../components/checkout/arrow-object";
 import moment from 'moment'
+import {VIET_MAP_KEY} from "../../utils/constants";
+import {VietmapApi} from "@vietmap/vietmap-api";
 
 const UserCart = () => {
     const navigate = useNavigate();
     const cart = useRecoilValue(cartState);
+    const [distance, setDistance] = useState< number | null>(null);
     const [buyDate,setBuyDate] = useState('');
     const [buyHour,setBuyHour] = useState(0);
     const [buyMinute,setBuyMinute] = useState(0);
@@ -70,6 +76,33 @@ const UserCart = () => {
     const [branchType, setBranchType] = useRecoilState<number>(
         branchTypeState
     );
+
+    const [branchLat, setBranchLat] = useRecoilState<number>(
+        branchLatState
+    );
+
+    const [branchLng, setBranchLng] = useRecoilState<number>(
+        branchLngState
+    );
+
+
+    console.log("branchPoint",branchLng,branchLat, shippingAddress )
+
+    const vietmapApi = new VietmapApi({ apiKey: VIET_MAP_KEY })
+    const getDistance = async () => {
+        const distance = await vietmapApi.route(
+            [[branchLat,branchLng], [shippingAddress.lat,shippingAddress.lng]],
+            ({ vehicle: 'motorcycle',apikey: VIET_MAP_KEY,points_encoded: true, optimize:true}),
+        )
+        setDistance(distance.paths[0].distance)
+        console.log(distance, 'distance')
+    }
+
+    useEffect(() => {
+        if(branchLat && branchLng && shippingAddress && shippingAddress?.lat && shippingAddress?.lng && branchLat > 0 && branchLng > 0){
+            getDistance()
+        }
+    }, [branchLng,branchLat, shippingAddress ]);
 
     const branchs = useRecoilValue<Branch[]>(branchsState);
     useEffect(() => {
@@ -178,8 +211,12 @@ const UserCart = () => {
                                         <Text className={`flex-1`}>{`Mã giảm giá`}</Text>
                                         <Text>{(selectedCoupon && selectedCoupon?.code) ? (parseInt(selectedCoupon?.discount_type || '0') !== 1 ? `${convertPrice(Number(selectedCoupon?.amount || 0))} đ` : `${convertPrice(Number(selectedCoupon?.amount || 0) * cart?.totalCart/100 )} đ`) : ''}</Text>
                                     </div>
-                                    <div className={`flex w-full border-gray-300 border-b py-6`}>
-                                        <Text className={`flex-1`}>{`Phí giao hàng`}</Text>
+                                    <div className={`flex w-full border-gray-300 border-b py-6 justify-between`}>
+                                        <div>
+                                            <Text >{`Phí giao hàng`}</Text>
+                                            { distance &&   <Text className={'pt-1 text-gray-600'} size={'xxSmall'}>{`${distance/1000} km`}</Text>}
+
+                                        </div>
                                         <Text>{`${convertPrice(Number( 0))} đ`}</Text>
                                     </div>
                                     <div className={`flex w-full  pt-6`}>

@@ -135,6 +135,19 @@ export const branchValState = atom<number>({
   default: 0,
 });
 
+
+export const branchLatState = atom<number>({
+  key: "branchLat",
+  default: 0,
+});
+
+export const branchLngState = atom<number>({
+  key: "branchLng",
+  default: 0,
+});
+
+
+
 //2: Den lay tai cua hang
 //1: Giao tan noi
 export const branchTypeState = atom<number>({
@@ -160,7 +173,7 @@ export const userEditingAddressState = atom<Address>({
     name:'',
     phone: '',
     email: '',
-    address:''
+    address:'',
   },
 });
 

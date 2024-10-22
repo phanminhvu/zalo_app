@@ -137,6 +137,8 @@ export type ShippingDate = {
 export type Address = {
   id: number | 0;
   name?: string;
+  lat?: number;
+  lng?: number;
   phone?: string;
   email?: string;
   address?: string;
@@ -354,7 +356,10 @@ export type District = {
 }
 export type Branch = {
   id:number;
+  point: number;
   district:number;
+  let: number;
+  lng: number;
   province: number;
   name: string;
   address: string;
