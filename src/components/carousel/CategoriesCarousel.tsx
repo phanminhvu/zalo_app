@@ -17,7 +17,7 @@ const CategoriesCarousel: FC<Category[]> = ({categories})  => {
     >
         {categories && categories.map((cat:Category,index) => (
             <div  key={index} style={{minWidth: 'auto'}} className={'p-1'}>
-                <IconMenu image={cat?.image} label={cat.name} textSize={`text-xs`} imageSize={50} onClick={()=>{navigate(`/category-detail/${cat.id}`)}} textSize={'text-xs'} outClass={'rounded-lg  overflow-hidden iconavatar flex justify-items-center justify-center items-center'}/>
+                <IconMenu image={cat?.image} label={cat.name} textSize={`text-xs`} imageSize={50} onClick={()=>{navigate(`/category-detail/${cat.id}`)}} outClass={'rounded-lg  overflow-hidden iconavatar flex justify-items-center justify-center items-center'}/>
             </div>
         ))}
     </Glider>)

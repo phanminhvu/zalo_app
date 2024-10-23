@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect,useState} from "react";
 import {Box, Icon, List, useNavigate} from "zmp-ui";
 import Container from "../../components/layout/Container";
 import {HiOutlineFlag, HiOutlineShoppingCart, HiOutlineUser} from "react-icons/hi";
@@ -6,12 +6,14 @@ import {useRecoilValue} from "recoil";
 import {authState} from "../../states/auth";
 import useSetHeader from "../../hooks/useSetHeader";
 import {showOAWidget} from "zmp-sdk/apis";
+import {getPhoneNumberUser} from "../../services/zalo"
 
 const { Item } = List;
 const UserProfile = () => {
     const navigate = useNavigate();
     const authDt = useRecoilValue(authState);
     const setHeader = useSetHeader();
+    const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
     useEffect(() => {
         setHeader({
             customTitle:  "Trang cá nhân",
@@ -27,6 +29,12 @@ const UserProfile = () => {
                 console.log(status);
             }
         });
+        const savedPhoneNumber = sessionStorage.getItem("phoneNumber");
+                if (savedPhoneNumber) {
+                    setPhoneNumber(savedPhoneNumber);
+                }else{
+                    getPhoneNumberUser();
+                }
     }, []);
     return (<Container className={'  zui-container-background-color'}>
         {/*<Box flex p={4}>
@@ -67,6 +75,7 @@ const UserProfile = () => {
         <Box m={4} p={0} className={"rounded-lg bg-white"}>
             <List>
                 <Item title="Thông tin tài khoản" prefix={<HiOutlineUser size={20} />} className={"text-sm m-0"} suffix={<Icon icon="zi-chevron-right" />} onClick={()=> {
+                  
                     navigate('/user-info');
                 }} />
                 <Item title="Địa chỉ đã lưu" prefix={<HiOutlineFlag size={20} />} suffix={<Icon icon="zi-chevron-right" />} className={"text-sm m-0"}  onClick={()=> {
@@ -121,39 +130,7 @@ export default UserProfile;
 //     }
 //   }, []);
 
-//   const checkContact = async (phoneNumber: string) => {
-//     try {
-//       const response = await fetch("https://quequan.vn:8081/customer/phonenumber", {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({ phoneNumber }),
-//       });
 
-//       const result = await response.json();
-//       if (result.isSuccess) {
-//         openSnackbar({
-//           text: `Số điện thoại ${phoneNumber} đã đăng ký.`,
-//           type: "success",
-//           duration: 5000,
-//         });
-//       } else {
-//         openSnackbar({
-//           text: `Số điện thoại ${phoneNumber} chưa được đăng ký.`,
-//           type: "error",
-//           duration: 5000,
-//         });
-//       }
-//     } catch (error) {
-//       console.error("Lỗi khi kiểm tra số điện thoại:", error);
-//       openSnackbar({
-//         text: "Lỗi khi kiểm tra số điện thoại trên server.",
-//         type: "error",
-//         duration: 5000,
-//       });
-//     }
-//   };
 
 //   const handleAccessSystem = async () => {
 //     try {
@@ -169,32 +146,64 @@ export default UserProfile;
 //       // Lấy số điện thoại từ Zalo SDK
 //       getPhoneNumber({
 //         success: async (data) => {
-//           const { phoneNumber: rawPhoneNumber } = data;
+//           let { token } = data;
+//           console.log('token',token)
+//           try {
+//             console.log({ accessToken, token});
+//             const response = await fetch("https://quequan.vn:8081/customer/phonenumber", {
+//               method: "POST",
+//               headers: {
+                
+//                 "Content-Type": "application/json",
+//               },
+//               body: JSON.stringify({ accessToken, token}),
+//             });
+//             const result = await response.json();
+//             console.log(result);
+            
+//             let formattedPhoneNumber = result.phoneNumber.startsWith("84")
+//                 ? result.phoneNumber.replace(/^84/, "0")
+//                 : result.phoneNumber;
+//             console.log("Số điện thoại đã định dạng:", formattedPhoneNumber);
+//             sessionStorage.setItem("phoneNumber", formattedPhoneNumber);
+//             setPhoneNumber(formattedPhoneNumber);
+
+//         }
+//         catch (error) {
+//             console.error("Lỗi khi kiểm tra số điện thoại:", error);
+
+//         }}})
+        
+      
+//     //   getPhoneNumber({
+//     //     success: async (data) => {
+//     //       const { phoneNumber: rawPhoneNumber } = data;
           
-//           // Chuyển đổi đầu số 84 thành 0
-//           let formattedPhoneNumber = rawPhoneNumber.startsWith("84")
-//             ? rawPhoneNumber.replace(/^84/, "0")
-//             : rawPhoneNumber;
+//     //       // Chuyển đổi đầu số 84 thành 0
+//     //       let formattedPhoneNumber = rawPhoneNumber.startsWith("84")
+//     //         ? rawPhoneNumber.replace(/^84/, "0")
+//     //         : rawPhoneNumber;
 
-//           console.log("Số điện thoại đã định dạng:", formattedPhoneNumber);
+//     //       console.log("Số điện thoại đã định dạng:", formattedPhoneNumber);
 
-//           // Lưu số điện thoại vào sessionStorage
-//           sessionStorage.setItem("phoneNumber", formattedPhoneNumber);
-//           setPhoneNumber(formattedPhoneNumber);
+//     //       // Lưu số điện thoại vào sessionStorage
+//     //       sessionStorage.setItem("phoneNumber", formattedPhoneNumber);
+//     //       setPhoneNumber(formattedPhoneNumber);
 
-//           // Kiểm tra số điện thoại trên hệ thống server
-//           await checkContact(formattedPhoneNumber);
-//         },
-//         fail: (error) => {
-//           console.error("Lỗi khi lấy số điện thoại từ Zalo:", error);
-//           openSnackbar({
-//             text: "Không thể lấy số điện thoại. Vui lòng thử lại.",
-//             type: "error",
-//             duration: 5000,
-//           });
-//         },
-//       });
-//     } catch (error) {
+//     //       // Kiểm tra số điện thoại trên hệ thống server
+//     //       await checkContact(formattedPhoneNumber);
+//     //     },
+//     //     fail: (error) => {
+//     //       console.error("Lỗi khi lấy số điện thoại từ Zalo:", error);
+//     //       openSnackbar({
+//     //         text: "Không thể lấy số điện thoại. Vui lòng thử lại.",
+//     //         type: "error",
+//     //         duration: 5000,
+//     //       });
+//     //     },
+//     //   });
+//       }
+//     catch (error) {
 //       console.error("Lỗi khi lấy access token:", error);
 //       openSnackbar({
 //         text: "Không thể lấy access token. Vui lòng thử lại.",
@@ -206,7 +215,6 @@ export default UserProfile;
 
 //   return (
 //     <Box textAlign="center" mt={6}>
-//       <Text.Title level={2}>Tập đoàn BSD</Text.Title>
 //       {phoneNumber ? (
 //         <Text>Số điện thoại của bạn: {phoneNumber}</Text>
 //       ) : (

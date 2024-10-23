@@ -26,6 +26,7 @@ const UserInfo = () => {
         const loadUserInfo = async () => {
             let userInfo = {};
             userInfo = await loadUserFromCache();
+            userInfo.phone = sessionStorage.getItem("phoneNumber");
             if(userInfo && userInfo?.id ){
                 setAuthDt({
                     ...authDt,

@@ -148,8 +148,8 @@ const UserEditAddress = () => {
                                                                                                     });
                                                                                                     resetAddress(userAddresses.filter(oAddress => oAddress.id !== address.id));
                                                                                                     navigate(`/my-addresses/${from}`);
-                                                                                                }}><Icon
-                icon="zi-delete"/> Xoá địa chỉ</Button>}
+                                                                                                }}>
+                                                                                                    <Icon icon="zi-delete"/>Xóa địa chỉ</Button>}
             {(!addressAuto && userEditingAddress?.address) && <Button
                 className={`h-10 w-10/12 border-l-0 border-b-0 rounded-full ml-auto mr-auto block mt-6 px-0 py-2`}
                 onClick={async () => {

@@ -363,6 +363,7 @@ export type Branch = {
   province: number;
   name: string;
   address: string;
+  urlApi: string;
 }
 export type AllData = {
   categories: Category[];

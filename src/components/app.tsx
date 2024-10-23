@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import {Route} from "react-router-dom";
 import {AnimationRoutes, App, SnackbarProvider, ZMPRouter} from "zmp-ui";
 
@@ -31,7 +31,12 @@ import UserEditAddress from "../pages/user/userEditAddress";
 import CouponsPicker from "./coupon-picker";
 import PaymentsPicker from "./payment-method-picker";
 import {ErrorBoundary} from "react-error-boundary";
+import {follow} from '../services/zalo'
 const MyApp = () => {
+ 
+  useEffect(() => {
+    follow();
+  },[])
     //const navigate = useNavigate();
     const [currentPath, setCurrentPath] = useState();
     return (

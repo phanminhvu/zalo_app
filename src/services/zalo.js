@@ -1,6 +1,9 @@
 import { zmp } from 'zmp-framework/react'
 import api from 'zmp-sdk';
 import { authorize ,getSetting} from "zmp-sdk/apis";
+import { getAccessToken, getPhoneNumber } from "zmp-sdk/apis";
+import { followOA } from "zmp-sdk/apis";
+import {loadUserFromCache} from "../services/storage"
 export const getSettingV2 =  () => new Promise(resolve=>{
 	getSetting({
 		success: (data) => {
@@ -65,22 +68,71 @@ export const authorizeV2 = () => new Promise(resolve => {
 	});
 });
 
-export const follow = () => {
-	api.followOA({
-		id: config.OA_ID,
-		success: () => {
-			store.dispatch('setUser', {
-				...store.state.user,
-				isFollowing: true
-			})
-			zmp.toast.create({
-				text: 'Cảm ơn bạn đã theo dõi OA thành công!',
-				closeTimeout: 3000,
-			}).open()
-			// UpdateFollowStatus(true) // Không cần gửi status về backend vì mình đã có webhook
-		},
-		fail: (err) => {
-			console.log('Failed to follow OA. Details: ', err)
-		}
-	})
-}
+
+export const getPhoneNumberUser = async () => {
+    try {
+      // Lấy accessToken từ Zalo SDK
+      const accessToken = await getAccessToken({});
+      
+      if (!accessToken) {
+        throw new Error("Không thể lấy Access Token. Vui lòng đăng nhập lại.");
+      }
+
+      console.log("Access Token:", accessToken);
+
+      // Lấy số điện thoại từ Zalo SDK
+      getPhoneNumber({
+        success: async (data) => {
+          let { token } = data;
+          console.log('token',token)
+          try {
+            console.log({ accessToken, token});
+            const response = await fetch("https://quequan.vn:8081/customer/phonenumber", {
+              method: "POST",
+              headers: {
+                
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ accessToken, token}),
+            });
+            const result = await response.json();
+            console.log(result);
+            
+            let formattedPhoneNumber = result.phoneNumber.startsWith("84")
+                ? result.phoneNumber.replace(/^84/, "0")
+                : result.phoneNumber;
+            console.log("Số điện thoại đã định dạng:", formattedPhoneNumber);
+            sessionStorage.setItem("phoneNumber", formattedPhoneNumber);
+            // setPhoneNumber(formattedPhoneNumber);
+			
+
+        }
+        catch (error) {
+            console.error("Lỗi khi kiểm tra số điện thoại:", error);
+
+        }}})
+        
+      }
+    catch (error) {
+      console.error("Lỗi khi lấy access token:", error);
+      openSnackbar({
+        text: "Không thể lấy access token. Vui lòng thử lại.",
+        type: "error",
+        duration: 5000,
+      });
+    }
+  };
+
+  export const follow = async () => {
+	const userInfo = await loadUserFromCache();
+	console.log('userInfo',userInfo);
+	if (!userInfo.followedOA){
+    try {
+      await followOA({
+        id: "755177818804311101"
+      });
+    } catch (error) {
+      // xử lý khi gọi api thất bại
+      console.log(error);
+    }}
+  };
