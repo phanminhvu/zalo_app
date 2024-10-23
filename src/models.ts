@@ -236,6 +236,7 @@ export type PaymentMethod = {
   title?: string;
   order?: number;
   enabled?: boolean,
+  code?: string;
   notes?: string;
 }
 /*

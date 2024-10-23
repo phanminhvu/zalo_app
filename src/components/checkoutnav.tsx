@@ -1,5 +1,5 @@
-import {Button, Text, useNavigate} from "zmp-ui";
-import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import { Button, Text, useNavigate } from "zmp-ui";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
     cartState,
     selectedCouponState,
@@ -8,19 +8,21 @@ import {
     shippingDateState,
     userOrdersState
 } from "../states/cart";
-import {convertPrice} from "../utils";
-import React, {useEffect} from "react";
-import {branchTypeState, branchValState, headerState, pageGlobalState} from "../state";
-import {Address, CartData, Coupon, Order, PaymentMethod, ShippingDate} from "../models";
+import { convertPrice } from "../utils";
+import React, { useEffect } from "react";
+import { branchTypeState, branchValState, headerState, pageGlobalState } from "../state";
+import { Address, CartData, Coupon, Order, PaymentMethod, ShippingDate } from "../models";
 import moment from "moment";
-import {authState} from "../states/auth";
-import {resetCartCache, saveOrderToCache} from "../services/storage";
+import { authState } from "../states/auth";
+import { resetCartCache, saveOrderToCache } from "../services/storage";
+import { createMac } from "../services/zalo";
+import { Payment } from "zmp-sdk";
 
 const CheckoutNav = () => {
     const navigate = useNavigate();
     const setErrMsg = useSetRecoilState(pageGlobalState);
 
-    const {  showTotalCart,showBottomBar } = useRecoilValue(headerState);
+    const { showTotalCart, showBottomBar } = useRecoilValue(headerState);
     const authDt = useRecoilValue(authState);
     const [cart, setCart] = useRecoilState<CartData>(
         cartState
@@ -67,15 +69,16 @@ const CheckoutNav = () => {
             <div className={` bg-white flex-1`}>
                 <div className="justify-between ">
                     <Text size="xxxSmall" >Tổng tiền</Text>
-                    <Text size="xLarge"  className={`font-semibold`}>{`${convertPrice(Number(cart?.totalCart || 0))} đ`}</Text>
+                    <Text size="xLarge" className={`font-semibold`}>{`${convertPrice(Number(cart?.totalCart || 0))} đ`}</Text>
                 </div>
             </div>
             <Button
-                variant={((shippingAddress && shippingAddress.id > 0 || shippingDate) && branchVal  && selectedPaymentMethod && selectedPaymentMethod.id > 0) ? `primary` : `secondary`}
+                variant={((shippingAddress && shippingAddress.id > 0 || shippingDate) && branchVal && selectedPaymentMethod && selectedPaymentMethod.id > 0) ? `primary` : `secondary`}
                 size="large"
-                onClick={()=>{
-                    if((shippingAddress && shippingAddress.id > 0 || shippingDate) && branchVal  && selectedPaymentMethod && selectedPaymentMethod?.id > 0){
-                        const lineItems = cart?.cartItems.map((cartItem,cartIndex) => {
+                onClick={async () => {
+                    
+                    if ((shippingAddress && shippingAddress.id > 0 || shippingDate) && branchVal && selectedPaymentMethod && selectedPaymentMethod?.id > 0) {
+                        const lineItems = cart?.cartItems.map((cartItem, cartIndex) => {
                             const price = cartItem?.sale_price > 0 ? cartItem?.sale_price : cartItem?.price;
                             return {
                                 id: cartItem?.product_id,
@@ -84,19 +87,19 @@ const CheckoutNav = () => {
                                 quantity: cartItem?.quantity,
                                 subtotal: price * cartItem?.quantity,
                                 price: price,
-                                image:  cartItem?.image,
+                                image: cartItem?.image,
                                 user_note: cartItem?.user_note
                             }
                         });
                         let maxId = 0;
-                        if(userOrders && userOrders?.length > 0){
+                        if (userOrders && userOrders?.length > 0) {
                             maxId = userOrders?.reduce((acc, value) => {
                                 return (acc = acc > value.id ? acc : value.id);
                             }, 0) || 0;
                         }
 
                         const newOrder = {
-                            id: maxId+1,
+                            id: maxId + 1,
                             parent_id: 0,
                             status: "processing",
                             currency: "VND",
@@ -104,9 +107,9 @@ const CheckoutNav = () => {
                             prices_include_tax: true,
                             date_created: moment().format("h:mm DD/MM/YYYY"),
                             date_modified: moment().format("h:mm DD/MM/YYYY"),
-                            discount_total: (selectedCoupon && selectedCoupon?.code && selectedCoupon?.amount) ? (parseInt(selectedCoupon?.discount_type || '0') == 1 ? Number(selectedCoupon?.amount || 0) * cart?.totalCart/100 : Number(selectedCoupon?.amount || 0) ) : 0,
+                            discount_total: (selectedCoupon && selectedCoupon?.code && selectedCoupon?.amount) ? (parseInt(selectedCoupon?.discount_type || '0') == 1 ? Number(selectedCoupon?.amount || 0) * cart?.totalCart / 100 : Number(selectedCoupon?.amount || 0)) : 0,
                             shipping_total: 0,
-                            total: parseFloat(cart?.totalCart+'' || '0'),
+                            total: parseFloat(cart?.totalCart + '' || '0'),
                             customer_id: authDt?.profile?.id || '',
                             shipping: shippingAddress,
                             payment_method: selectedPaymentMethod?.id,
@@ -116,32 +119,93 @@ const CheckoutNav = () => {
                             branch_id: branchVal,
                             branch_type: branchType,
                             line_items: lineItems
-                        } ;
+                        };
 
                         saveOrderToCache(newOrder);
 
                         setUserOrders(old => {
-                            let orders = (old && old?.length > 0 ) ? [...old] : [];
+                            let orders = (old && old?.length > 0) ? [...old] : [];
                             orders.push(newOrder as Order)
                             return orders;
                         });
-                        setErrMsg(oldMsg => {
-                            return {
-                                ...oldMsg,
-                                errMsg: "Tạo đơn hàng thành công!"
-                            }
-                        })
-                        resetCartCache();
-                        setCart({
-                            cartItems: [],
-                            totalCart: 0,
-                            totalCheckout: 0,
-                            isFetching: false
-                        })
-                        setBranchVal(0); setBranchType(0); setShippingAddress(null); setShippingDate(null); setSelectedCoupon(null); setSelectedPaymentMethod(null);
+                        // setErrMsg(oldMsg => {
+                        //     return {
+                        //         ...oldMsg,
+                        //         errMsg: "Tạo đơn hàng thành công!"
+                        //     }
+                        // })
+                        // resetCartCache();
+                        // setCart({
+                        //     cartItems: [],
+                        //     totalCart: 0,
+                        //     totalCheckout: 0,
+                        //     isFetching: false
+                        // })
+                        // setBranchVal(0); setBranchType(0); setShippingAddress(null); setShippingDate(null); setSelectedCoupon(null); setSelectedPaymentMethod(null);
 
-                        navigate(`/my-orders`);
-                    }else{
+                        //tạo đơn hàng
+                        const item = lineItems.map((i) => (
+                            {
+                                id: i.id,
+                                amount: i.subtotal
+                            }
+                        ));
+
+                        const paymentMethod = {
+                            id: selectedPaymentMethod.code,
+                            isCustom: false
+                        }
+
+                        const extraData = {
+                            orderId: newOrder.id
+                        }
+
+                        const totalAmount = item.reduce((acc, curentItem) => acc + curentItem.amount, 0)
+
+                        let orderData = {
+                            desc: `Thanh toan ${totalAmount}`,
+                            item,
+                            amount: totalAmount,
+                            extradata: JSON.stringify(extraData),
+                            method: JSON.stringify(paymentMethod)
+
+                        }
+
+                        const getMac = await createMac(orderData)
+                        if (getMac) {
+                            orderData.mac = getMac.mac
+                            new Promise((resolve, reject) => {
+                                Payment.createOrder({
+                                    ...orderData,
+                                    success: async (data) => {
+                                        const { orderId } = data;
+                                        console.log('Thành công: ' , data)
+                                        resolve(orderId)
+                                        resetCartCache();
+                                        setCart({
+                                            cartItems: [],
+                                            totalCart: 0,
+                                            totalCheckout: 0,
+                                            isFetching: false
+                                        })
+                                        setBranchVal(0); setBranchType(0); setShippingAddress(null); setShippingDate(null); setSelectedCoupon(null); setSelectedPaymentMethod(null);
+
+                                        navigate(`/my-orders`);
+                                    },
+                                    fail: (e) => {
+                                        console.error(e)
+                                        reject(e)
+                                    }
+                                })
+                            })
+
+                        } else {
+                            console.log('Không thể tạo MAC')
+                        }
+                        //
+
+
+                    } else {
                         navigate(`/cart`);
                     }
                 }}

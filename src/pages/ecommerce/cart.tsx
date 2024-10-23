@@ -442,7 +442,7 @@ const UserCart = () => {
                         </Box>
                         <Box mt={4} className={`px-4 `}>
                             <ArrowObject title={`Phương thức thanh toán`} padding={0} textSize={"large"} content={(selectedPaymentMethod && selectedPaymentMethod?.id) ? selectedPaymentMethod.title : ``} contentTextColor={`text-sky-500`} onClick={() => {
-                                //setSelectedPaymentMethod(true)
+                                //setSelectedPaymentMe`thod(true)
                                 setOpenPaymentMethodSheet(true)
                             }} rightcontent={''} subcontent={(selectedPaymentMethod?.notes) ? selectedPaymentMethod?.notes : ''} extraClassName={`w-full bg-white rounded-lg p-4`}></ArrowObject>
                         </Box>
