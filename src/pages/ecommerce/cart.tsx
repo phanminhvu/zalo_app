@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useSetHeader from "../../hooks/useSetHeader";
-import { Box, Picker, Tabs, Text, useNavigate } from "zmp-ui";
+import { Box, Picker, Tabs, Text, useNavigate ,  Page, List, Icon, Button } from "zmp-ui";
 import { HiLocationMarker, HiMap, HiOutlineArrowRight, HiOutlineClock } from 'react-icons/hi';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
@@ -40,7 +40,9 @@ const UserCart = () => {
     const [distance, setDistance] = useState<number | null>(null);
     const [deliveryFee, setDeliveryFee] = useState<number | null>(null);
     useEffect(() => {
-        setDeliveryFee(phiGiaohang(distance/1000));
+        if(distance && distance > 0) {
+            setDeliveryFee(phiGiaohang(distance/1000));
+        }
     }, [distance])
     const [buyDate, setBuyDate] = useState('');
     const [buyHour, setBuyHour] = useState(0);
@@ -95,12 +97,13 @@ const UserCart = () => {
     const vietmapApi = new VietmapApi({ apiKey: VIET_MAP_KEY })
     const getDistance = async () => {
         const distance = await vietmapApi.route(
-            [[branchLat, branchLng], [shippingAddress.lat, shippingAddress.lng]],
+            [[branchLat, branchLng], [shippingAddress.lat as number, shippingAddress.lng as number]],
             ({ vehicle: 'motorcycle', apikey: VIET_MAP_KEY, points_encoded: true, optimize: true }),
         )
         setDistance(distance.paths[0].distance)
-        setDeliveryFee(phiGiaohang(distance/1000));
-        console.log(distance, 'distance')
+        // if(distance && distance > 0) {
+        //     setDeliveryFee(phiGiaohang(distance /1000));
+        // }
     }
 
     useEffect(() => {
@@ -223,70 +226,118 @@ const UserCart = () => {
                 <div className="md:w-3/4">
                     <div className="w-full">
                         <div className={`px-4`}>
-                            {(cart && cart?.cartItems) && <div className={"w-full bg-white rounded-lg mb-4 p-4 shadow-btn-fixed"}> <table className="w-full"><tbody>
-                                {cart?.cartItems?.filter(cItem => cItem.parent === 0).map((cartItem, cartIndex) => {
-                                    const childItems = cart.cartItems?.filter(cIt => cIt.parent === cartItem.product_id);
-                                    let totalItemPrice = (parseFloat(cartItem.sale_price + '') > 0) ? cartItem.sale_price : cartItem.price;
-                                    if (childItems && childItems?.length > 0) {
-                                        childItems.map(child => {
-                                            totalItemPrice += (parseFloat(child.sale_price + '') > 0) ? child.sale_price : child.price;
-                                        })
-                                    }
+                            {(cart && cart?.cartItems) && <div className={"w-full bg-white items-center justify-center align-middle rounded-lg mb-4 p-4 shadow-btn-fixed"}>
+                                {
+                                    cart?.cartItems?.filter(cItem => cItem.parent === 0).length > 0  ?
+                                        <table className="w-full">
 
-                                    return (<tr key={`cart_item${cartIndex}`} onClick={() => {
-                                        setProductInfoPicked(info => {
-                                            return {
-                                                ...info,
-                                                product: products.find(cIt => cIt.id === cartItem.product_id),
-                                                currentItem: cartItem
-                                            } as ProductInfoPicked
-                                        });
-                                        setOpenSheet(true)
-                                    }}>
-                                        <td className="py-4">
-                                            <div className="flex items-start">
-                                                <img className="w-[60px] h-[60px] mr-4 rounded-lg" src={`${cartItem.image}`} alt={`${cartItem.name}`} />
-                                                <div className="flex-1">
-                                                    <p className="font-medium text-sm zblack-color">{`${cartItem.name}`}</p>
-                                                    <p className="text-sm grey-price-color mt-1">{`${convertPrice(totalItemPrice)} đ`}</p>
-                                                    {(childItems && childItems?.length > 0) && <div className="text-xs grey-price-color mt-1"><span>{`Đồ ăn thêm: `}</span>{childItems?.map(chItem => {
-                                                        return (<span>{chItem.name + ', '}</span>)
-                                                    })}</div>}
-                                                </div>
-                                                <span className="text-sm text-center w-8 zaui-link-text-color">{`x ${cartItem.quantity}`}</span>
-                                            </div>
-                                        </td>
-                                    </tr>)
-                                })}
 
-                            </tbody></table></div>}
-                            <div className={`text-right`}><Text size={`xSmall`} className={`zaui-link-text-color font-semibold`} onClick={() => {
-                                setOpenProductsSheet(true);
-                            }}>Thêm món</Text></div>
-                        </div>
-                        <Box mt={4} className={`px-4 `}>
+                                            <tbody>
+                                            {cart?.cartItems?.filter(cItem => cItem.parent === 0).map((cartItem, cartIndex) => {
+                                                const childItems = cart.cartItems?.filter(cIt => cIt.parent === cartItem.product_id);
+                                                let totalItemPrice = (parseFloat(cartItem.sale_price + '') > 0) ? cartItem.sale_price : cartItem.price;
+                                                if (childItems && childItems?.length > 0) {
+                                                    childItems.map(child => {
+                                                        totalItemPrice += (parseFloat(child.sale_price + '') > 0) ? child.sale_price : child.price;
+                                                    })
+                                                }
+
+                                                return (<tr key={`cart_item${cartIndex}`} onClick={() => {
+                                                    setProductInfoPicked(info => {
+                                                        return {
+                                                            ...info,
+                                                            product: products.find(cIt => cIt.id === cartItem.product_id),
+                                                            currentItem: cartItem
+                                                        } as ProductInfoPicked
+                                                    });
+                                                    setOpenSheet(true)
+                                                }}>
+                                                    <td className="py-4">
+                                                        <div className="flex items-start">
+                                                            <img className="w-[60px] h-[60px] mr-4 rounded-lg"
+                                                                 src={`${cartItem.image}`} alt={`${cartItem.name}`}/>
+                                                            <div className="flex-1">
+                                                                <p className="font-medium text-sm zblack-color">{`${cartItem.name}`}</p>
+                                                                <p className="text-sm grey-price-color mt-1">{`${convertPrice(totalItemPrice)} đ`}</p>
+                                                                {(childItems && childItems?.length > 0) &&
+                                                                    <div className="text-xs grey-price-color mt-1">
+                                                                        <span>{`Đồ ăn thêm: `}</span>{childItems?.map(chItem => {
+                                                                        return (<span>{chItem.name + ', '}</span>)
+                                                                    })}</div>}
+                                                            </div>
+                                                            <span
+                                                                className="text-sm text-center w-8 zaui-link-text-color">{`x ${cartItem.quantity}`}</span>
+                                                        </div>
+                                                    </td>
+                                                </tr>)
+                                            })}
+
+                                            </tbody>
+                                        </table> : <div className={"w-full items-center justify-center rounded-lg mb-4 p-4"}>
+                                            <Text size={`xxxSmall`} className={'align-middle justify-center items-center'}>Không có món ăn, thức uống trong giỏ hàng</Text>
+                                        </div>
+                                }
+
+                            </div>}
+            <Text size={`xSmall`}
+                                                             style={{float: 'right'}}
+                                                                className={`zaui-link-text-color  rounded-3xl pt-1 pb-1 pl-3 pr-3  w-fit  bg-blue-200 font-semibold`}
+                                                                onClick={() => {
+                                                                    setOpenProductsSheet(true);
+                                                                }}>Thêm +</Text></div>
+                        <Box mt={14} className={`px-4 mt-14`}>
+
                             <div className={`w-full bg-white rounded-lg p-4`}>
                                 <Text bold size={'large'} className={`mb-2`}>{`Tổng cộng`}</Text>
-                                <div className={`flex w-full border-gray-300 border-b py-6`}>
-                                    <Text className={`flex-1`}>{`Thành tiền`}</Text>
-                                    <Text>{`${convertPrice(Number(cart?.totalCart || 0))} đ`}</Text>
-                                </div>
-                                <div className={`flex w-full border-gray-300 border-b py-6`}>
-                                    <Text className={`flex-1`}>{`Mã giảm giá`}</Text>
-                                    <Text>{(selectedCoupon && selectedCoupon?.code) ? (parseInt(selectedCoupon?.discount_type || '0') !== 1 ? `${convertPrice(Number(selectedCoupon?.amount || 0))} đ` : `${convertPrice(Number(selectedCoupon?.amount || 0) * cart?.totalCart / 100)} đ`) : ''}</Text>
-                                </div>
-                                <div className={`flex w-full border-gray-300 border-b py-6 justify-between`}>
-                                    <div>
-                                        <Text >{`Phí giao hàng`}</Text>
-                                        {distance && <Text className={'pt-1 text-gray-600'} size={'xxSmall'}>{`${(distance / 1000).toFixed(2)} km`}</Text>}
 
-                                    </div>
-                                    <Text>{`${convertPrice(Number(deliveryFee))} đ`}</Text>
-                                </div>
-                                <div className={`flex w-full  pt-6`}>
-                                    <Text size={'large'} className={`flex-1 font-extrabold`}>{`Số tiền thanh toán`}</Text>
-                                    <Text size={'large'} className={`font-extrabold`}>{`${convertPrice(Number((cart?.totalCart || 0) + (deliveryFee || 0)))} đ`}</Text>
-                                </div>
+                                <List noSpacing >
+                                    <List.Item
+                                        title="Thành tiền"
+                                        suffix={`${convertPrice(Number(cart?.totalCart || 0))} đ`}
+                                    />
+                                    <List.Item
+                                        title="Mã giảm giá"
+                                        suffix={(selectedCoupon && selectedCoupon?.code) ? (parseInt(selectedCoupon?.discount_type || '0') !== 1 ? `${convertPrice(Number(selectedCoupon?.amount || 0))} đ` : `${convertPrice(Number(selectedCoupon?.amount || 0) * cart?.totalCart / 100)} đ`) : ''}
+
+                                    />
+                                    <List.Item
+                                        title="Phí giao hàng"
+                                        suffix={`${convertPrice(Number(deliveryFee))} đ`}
+                                        subTitle={(distance && (distance / 1000).toFixed(2) + ' km')}
+                                    />
+                                    <List.Item
+                                        title={ <Text  className={'font-bold'}>{`Số tiền thanh toán`}</Text>}
+                                        suffix={`${convertPrice(Number((cart?.totalCart || 0) + (deliveryFee || 0)))} đ`}
+                                        // subTitle={(distance && (distance / 1000).toFixed(2) + ' km')}
+                                    />
+                                </List>
+
+
+                                {/*<div className={`flex w-full border-gray-300 border-b py-6`}>*/}
+                                {/*    <Text className={`flex-1`}>{`Thành tiền`}</Text>*/}
+                                {/*    <Text>{`${convertPrice(Number(cart?.totalCart || 0))} đ`}</Text>*/}
+                                {/*</div>*/}
+                                {/*<div className={`flex w-full border-gray-300 border-b py-6`}>*/}
+                                {/*    <Text className={`flex-1`}>{`Mã giảm giá`}</Text>*/}
+                                {/*    <Text>*/}
+                                {/*        {(selectedCoupon && selectedCoupon?.code) ? (parseInt(selectedCoupon?.discount_type || '0') !== 1 ? `${convertPrice(Number(selectedCoupon?.amount || 0))} đ` : `${convertPrice(Number(selectedCoupon?.amount || 0) * cart?.totalCart / 100)} đ`) : ''}*/}
+                                {/*    </Text>*/}
+                                {/*</div>*/}
+                                {/*<div className={`flex w-full border-gray-300 border-b py-6 justify-between`}>*/}
+                                {/*    <div>*/}
+                                {/*        <Text>{`Phí giao hàng`}</Text>*/}
+                                {/*        {distance && <Text className={'pt-1 text-gray-600'}*/}
+                                {/*                           size={'xxSmall'}>{`${(distance / 1000).toFixed(2)} km`}</Text>}*/}
+
+                                {/*    </div>*/}
+                                {/*    <Text>{`${convertPrice(Number(deliveryFee))} đ`}</Text>*/}
+                                {/*</div>*/}
+                                {/*<div className={`flex w-full  pt-6`}>*/}
+                                {/*    <Text size={'large'}*/}
+                                {/*          className={`flex-1 font-extrabold`}>{`Số tiền thanh toán`}</Text>*/}
+                                {/*    <Text size={'large'}*/}
+                                {/*          className={`font-extrabold`}>{`${convertPrice(Number((cart?.totalCart || 0) + (deliveryFee || 0)))} đ`}</Text>*/}
+                                {/*</div>*/}
                             </div>
                         </Box>
                         <Box mt={4} className={`px-4 `}>
@@ -294,7 +345,11 @@ const UserCart = () => {
                                 <Tabs id="contact-list" onChange={(activeKey) => {
                                 }}>
                                     <Tabs.Tab key="giao_hang_tan_noi" label="Giao hàng tận nơi">
-                                        <ArrowObject icon={<HiMap className="mr-2 h-5 w-5 inline-block" />} title={`Vị trí cửa hàng`} padding={0} textSize={"large"} content={(branchVal > 0 && branchType == 1) ? branchs.find(bit => (bit.id === branchVal))?.name : ``} subcontent={(branchVal > 0 && branchType == 1) ? branchs.find(bit => (bit.id === branchVal))?.address : ``} contentTextColor={`text-sky-500`} onClick={() => {
+                                        <ArrowObject icon={<HiMap className="mr-2 h-5 w-5 inline-block"/>}
+                                                     title={`Vị trí cửa hàng`} padding={0} textSize={"large"}
+                                                     content={(branchVal > 0 && branchType == 1) ? branchs.find(bit => (bit.id === branchVal))?.name : ``}
+                                                     subcontent={(branchVal > 0 && branchType == 1) ? branchs.find(bit => (bit.id === branchVal))?.address : ``}
+                                                     contentTextColor={`text-sky-500`} onClick={() => {
                                             setBranchType(1);
                                             setOpenStoreSheet(true);
                                         }} rightcontent={''} extraClassName={`w-full bg-white rounded-lg p-4`}></ArrowObject>

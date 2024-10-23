@@ -62,7 +62,7 @@ const Header = () => {
               </div>
             </Box>}
             {!showAvatar &&
-              <Text bold className='mt-10' size={'xLarge'} >
+              <Text bold className={`${showSearch ? 'mt-10' : ''}`} size={'xLarge'} >
                 {hasLeftIcon && (
 
                     <Icon icon="zi-chevron-left-header" onClick={() => (route ? navigate(route) : navigate(-1))} className={iconColor} size={size}/>
