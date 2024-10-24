@@ -61,11 +61,11 @@ const SearchPage: React.FunctionComponent = () => {
     }, [searchString]);
 
     return (<Container className={"bg-white px-4 mt-8"}>
-            <div  className={`mb-2 pt-2 fixed w-full bg-white z-30`}>
-                <Text bold size={'large'}>{`Kết quả (${products.length})`}</Text>
+            <div  className={`mb-2 pt-7 fixed w-full bg-white z-30`}>
+                <Text bold size={'xLarge'}>{`Kết quả (${products.length})`}</Text>
             </div>
             <List divider={false} noSpacing
-                 className={'mt-10'}
+                 className={'mt-20 mb-20'}
                   dataSource={
                       (products && products.length > 0) ? products.map((product) => ({
                           title: <Text style={{width: `calc(50vw)`, whiteSpace: "wrap"}}
