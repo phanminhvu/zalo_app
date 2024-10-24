@@ -65,11 +65,13 @@ export const paymentMethodsState = selector<PaymentMethod[]>({
 });
 export const selectedPaymentMethodState = atom<PaymentMethod>({
     key: 'selectedPaymentMethod',
-    default: {
-        id: 0,
-        title: '',
-        order: 0,
-        enabled: false
+    default:  {
+        "id": 1,
+        "title":"Thanh toán khi nhận hàng",
+        "order": 0,
+        "notes":"Thanh toán khi nhận hàng",
+        "enabled": true,
+        "code":"COD"
     }
 });
 export const userOrdersState = atom<Order[]>({

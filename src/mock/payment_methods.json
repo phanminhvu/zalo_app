@@ -4,7 +4,8 @@
         "title":"Thanh toán khi nhận hàng",
         "order": 0,
         "enabled": true,
-        "code":"COD"
+        "code":"COD",
+        "notes":"Thanh toán khi nhận hàng"
     },{
         "id": 2,
         "title":"Chuyển khoản qua ngân hàng",
