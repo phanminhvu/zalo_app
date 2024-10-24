@@ -4,12 +4,13 @@ import {pageGlobalState, userAddressesState, userEditingAddressState} from "../.
 import {Button, Icon, List, Text, useNavigate} from "zmp-ui";
 import Container from "../../components/layout/Container";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
-import {Address, AuthData} from "../../models";
+import {Address, AuthData, Branch} from "../../models";
 import {useSetHeader} from "../../hooks";
 import {useParams} from "react-router-dom";
 import {shippingAddressState} from "../../states/cart";
 import {authState} from "../../states/auth";
 import {HiOutlineLocationMarker} from "react-icons/hi";
+import {branchsState} from "../../states/home";
 
 const UserAddresses: React.FunctionComponent = () =>{
     let { from } = useParams();
@@ -27,10 +28,12 @@ const UserAddresses: React.FunctionComponent = () =>{
     const authDt = useRecoilValue<AuthData>(authState);
     const navigate = useNavigate();
     useEffect(() => {
+
         setHeader({
             customTitle:  "Quản lý địa chỉ",
             hasLeftIcon: true,
-            showBottomBar: false
+            type: "secondary",
+            showBottomBar: true
         });
         const gAddresses= async () => {
             //await saveAddress(uaddresses[0])
@@ -41,10 +44,10 @@ const UserAddresses: React.FunctionComponent = () =>{
     },[])
 
 
-    console.log(userAddresses)
 
     const { Item } = List;
-    return (<Container><div
+    return (<Container>
+        <div
         className="p-0 zui-container-background-color"
         style={{ marginBottom: "0px" }}
 

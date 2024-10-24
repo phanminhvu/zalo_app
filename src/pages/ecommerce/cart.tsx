@@ -11,14 +11,14 @@ import {
     shippingDateState
 } from "../../states/cart";
 import {convertPrice} from "../../utils";
-import {Address, Branch, Coupon, PaymentMethod, Product, ProductInfoPicked, ShippingDate} from "../../models";
+import {Address, Branch, CartData, Coupon, PaymentMethod, Product, ProductInfoPicked, ShippingDate} from "../../models";
 import {useAddProductToCart} from "../../hooks";
 import {
     branchLatState,
     branchLngState,
     //branchPointState,
     branchTypeState,
-    branchValState,
+    branchValState, openAddressPickerState,
     openCouponPickerState,
     openPaymentMethodPickerState,
     openProductPickerState,
@@ -38,14 +38,18 @@ import bank from "../../components/bank.png";
 
 const UserCart = () => {
     const navigate = useNavigate();
-    const cart = useRecoilValue(cartState);
-    const [distance, setDistance] = useState<number | null>(null);
+    const [cart, setCart] = useRecoilState<CartData>(
+        cartState
+    );
+    const [distance, setDistance] = useState<number >(0);
     const [deliveryFee, setDeliveryFee] = useState<number | null>(null);
     console.log('distance', distance)
     useEffect(() => {
-        if (distance && distance > 0) {
             setDeliveryFee(phiGiaohang(distance / 1000));
-        }
+            setCart({
+                ...cart,
+                deliveryFee: phiGiaohang(distance / 1000)
+            })
     }, [distance])
     const [currenTab, setCurrentTab] = useState("giao_hang_tan_noi");
     const [buyDate, setBuyDate] = useState('');
@@ -60,8 +64,9 @@ const UserCart = () => {
     const setOpenSheet = useSetRecoilState(openProductPickerState);
     const products = useRecoilValue<Product[]>(homeProductsState);
     const setOpenProductsSheet = useSetRecoilState(openProductsPickerState);
-
-    console.log(cod, bank)
+    const [openAddressSSheet, setOpenAddressSheet] = useRecoilState<boolean>(
+        openAddressPickerState
+    );
 
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useRecoilState<PaymentMethod>(
         selectedPaymentMethodState
@@ -117,17 +122,17 @@ const UserCart = () => {
             getDistance()
         }
         if (currenTab == "tai_cua_hang" ) {
-            setDistance(null)
+            setDistance(0)
         }
         if (branchType !== 1 ) {
-            setDistance(null)
+            setDistance(0)
         }
     }, [branchLng, branchLat, shippingAddress , currenTab, branchType]);
 
     const branchs = useRecoilValue<Branch[]>(branchsState);
     useEffect(() => {
         setHeader({
-            customTitle: "Cart",
+            customTitle: "Giỏ hàng",
             hasLeftIcon: true,
             type: "secondary",
             showBottomBar: false,
@@ -169,7 +174,7 @@ const UserCart = () => {
             case 'COD':
                 source = cod
                 break;
-            case 'Bank':
+            case 'BANK':
                 source = bank
                 break;
         }
@@ -237,7 +242,9 @@ const UserCart = () => {
         //     return 50000;
         // }
         // else return 300000;
-        if (distance <= 3) {
+        if (distance === 0) {
+            return 0
+        }else if (distance <= 3) {
             return 16000
         } else {
             return 16000 + (distance - 3) * 5500
@@ -318,9 +325,11 @@ const UserCart = () => {
                                   onClick={() => {
                                       setOpenProductsSheet(true);
                                   }}>Thêm +</Text></div>
+
                         <Box mt={14} className={`px-4 mt-14`}>
 
                             <div className={`w-full bg-white rounded-lg p-4`}>
+
                                 <Text bold size={'xLarge'} className={`mb-2`}>{`Tổng cộng`}</Text>
 
                                 <List noSpacing>
@@ -336,7 +345,7 @@ const UserCart = () => {
                                     <List.Item
                                         title="Phí giao hàng"
                                         suffix={`${convertPrice(Number(deliveryFee))} đ`}
-                                        subTitle={(distance && (distance / 1000).toFixed(2) + ' km')}
+                                        subTitle={`${(distance / 1000).toFixed(distance > 0 ? 2 : 0)} km`}
                                     />
                                     <List.Item
                                         title={<Text className={'font-bold'}>{`Số tiền thanh toán`}</Text>}
@@ -373,6 +382,7 @@ const UserCart = () => {
                                 {/*</div>*/}
                             </div>
                         </Box>
+
                         <Box mt={4} className={`px-4 `}>
                             <div className={`w-full bg-white rounded-lg p-4`}>
                                 <Tabs id="contact-list"
@@ -418,7 +428,8 @@ const UserCart = () => {
 
                                             <List.Item
                                                 onClick={() => {
-                                                    navigate('/my-addresses/cart');
+                                                    // navigate('/my-addresses/cart');
+                                                    setOpenAddressSheet(true);
                                                 }}
                                                 prefix={<HiLocationMarker className="h-5 w-5 "/>}
                                                 title="Địa chỉ"
@@ -443,19 +454,17 @@ const UserCart = () => {
                                             >{(branchVal > 0 && branchType == 2) ? branchs.find(bit => (bit.id === branchVal))?.address : ``}</List.Item>
 
 
-                                            <List.Item
-                                                prefix={<HiOutlineClock className=" h-5 w-5 inline-block"/>}
-                                                title={<Picker
+                                            <List.Item  >
+                                                <Picker
                                                     placeholder="Chọn thời gian"
                                                     mask
-                                                    maskClosable-
-                                                    inputClass="border-none bg-transparent text-base text-black font-medium text-md m-0 p-0 h-auto"
-                                                    action={{
-                                                        text: "Đóng",
-                                                        close: true,
-                                                    }}
+                                                    title="Thời gian nhận hàng"
+                                                    maskClosable
+                                                    prefix={<HiOutlineClock className="mr-4 h-5 w-5"/>}
+                                                    suffix={ <Icon icon="zi-chevron-right"/>}
+                                                    inputClass="border-none w-full flex bg-transparent text-base text-black font-medium text-md m-0 p-0 h-auto"
                                                     formatPickedValueDisplay={(test) =>
-                                                        (test && test?.hour && test?.minute && test?.date)
+                                                        test && test?.hour && test?.minute && test?.date
                                                             ? `${test?.hour?.displayName} : ${test?.minute?.displayName} - ${test?.date?.displayName}`
                                                             : `Chọn thời gian`
                                                     }
@@ -474,37 +483,25 @@ const UserCart = () => {
                                                         },
                                                     ]}
                                                     onChange={(value) => {
-                                                        console.log('on change')
+                                                        console.log('on change');
                                                         if (value?.date?.value != buyDate) {
                                                             setBuyDate(value?.date?.value);
                                                             if (value.date?.displayName == "Hôm nay") {
-
-                                                                setgenHourDataState(genHourData(1))
-
+                                                                setgenHourDataState(genHourData(1));
                                                             } else {
-                                                                setgenHourDataState(genHourData(0))
+                                                                setgenHourDataState(genHourData(0));
                                                             }
                                                         }
                                                         if (!value?.date || !value?.hour || !value?.minute) {
-                                                            // setErrMsg(oldMsg => {
-                                                            //     return {
-                                                            //       ...oldMsg,
-                                                            //       errMsg: "Bạn cần chọn đủ thời gian nhận hàng"
-                                                            //     }
-                                                            //   })
-                                                            console.log('erro')
+                                                            console.log('erro');
                                                         } else {
-                                                            /**/
                                                             setBuyHour(value.hour.value);
                                                             setBuyMinute(value.minute.value);
                                                             setBuyDate(value.date.value);
-
                                                         }
-                                                    }
-                                                    }
-                                                />}
-                                                suffix={<Icon icon="zi-chevron-right"/>}
-                                            />
+                                                    }}
+                                                />
+                                            </List.Item>
 
                                         </List>
                                         {/*<ArrowObject icon={<HiMap className="mr-2 h-5 w-5 "/>}*/}
@@ -624,8 +621,8 @@ const UserCart = () => {
                                             setOpenPaymentMethodSheet(true)
                                         }}
                                         prefix={<img className="w-9 h-9"
-                                                     src={getImageSource(selectedPaymentMethod.code as string) }/>}
-                                        title={(selectedPaymentMethod && selectedPaymentMethod?.id) ? selectedPaymentMethod.title : ``}
+                                                     src={getImageSource(selectedPaymentMethod?.code as string) }/>}
+                                        title={(selectedPaymentMethod && selectedPaymentMethod?.id) ? selectedPaymentMethod?.title : ``}
                                         suffix={<Icon icon="zi-chevron-right"/>}
                                         subTitle={
                                             <p

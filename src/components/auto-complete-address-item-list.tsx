@@ -22,6 +22,7 @@ const AddressSearchItemList = () => {
     const [searchList, setSearchList] = useState([]);
     const [loading, setLoading] = useState(false);
     const vietmapApi = new VietmapApi({ apiKey: VIET_MAP_KEY })
+
     useEffect(() => {
         setLoading(true)
         setSearchList([])
@@ -34,12 +35,13 @@ const AddressSearchItemList = () => {
         }, 1500)
         return () => clearTimeout(getData)
     }, [searchString])
+
     return (<div className={' relative'}><div className={'rounded-lg border border-slate-200 mx-4 '}>
         <Input.Search
             label=""
             helperText=""
             placeholder="Tìm địa chỉ..."
-            className="w-full border-0 m-0"
+            className="w-full  border-0 m-0"
             size={'medium'}
             onChange={(event) => setSearchString(event.target.value)}
         />
@@ -50,10 +52,7 @@ const AddressSearchItemList = () => {
                 // console.log("me nos",v);
                 return <Button
                 onClick={async () => {
-
-
                     const placeResponse = await vietmapApi.place({refId: v.ref_id, apikey: VIET_MAP_KEY})
-
                     setUserEditingAddress(old=>({
                         ...old,
                         address: v.display,

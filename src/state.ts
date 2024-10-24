@@ -130,6 +130,11 @@ export const openAddressPickerState = atom<boolean>({
   default: false,
 });
 
+export const isMappingState = atom<boolean>({
+  key: "isMapping",
+  default: false,
+});
+
 export const branchValState = atom<number>({
   key: "branchVal",
   default: 0,

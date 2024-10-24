@@ -26,6 +26,7 @@ import NewsPage from "../pages/news";
 import CheckoutNav from "./checkoutnav";
 import ProductsPicker from "./products-picker";
 import StoresPicker from "./stores-picker";
+import AddressPicker  from "./address-picker";
 import UserAddresses from "../pages/user/addresses";
 import UserEditAddress from "../pages/user/userEditAddress";
 import CouponsPicker from "./coupon-picker";
@@ -33,7 +34,12 @@ import PaymentsPicker from "./payment-method-picker";
 import {ErrorBoundary} from "react-error-boundary";
 import {follow} from '../services/zalo'
 const MyApp = () => {
- 
+
+
+
+
+
+
   useEffect(() => {
     follow();
   },[])
@@ -125,6 +131,7 @@ const MyApp = () => {
                 <CheckoutNav/>
                 <ProductsPicker/>
                 <ProductPicker />
+                <AddressPicker/>
 
                 <StoresPicker />
                 <CouponsPicker />

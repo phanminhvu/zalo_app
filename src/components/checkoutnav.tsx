@@ -1,4 +1,4 @@
-import { Button, Text, useNavigate } from "zmp-ui";
+import {Box, Button, Text, useNavigate} from "zmp-ui";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
     cartState,
@@ -27,6 +27,8 @@ const CheckoutNav = () => {
     const [cart, setCart] = useRecoilState<CartData>(
         cartState
     );
+
+    console.log('cart', cart)
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useRecoilState<PaymentMethod>(
         selectedPaymentMethodState
     );
@@ -65,18 +67,16 @@ const CheckoutNav = () => {
     //const location = useLocation();
     //console.log(location.pathname)
     return (cart && cart?.cartItems && cart?.cartItems?.length > 0 && showTotalCart) ? (<div className={`w-full fixed ${showBottomBar ? `bottom-[55px]` : `bottom-0`} left-0 shadow-btn-fixed`}>
-        <div className="flex bg-white p-4 items-start">
-            <div className={` bg-white flex-1`}>
-                <div className="justify-between ">
-                    <Text size="xxxSmall" >Tổng tiền</Text>
-                    <Text size="xLarge" className={`font-semibold`}>{`${convertPrice(Number(cart?.totalCart || 0))} đ`}</Text>
-                </div>
-            </div>
+        <div className="flex bg-white p-4 items-start justify-between">
+            <Box  className="w-1/2">
+                    <Text size="xxxSmall"  className={'w-full'} >{cart.cartItems.length} Món ăn</Text>
+                    <Text size="xLarge" className={`font-semibold`}>{`${convertPrice(Number(cart?.totalCart || 0) + (cart?.deliveryFee || 0))} đ`}</Text>
+            </Box>
             <Button
+                className="w-full "
                 variant={((shippingAddress && shippingAddress.id > 0 || shippingDate) && branchVal && selectedPaymentMethod && selectedPaymentMethod.id > 0) ? `primary` : `secondary`}
                 size="large"
                 onClick={async () => {
-                    
                     if ((shippingAddress && shippingAddress.id > 0 || shippingDate) && branchVal && selectedPaymentMethod && selectedPaymentMethod?.id > 0) {
                         const lineItems = cart?.cartItems.map((cartItem, cartIndex) => {
                             const price = cartItem?.sale_price > 0 ? cartItem?.sale_price : cartItem?.price;
@@ -120,14 +120,13 @@ const CheckoutNav = () => {
                             branch_type: branchType,
                             line_items: lineItems
                         };
-
                         saveOrderToCache(newOrder);
-
                         setUserOrders(old => {
                             let orders = (old && old?.length > 0) ? [...old] : [];
                             orders.push(newOrder as Order)
                             return orders;
                         });
+
                         // setErrMsg(oldMsg => {
                         //     return {
                         //         ...oldMsg,
@@ -142,8 +141,8 @@ const CheckoutNav = () => {
                         //     isFetching: false
                         // })
                         // setBranchVal(0); setBranchType(0); setShippingAddress(null); setShippingDate(null); setSelectedCoupon(null); setSelectedPaymentMethod(null);
-
                         //tạo đơn hàng
+
                         const item = lineItems.map((i) => (
                             {
                                 id: i.id,
@@ -179,7 +178,7 @@ const CheckoutNav = () => {
                                     ...orderData,
                                     success: async (data) => {
                                         const { orderId } = data;
-                                        console.log('Thành công: ' , data)
+
                                         resolve(orderId)
                                         resetCartCache();
                                         setCart({
@@ -189,7 +188,6 @@ const CheckoutNav = () => {
                                             isFetching: false
                                         })
                                         setBranchVal(0); setBranchType(0); setShippingAddress(null); setShippingDate(null); setSelectedCoupon(null); setSelectedPaymentMethod(null);
-
                                         navigate(`/my-orders`);
                                     },
                                     fail: (e) => {
@@ -198,13 +196,10 @@ const CheckoutNav = () => {
                                     }
                                 })
                             })
-
                         } else {
                             console.log('Không thể tạo MAC')
                         }
                         //
-
-
                     } else {
                         navigate(`/cart`);
                     }

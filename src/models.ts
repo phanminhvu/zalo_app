@@ -29,6 +29,7 @@ export type CartData = {
   totalCart: number;
   totalCheckout: number;
   isFetching?: boolean;
+  deliveryFee?: number;
 };
 export type Category = {
   id: number;

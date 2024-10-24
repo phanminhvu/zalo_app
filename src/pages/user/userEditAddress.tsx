@@ -1,12 +1,18 @@
 import React, {useEffect} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {useSetHeader} from "../../hooks";
-import {branchPointState, pageGlobalState, userAddressesState, userEditingAddressState} from "../../state";
+import {
+    branchPointState,
+    isMappingState,
+    pageGlobalState,
+    userAddressesState,
+    userEditingAddressState
+} from "../../state";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {Address, AuthData} from "../../models";
 import {Box, Button, Icon, Input, Switch, Text} from "zmp-ui";
 import Container from "../../components/layout/Container";
-import {resetAddress, saveAddress} from "../../services/storage";
+import {loadAddresses, resetAddress, saveAddress} from "../../services/storage";
 import AddressSearchItemList from "../../components/auto-complete-address-item-list";
 import {HiLocationMarker} from 'react-icons/hi';
 import {addressAutoState, shippingAddressState} from "../../states/cart";
@@ -17,7 +23,7 @@ const UserEditAddress = () => {
     const navigate = useNavigate();
     const setErrMsg = useSetRecoilState(pageGlobalState);
     let {from} = useParams();
-    const [addressAuto, setAddressAuto] = useRecoilState<string>(
+    const [addressAuto, setAddressAuto] = useRecoilState<boolean>(
         addressAutoState
     );
     const [userAddresses, setUserAddresses] = useRecoilState<Address[]>(
@@ -26,7 +32,9 @@ const UserEditAddress = () => {
     const [userEditingAddress, setUserEditingAddress] = useRecoilState<Address>(
         userEditingAddressState
     );
-
+    const [isMapping, setIsMapping] = useRecoilState<boolean>(
+        isMappingState
+    );
 
     useEffect(() => {
         setHeader({
@@ -50,7 +58,7 @@ const UserEditAddress = () => {
         }
     }, [userEditingAddress])
     useEffect(() => {
-        console.log("userEditingAddress aa ", userEditingAddress)
+
         if (!addressAuto && userEditingAddress?.name === "" && userEditingAddress?.phone === "") {
             setUserEditingAddress({
                 ...userEditingAddress,
@@ -140,21 +148,23 @@ const UserEditAddress = () => {
                 </div>
 
             </Box>}
-            {(!addressAuto && userEditingAddress?.id && userEditingAddress?.address) && <Button variant={`tertiary`}
+            {(!addressAuto && userEditingAddress?.id && userEditingAddress?.address) ? <Button variant={`tertiary`}
                                                                                                 className={'border-l-0 border-b-0 ml-auto mr-auto block mt-6 px-0 py-2 text-sm  text-rose-600'}
                                                                                                 onClick={() => {
                                                                                                     setUserAddresses(old => {
                                                                                                         return old.filter(oAddress => oAddress.id !== userEditingAddress.id);
                                                                                                     });
-                                                                                                    resetAddress(userAddresses.filter(oAddress => oAddress.id !== address.id));
+                                                                                                    resetAddress(userAddresses.filter(oAddress => oAddress.id !== userEditingAddress.id));
                                                                                                     navigate(`/my-addresses/${from}`);
                                                                                                 }}>
-                                                                                                    <Icon icon="zi-delete"/>Xóa địa chỉ</Button>}
+                <Icon icon="zi-delete"/>Xóa địa chỉ</Button> : ""}
             {(!addressAuto && userEditingAddress?.address) && <Button
                 className={`h-10 w-10/12 border-l-0 border-b-0 rounded-full ml-auto mr-auto block mt-6 px-0 py-2`}
                 onClick={async () => {
                     const selectedAddress = await saveAddress(userEditingAddress)
-                    if (from === 'cart') {
+                    const cachedUserAddresses = await loadAddresses();
+                    setUserAddresses(cachedUserAddresses);
+                    if (isMapping) {
                         setShippingAddress(selectedAddress);
                         navigate(`/cart`);
                     } else {

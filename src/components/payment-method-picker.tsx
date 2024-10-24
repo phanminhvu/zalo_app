@@ -1,7 +1,7 @@
 import { useSetRecoilState, useRecoilState, useRecoilValue } from "recoil";
 import {pageGlobalState, openCouponPickerState, openPaymentMethodPickerState} from "../state";
 import React, { useRef } from "react";
-import {Box, Text, Sheet, List, Icon, Avatar} from "zmp-ui";
+import {Box, Text, Sheet, List, Icon, Avatar, Radio} from "zmp-ui";
 import {  PaymentMethod } from "../models";
 import cod from './buy.png';
 import bank from './bank.png'
@@ -26,7 +26,7 @@ const PaymentsPicker = () => {
             case 'COD':
                 source = cod
                 break;
-            case 'Bank':
+            case 'BANK':
                 source = bank
                 break;
         }
@@ -41,10 +41,8 @@ const PaymentsPicker = () => {
                     visible={openSheet}
                     swipeToClose
                     maskClosable
-
                     onClose={() => setOpenSheet(false)}
                     afterClose={() => {
-
                     }}
                     ref={sheet}
                     autoHeight
@@ -52,44 +50,44 @@ const PaymentsPicker = () => {
 
                 >
                     <div className='w-full bg-blue-100 '>
-                        <Text className={'text-center pl-4 pr-4 pt-3 pb-3'}>Vui lòng chọn hình thức thanh toán phù hợp cho đơn hàng của bạn</Text>
+                        <Text className={'text-center pl-4 pr-4 pt-3 pb-3'}>Vui lòng chọn hình thức thanh toán phù hợp
+                            cho đơn hàng của bạn</Text>
                     </div>
 
+                    <div className="overflow-y-auto max-h-full">
+                        {paymentMethods?.filter(c => c.enabled === true)?.length > 0 && <List
 
-                    {paymentMethods?.filter(c=>c.enabled === true)?.length > 0 && <List
+                        >{/*zi-check-circle*/}
+                            <Item
+                                title={<Text bold size={'xLarge'}>{`Phương thức thanh toán`}</Text>}
+                            />
+                            {paymentMethods.filter(c => c.enabled === true).map((method, index) => {
+                                return (<Item key={`method${index}`} title={
+                                        <div className="flex items-center ">
 
-                    >{/*zi-check-circle*/}
-                        <Item
-                            title={<Text bold size={'xLarge'} >{`Phương thức thanh toán`}</Text>}
-                        />
-                        {paymentMethods.filter(c=>c.enabled === true).map((method,index) => {
-                            return (<Item key={`method${index}`}  title={
-                                <div className="flex items-center ">
-                                    {(selectedPaymentMethod && selectedPaymentMethod?.id === method?.id) ?
-                                        <img className="w-5 h-5 flex" src={check}/>
-                                        :
-                                        <img className="w-5 h-5 flex" src={checkBox}/>
+                                            <Radio size={'small'}
+                                                   checked={selectedPaymentMethod && selectedPaymentMethod?.id === method?.id}/>
 
+                                            <img className="w-10 h-10 ml-5" src={getImageSource(method.code)}/>
+                                            <Text className={'ml-5'}>
+                                                {method.title}
+                                            </Text>
+                                        </div>
                                     }
-                                    <img className="w-10 h-10 ml-5" src={getImageSource(method.code)}/>
-                                    <Text className={'ml-5'}>
-                                        {method.title}
-                                    </Text>
-                                </div>
-                            }
-                                          onClick={() => {
-                                              setSelectedPaymentMethod(method);
-                                              setOpenSheet(false)
-                            }}
+                                              onClick={() => {
+                                                  setSelectedPaymentMethod(method);
+                                                  setOpenSheet(false)
+                                              }}
 
 
-                                />
+                                    />
 
-                            )
-                        })}
-                    </List>}
+                                )
+                            })}
+                        </List>}
+                    </div>
                 </Sheet>
-            )}</>);
+                )}</>);
 }
 export default PaymentsPicker;
 

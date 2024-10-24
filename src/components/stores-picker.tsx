@@ -1,4 +1,4 @@
-import { useSetRecoilState, useRecoilState, useRecoilValue } from "recoil";
+import {useSetRecoilState, useRecoilState, useRecoilValue} from "recoil";
 import {
     pageGlobalState,
     openStoresPickerState,
@@ -7,12 +7,13 @@ import {
     branchPointState,
     branchLatState, branchLngState
 } from "../state";
-import React, { useRef } from "react";
-import { branchsState} from "../states/home";
-import {Box, Text,Sheet, List, Icon} from "zmp-ui";
+import React, {useRef} from "react";
+import {branchsState} from "../states/home";
+import {Box, Text, Sheet, List, Icon, Radio} from "zmp-ui";
 import CardProductVertical from "./custom-card/product-vertical";
-import { Branch } from "../models";
-const { Item } = List;
+import {Branch} from "../models";
+
+const {Item} = List;
 const StoresPicker = () => {
     const setErrMsg = useSetRecoilState(pageGlobalState)
     const [openSheet, setOpenSheet] = useRecoilState<boolean>(
@@ -44,26 +45,35 @@ const StoresPicker = () => {
                     visible={openSheet}
                     swipeToClose
                     maskClosable
-
                     onClose={() => setOpenSheet(false)}
-                    afterClose={() => {
 
-                    }}
                     ref={sheet}
                     autoHeight
-                    title=""
-                    
+                    title="Vị trí cửa hàng"
+
                 >
-                    <List>{/*zi-check-circle*/}
-                        {branchs && branchs.map((branch) => (
-                            <Item key={branch.id} title={branch.name} onClick={()=> {
-                                setBranchLat(branch.lat);
-                                setBranchLng(branch.lng);
-                                setBranchVal(branch.id);
-                                setOpenSheet(false)
-                            }} subTitle={branch.address} prefix={(branchVal === branch.id) ? <Icon icon="zi-check-circle" /> : <Icon icon="zi-info-circle" />}/>
-                        ))}
-                    </List>
+                    <div className='w-full mt-3 bg-blue-100 '>
+                        <Text className={'text-center pl-4 pr-4 pt-3 pb-3'}>Vui lòng chọn vị trí cửa hàng phù hợp
+                            cho đơn hàng của bạn</Text>
+                    </div>
+                    <div className="overflow-y-auto max-h-full">
+                        <List>{/*zi-check-circle*/}
+                            {branchs && branchs.map((branch) => (
+                                <Item key={branch.id} title={branch.name} onClick={() => {
+                                    setBranchLat(branch.lat);
+                                    setBranchLng(branch.lng);
+                                    setBranchVal(branch.id);
+                                    setOpenSheet(false)
+                                }}
+                                      subTitle={branch.address}
+                                      prefix={<Radio size={'small'}
+                                                     className={'mt-3'}
+                                                     checked={branchVal === branch.id}/>
+                                      }
+                                />
+                            ))}
+                        </List>
+                    </div>
                 </Sheet>
             )}</>);
 }

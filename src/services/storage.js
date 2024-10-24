@@ -69,6 +69,7 @@ export const saveAddress = async address => {
     data: { addresses },
     fail: (error) => console.log('Failed to save new address to storage. Details: ', error)
   })
+
   return {
     ...address,
     id: newId
