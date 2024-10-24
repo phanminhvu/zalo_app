@@ -34,6 +34,8 @@ const typeColor = {
   },
 };
 
+console.log('alo')
+
 const Header = () => {
   const { route, hasLeftIcon, rightIcon, title, customTitle, type , showAvatar, showSearch,onSearchChange,showCart,
     onSearchButtonClick} =
@@ -65,7 +67,7 @@ const Header = () => {
               <Text bold className={`${showSearch ? 'mt-10' : ''}`} size={'xLarge'} >
                 {hasLeftIcon && (
 
-                    <Icon icon="zi-chevron-left-header" onClick={() => (route ? navigate(route) : navigate(-1))} className={iconColor} size={size}/>
+                    <Icon icon="zi-home" onClick={() =>  navigate('/')} className={iconColor} size={size}/>
                 )}
                 <span  className='ml-4'>
                   {customTitle ? customTitle : title}

@@ -41,6 +41,7 @@ const UserCart = () => {
     const cart = useRecoilValue(cartState);
     const [distance, setDistance] = useState<number | null>(null);
     const [deliveryFee, setDeliveryFee] = useState<number | null>(null);
+    console.log('distance', distance)
     useEffect(() => {
         if (distance && distance > 0) {
             setDeliveryFee(phiGiaohang(distance / 1000));
@@ -60,9 +61,12 @@ const UserCart = () => {
     const products = useRecoilValue<Product[]>(homeProductsState);
     const setOpenProductsSheet = useSetRecoilState(openProductsPickerState);
 
+    console.log(cod, bank)
+
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useRecoilState<PaymentMethod>(
         selectedPaymentMethodState
     );
+
     const [shippingAddress, setShippingAddress] = useRecoilState<Address>(
         shippingAddressState
     );
@@ -107,7 +111,6 @@ const UserCart = () => {
         //     setDeliveryFee(phiGiaohang(distance /1000));
         // }
     }
-    console.log('branchType', branchType)
 
     useEffect(() => {
         if ( branchType === 1 && branchLat && branchLng && shippingAddress && shippingAddress?.lat && shippingAddress?.lng && branchLat > 0 && branchLng > 0 && currenTab == "giao_hang_tan_noi") {
@@ -620,8 +623,8 @@ const UserCart = () => {
                                             //setSelectedPaymentMe`thod(true)
                                             setOpenPaymentMethodSheet(true)
                                         }}
-                                        prefix={<img className="w-10 h-10"
-                                                     src={getImageSource(selectedPaymentMethod.code)}/>}
+                                        prefix={<img className="w-9 h-9"
+                                                     src={getImageSource(selectedPaymentMethod.code as string) }/>}
                                         title={(selectedPaymentMethod && selectedPaymentMethod?.id) ? selectedPaymentMethod.title : ``}
                                         suffix={<Icon icon="zi-chevron-right"/>}
                                         subTitle={
