@@ -91,7 +91,7 @@ const UserEditAddress = () => {
 
             {(!addressAuto && userEditingAddress?.address) && <Box className={"bg-white p-4 mt-4"}>
                 <div className={" mt-4"}>
-                    <Text className={`Tên người nhận`}></Text>
+                    <Text>Tên người nhận *</Text>
                     <Input
                         type="text"
                         size={"medium"}
@@ -107,7 +107,7 @@ const UserEditAddress = () => {
                     />
                 </div>
                 <div className={" mt-4"}>
-                    <Text className={`Số điện thoại`}></Text>
+                    <Text >Số điện thoại *</Text>
                     <Input
                         type="number"
                         size={"medium"}
@@ -123,7 +123,7 @@ const UserEditAddress = () => {
                     />
                 </div>
                 <div className={" mt-4"}>
-                    <Text className={`Ghi chú khác`}></Text>
+                    <Text>Ghi chú khác</Text>
                     <Input
                         type="text"
                         size={"medium"}

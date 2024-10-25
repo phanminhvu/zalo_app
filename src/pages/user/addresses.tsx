@@ -62,10 +62,6 @@ const UserAddresses: React.FunctionComponent = () =>{
                                   setUserEditingAddress(address);
                                   navigate('/edit-address/${from}');
 
-                    // if(from && from === 'cart'){
-                    //     setShippingAddress(address);
-                    //     navigate('/cart');
-                    // }
                 }}
                 suffix={<Button variant={`tertiary`} className={"p-0 min-w-0 h-8 w-8 leading-0 rounded-full zui-container-background-color mt-5" } onClick={()=>{
                     setUserEditingAddress(address);

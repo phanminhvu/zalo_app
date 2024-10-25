@@ -6,6 +6,7 @@ import {headerState, isMappingState} from "../state";
 import {HiShoppingCart, HiSearch} from "react-icons/hi";
 import {AuthData} from "../models";
 import {authState} from "../states/auth";
+import {addressAutoState} from "../states/cart";
 
 const typeColor = {
     primary: {
@@ -50,6 +51,10 @@ const Header = () => {
       isMappingState
   );
 
+
+    const [addressAuto, setAddressAuto] = useRecoilState<boolean>(
+        addressAutoState
+    );
     return (
         <div
             className={cx(
@@ -74,6 +79,7 @@ const Header = () => {
                                 <Icon icon="zi-home" style={{marginBottom: "4px"}}
                                       onClick={() => {
                                         setIsMapping(false);
+                                          setAddressAuto(false);
                                         navigate('/')
                                       }}
                                       className={iconColor} size={25}/>
