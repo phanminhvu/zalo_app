@@ -59,7 +59,7 @@ const Header = () => {
     );
 
 
-    const editAddress = customTitle ===  "Tin Tức" || customTitle ===   "Giỏ hàng" || customTitle ===   "Trang cá nhân"  || customTitle ===   "Tìm kiếm" || customTitle ===   "Danh mục"
+    const editAddress = customTitle ===  "Tin tức" || customTitle ===   "Giỏ hàng" || customTitle ===   "Trang cá nhân"  || customTitle ===   "Tìm kiếm" || customTitle ===   "Danh mục"
 
 
 
