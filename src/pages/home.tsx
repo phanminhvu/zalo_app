@@ -89,6 +89,7 @@ const HomeMain: React.FunctionComponent = () =>{
                         email:"4855948733451676664@zalo.vn",
                         id:26,
                         name:"Ctygram",
+                        sex: 0,
                         phone:"",
                         picture:"https://s120-ava-talk.zadn.vn/5/d/5/6/5/120/7fd4d3350d3b52b18958e939d974a026.jpg",
                         zalo_data: {
