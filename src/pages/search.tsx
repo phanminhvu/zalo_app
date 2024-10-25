@@ -75,10 +75,10 @@ const SearchPage: React.FunctionComponent = () => {
                               alt={product.name}
                               style={{width: "95px", maxWidth: "95px", height: "95px"}}
                               className="aspect-auto relative rounded-lg"/>,
-                          brackets: (product.on_sale == 1 && product.sale_price > 0) ?
-                              <del className="text-xs text-gray-600 font-lato">
-                                  {convertPrice(product.price || 0)}đ
-                              </del> : false,
+                          // brackets: (product.on_sale == 1 && product.sale_price > 0) ?
+                          //     <del className="text-xs text-gray-600 font-lato">
+                          //         {convertPrice(product.price || 0)}đ
+                          //     </del> : false,
                           subTitle: (parseFloat(product.sale_price) > 0 || (parseFloat(product.price) > 0)) && (
                               <div className="flex items-center">
                                   <p className="text-xs text-[#1677ff] cursor-auto font-lato font-[570]">
