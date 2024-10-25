@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import useSetHeader from "../../hooks/useSetHeader";
-import {Box, Picker, Tabs, Text, useNavigate, Page, List, Icon, Button} from "zmp-ui";
+import {Box, Picker, Tabs, Text, useNavigate, Page, List, Icon, Button, Input} from "zmp-ui";
 import {HiLocationMarker, HiMap, HiOutlineArrowRight, HiOutlineClock} from 'react-icons/hi';
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {
@@ -321,7 +321,7 @@ const UserCart = () => {
                             }
                             <Text size={`xSmall`}
                                   style={{float: 'right'}}
-                                  className={`zaui-link-text-color  rounded-3xl pt-1 pb-1 pl-3 pr-3 bg-blue-200 font-semibold`}
+                                  className={`zaui-link-text-color bg-[#088c4c] text-white rounded-3xl pt-1 pb-1 pl-3 pr-3 bg-blue-200 font-semibold`}
                                   onClick={() => {
                                       setOpenProductsSheet(true);
                                   }}>Thêm +</Text></div>
@@ -420,10 +420,10 @@ const UserCart = () => {
                                                     setOpenStoreSheet(true);
                                                 }}
                                                 prefix={<HiMap className="h-5 w-5 "/>}
-                                                title="Vị trí cửa hàng"
+                                                title={<Text bold className={'text-blue-500'}>Vị trí cửa hàng</Text>}
                                                 suffix={<Icon icon="zi-chevron-right"/>}
-                                                subTitle={(branchVal > 0 && branchType == 1) ? branchs.find(bit => (bit.id === branchVal))?.name : ``}
-                                            >{(branchVal > 0 && branchType == 1) ? branchs.find(bit => (bit.id === branchVal))?.address : ``}</List.Item>
+                                                subTitle={(branchVal > 0 && branchType == 1) ? branchs.find(bit => (bit.id === branchVal))?.name : `Vui lòng chọn cửa hàng`}
+                                            >{(branchVal > 0 && branchType == 1) ? branchs.find(bit => (bit.id === branchVal))?.address : ""}</List.Item>
 
 
                                             <List.Item
@@ -432,9 +432,9 @@ const UserCart = () => {
                                                     setOpenAddressSheet(true);
                                                 }}
                                                 prefix={<HiLocationMarker className="h-5 w-5 "/>}
-                                                title="Địa chỉ"
+                                                title={<Text bold className={'text-blue-500'}>Địa chỉ</Text>}
                                                 suffix={<Icon icon="zi-chevron-right"/>}
-                                                subTitle={(shippingAddress && shippingAddress?.id) ? shippingAddress.name + `  ${shippingAddress.phone ? `- ${shippingAddress.phone}` : ''}` : ``}
+                                                subTitle={(shippingAddress && shippingAddress?.id) ? shippingAddress.name + `  ${shippingAddress.phone ? `- ${shippingAddress.phone}` : ''}` : `Vui lòng chọn địa chỉ`}
                                             >{(shippingAddress && shippingAddress?.id) ? shippingAddress.address : ``}</List.Item>
 
                                         </List>
@@ -448,7 +448,8 @@ const UserCart = () => {
                                                     setOpenStoreSheet(true);
                                                 }}
                                                 prefix={<HiMap className="h-5 w-5 "/>}
-                                                title="Vị trí cửa hàng"
+                                                title={<Text bold className={'text-blue-500'}>Vị trí cửa hàng</Text>}
+
                                                 suffix={<Icon icon="zi-chevron-right"/>}
                                                 subTitle={(branchVal > 0 && branchType == 2) ? branchs.find(bit => (bit.id === branchVal))?.name : ``}
                                             >{(branchVal > 0 && branchType == 2) ? branchs.find(bit => (bit.id === branchVal))?.address : ``}</List.Item>
@@ -457,12 +458,13 @@ const UserCart = () => {
                                             <List.Item  >
                                                 <Picker
                                                     placeholder="Chọn thời gian"
+
                                                     mask
                                                     title="Thời gian nhận hàng"
                                                     maskClosable
                                                     prefix={<HiOutlineClock className="mr-4 h-5 w-5"/>}
                                                     suffix={ <Icon icon="zi-chevron-right"/>}
-                                                    inputClass="border-none w-full flex bg-transparent text-base text-black font-medium text-md m-0 p-0 h-auto"
+                                                    inputClass="border-none w-full flex bg-transparent  text-base text-black font-medium text-md m-0 p-0 h-auto"
                                                     formatPickedValueDisplay={(test) =>
                                                         test && test?.hour && test?.minute && test?.date
                                                             ? `${test?.hour?.displayName} : ${test?.minute?.displayName} - ${test?.date?.displayName}`
@@ -594,6 +596,19 @@ const UserCart = () => {
                                         prefix={<Icon icon="zi-star"/>}
                                         title={'Chọn mã khuyến mãi'}
                                         suffix={<Icon icon="zi-chevron-right"/>}
+                                        subTitle=  {(selectedCoupon && selectedCoupon?.code) ? (parseInt(selectedCoupon?.discount_type || '0') !== 1 ? `${convertPrice(Number(selectedCoupon?.amount || 0))} đ` : `${convertPrice(Number(selectedCoupon?.amount || 0) * cart?.totalCart / 100)} đ`) : ''}
+
+                                    />
+
+                                    <List.Item
+
+                                        prefix={<Icon icon="zi-note"/>}
+                                        title={<Input
+
+                                            size={"small"}
+                                            className={'border-none pb-3'}
+                                        placeholder="Nhập ghi chú..."
+                                        />}
                                         subTitle=  {(selectedCoupon && selectedCoupon?.code) ? (parseInt(selectedCoupon?.discount_type || '0') !== 1 ? `${convertPrice(Number(selectedCoupon?.amount || 0))} đ` : `${convertPrice(Number(selectedCoupon?.amount || 0) * cart?.totalCart / 100)} đ`) : ''}
 
                                     />

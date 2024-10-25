@@ -2,7 +2,7 @@ import {useSetRecoilState, useRecoilState, useRecoilValue} from "recoil";
 import {pageGlobalState, openCouponPickerState} from "../state";
 import React, {useRef} from "react";
 import {couponsState} from "../states/home";
-import {Box, Text, Sheet, List, Icon, Radio} from "zmp-ui";
+import {Box, Text, Sheet, List, Icon, Radio, Input, Button} from "zmp-ui";
 import {Coupon} from "../models";
 import {selectedCouponState} from "../states/cart";
 import checkBox from './checkbox.png'
@@ -33,7 +33,13 @@ const CouponsPicker = () => {
                     }}
                     ref={sheet}
                     autoHeight
-                    title=""
+                    title={<div className={'m-4'}>  <Input
+                        suffix={<Button
+                            style={{ borderRadius:"8px" }}
+                            className={'border-none border'}>Áp dụng</Button>}
+                        placeholder={"Nhập mã khuyến mãi"}  visibilityToggle />
+
+                </div> }
                 >
                     <div className="overflow-y-auto max-h-full">
                         {coupons?.filter(c => c.status === 1)?.length > 0 && <List>{/*zi-check-circle*/}

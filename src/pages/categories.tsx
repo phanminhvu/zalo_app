@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Container from "../components/layout/Container";
 import {useRecoilValue} from "recoil";
-import {Input, useNavigate} from "zmp-ui";
+import {Input, Text, useNavigate} from "zmp-ui";
 import {Category, Product} from "../models";
 import {homeCategoriesState, homeProductsState} from "../states/home";
 import useSetHeader from "../hooks/useSetHeader";
@@ -86,8 +86,10 @@ const CategoriesPage = () => {
                 onChange={onSearchChange}
             />
         </div>
-        {((products?.length < 1 )) && <EmptyBox title={`Chưa có sản phẩm nào`} content={``}/>}
-
+        {/*{((products?.length < 1 )) && <EmptyBox title={`Chưa có sản phẩm nào`} content={``}/>}*/}
+        {products?.length === 0 && <div className="flex mt-4 w-full justify-center">
+            <Text>Không tìm thấy kết quả. Vui lòng thử lại</Text>
+        </div>}
         <section className="w-fit mx-auto grid grid-cols-2 gap-3 mt-10 mb-5">
             {(products && products.length > 0) && products.map((product) => (
                 <CardProductVertical product={product} key={product.id} grid/>

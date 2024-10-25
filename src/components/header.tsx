@@ -55,6 +55,12 @@ const Header = () => {
     const [addressAuto, setAddressAuto] = useRecoilState<boolean>(
         addressAutoState
     );
+
+
+
+
+    const editAddress = customTitle === "Sửa địa chỉ" || customTitle === "Tìm địa chỉ" || customTitle === "Thêm địa chỉ mới";
+    console.log('editAddress', editAddress);
     return (
         <div
             className={cx(
@@ -75,7 +81,18 @@ const Header = () => {
                     {!showAvatar &&
                         <Text bold className={`${showSearch ? 'mt-10' : ''}`} size={'xLarge'}>
                             {hasLeftIcon && (
+                                editAddress ? <Icon icon="zi-chevron-left" style={{marginBottom: "4px"}} onClick={() => {
 
+                                    setAddressAuto(false);
+                                   if (isMapping) {
+                                       setIsMapping(false)
+                                       navigate('/cart')
+                                   }else {
+                                       setIsMapping(false)
+                                       navigate('/my-addresses/profile')
+                                   }
+                                }
+                                } className={iconColor} size={25}/> :
                                 <Icon icon="zi-home" style={{marginBottom: "4px"}}
                                       onClick={() => {
                                         setIsMapping(false);

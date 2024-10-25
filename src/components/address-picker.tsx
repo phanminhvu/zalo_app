@@ -59,6 +59,7 @@ const AddressesPicker: React.FunctionComponent = () => {
     const {Item} = List;
     return (userAddresses &&
         <Sheet
+            className={'bg-white'}
             mask
             visible={openSheet}
             height={"90%"}
@@ -69,11 +70,11 @@ const AddressesPicker: React.FunctionComponent = () => {
             autoHeight
         >
             <div
-                className="p-0 zui-container-background-color overflow-y-auto max-h-full"
+                className="p-0 bg-white overflow-y-auto max-h-full"
                 style={{marginBottom: "0px"}}
 
             >
-                    {<List className=" zui-container-background-color py-4">
+                    {<List className="  py-4">
                         {userAddresses.map((address, index) => {
                             return (<Item key={`address${index}`} className={`mb-4 p-4 bg-white`} title={'Địa chỉ'}
                                           prefix={<HiOutlineLocationMarker className="mr-2 mt-6 h-5 w-5 inline-block"/>}
@@ -88,14 +89,14 @@ const AddressesPicker: React.FunctionComponent = () => {
                                                           onClick={(e) => {
                                                               e.stopPropagation()
                                                               setOpenSheet(false)
-
+                                                                setIsMapping(true);
                                                               setUserEditingAddress(address);
                                                               navigate('/edit-address/${from}');
                                                           }}><Icon icon="zi-edit-text" size={16}/></Button>}/>)
                         })}
                     </List>}
                     <Button
-                        className={`h-10  px-0 py-2 w-10/12 border-l-0 border-b-0 rounded-full w-full ml-auto mr-auto block`}
+                        className={`h-10 m-8 px-0 py-2 w-10/12 border-l-0 border-b-0 rounded-full ml-auto mr-auto block`}
                         onClick={async () => {
                             setUserEditingAddress({
                                 id: 0,
