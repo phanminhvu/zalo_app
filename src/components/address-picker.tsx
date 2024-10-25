@@ -69,32 +69,33 @@ const AddressesPicker: React.FunctionComponent = () => {
             autoHeight
         >
             <div
-                className="p-0 zui-container-background-color"
+                className="p-0 zui-container-background-color overflow-y-auto max-h-full"
                 style={{marginBottom: "0px"}}
 
             >
-                {<List className=" zui-container-background-color py-4">
-                    {userAddresses.map((address, index) => {
-                        return (<Item key={`address${index}`} className={`mb-4 p-4 bg-white`} title={'Địa chỉ'}
-                                      prefix={<HiOutlineLocationMarker className="mr-2 mt-6 h-5 w-5 inline-block"/>}
-                                      subTitle={address.address} children={<Text
-                            className={'zaui-list-item-subtitle'}>{address.name + ' ' + address.phone}</Text>}
-                                      onClick={() => {
-                                          setShippingAddress(address);
-                                          setOpenSheet(false)
-                                      }}
-                                      suffix={<Button variant={`tertiary`}
-                                                      className={"p-0 min-w-0 h-8 w-8 leading-0 rounded-full zui-container-background-color mt-5"}
-                                                      onClick={(e) => {
-                                                          e.stopPropagation()
-                                                          setOpenSheet(false)
+                    {<List className=" zui-container-background-color py-4">
+                        {userAddresses.map((address, index) => {
+                            return (<Item key={`address${index}`} className={`mb-4 p-4 bg-white`} title={'Địa chỉ'}
+                                          prefix={<HiOutlineLocationMarker className="mr-2 mt-6 h-5 w-5 inline-block"/>}
+                                          subTitle={address.address} children={<Text
+                                className={'zaui-list-item-subtitle'}>{address.name + ' ' + address.phone}</Text>}
+                                          onClick={() => {
+                                              setShippingAddress(address);
+                                              setOpenSheet(false)
+                                          }}
+                                          suffix={<Button variant={`tertiary`}
+                                                          className={"p-0 min-w-0 h-8 w-8 leading-0 rounded-full zui-container-background-color mt-5"}
+                                                          onClick={(e) => {
+                                                              e.stopPropagation()
+                                                              setOpenSheet(false)
 
-                                                          setUserEditingAddress(address);
-                                                          navigate('/edit-address/${from}');
-                                                      }}><Icon icon="zi-edit-text" size={16}/></Button>}/>)
-                    })}
-                </List>}
-                <Button className={`h-10  px-0 py-2 w-10/12 border-l-0 border-b-0 rounded-full ml-auto mr-auto block`}
+                                                              setUserEditingAddress(address);
+                                                              navigate('/edit-address/${from}');
+                                                          }}><Icon icon="zi-edit-text" size={16}/></Button>}/>)
+                        })}
+                    </List>}
+                    <Button
+                        className={`h-10  px-0 py-2 w-10/12 border-l-0 border-b-0 rounded-full w-full ml-auto mr-auto block`}
                         onClick={async () => {
                             setUserEditingAddress({
                                 id: 0,
@@ -109,9 +110,9 @@ const AddressesPicker: React.FunctionComponent = () => {
                             setOpenSheet(false)
                             navigate(`/edit-address/${from}`);
                         }}><Icon icon="zi-plus-circle" size={24}/> {`Thêm địa chỉ`}</Button>
-            </div>
+                </div>
         </Sheet>
-    );
+);
 }
 
 export default AddressesPicker;
