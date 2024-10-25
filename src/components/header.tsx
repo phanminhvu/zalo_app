@@ -2,7 +2,7 @@ import React from "react";
 import {cx} from "../utils";
 import {Avatar, Box, Icon, Input, Text, useNavigate, Button} from "zmp-ui";
 import {useRecoilState, useRecoilValue} from "recoil";
-import {headerState, isMappingState} from "../state";
+import {headerState, isFromSettingState, isMappingState} from "../state";
 import {HiShoppingCart, HiSearch} from "react-icons/hi";
 import {AuthData} from "../models";
 import {authState} from "../states/auth";
@@ -51,13 +51,16 @@ const Header = () => {
         isMappingState
     );
 
-
+    const [isFromSetting, setIsFromSetting] = useRecoilState<boolean>(
+        isFromSettingState
+    );
     const [addressAuto, setAddressAuto] = useRecoilState<boolean>(
         addressAutoState
     );
 
 
-    const editAddress = customTitle === "Sửa địa chỉ" || customTitle === "Tìm địa chỉ" || customTitle === "Thêm địa chỉ mới" || customTitle === "Quản lý địa chỉ" ;
+    const editAddress = customTitle ===  "Tin Tức" || customTitle ===   "Giỏ hàng" || customTitle ===   "Trang cá nhân"
+
 
 
 
@@ -82,15 +85,24 @@ const Header = () => {
                     {!showAvatar &&
                         <Text bold className={`${showSearch ? 'mt-10' : ''}`} size={'xLarge'}>
                             {hasLeftIcon && (
-                                editAddress ? <Icon icon="zi-chevron-left" style={{marginBottom: "4px"}} onClick={() => {
+                                editAddress ?
+                                    <Icon icon="zi-home" style={{marginBottom: "4px"}}
+                                          onClick={() => {
+                                              setIsMapping(false);
+                                              setAddressAuto(false);
+                                              navigate('/')
+                                          }}
+                                          className={iconColor} size={25}/> :
+                                    <Icon icon="zi-chevron-left" style={{marginBottom: "4px"}} onClick={() => {
 
                                         setAddressAuto(false);
                                         if (isMapping) {
                                             setIsMapping(false)
                                             navigate('/cart')
                                         }else {
-                                            if(customTitle === "Quản lý địa chỉ") {
+                                            if(isFromSetting) {
                                                 navigate('/my-profile')
+                                                setIsFromSetting(false)
                                             }
                                             else {
                                                 setIsMapping(false)
@@ -99,14 +111,8 @@ const Header = () => {
 
                                         }
                                     }
-                                    } className={iconColor} size={25}/> :
-                                    <Icon icon="zi-home" style={{marginBottom: "4px"}}
-                                          onClick={() => {
-                                              setIsMapping(false);
-                                              setAddressAuto(false);
-                                              navigate('/')
-                                          }}
-                                          className={iconColor} size={25}/>
+                                    } className={iconColor} size={25}/>
+
                             )}
                             <span className='ml-4'>
                   {customTitle ? customTitle : title}

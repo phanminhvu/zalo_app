@@ -45,7 +45,7 @@ const UserInfo = () => {
         }
 
         setHeader({
-            customTitle:  "Trang cá nhân",
+            customTitle:  "Hồ sơ của tôi",
             hasLeftIcon: true,
             type: "secondary",
             showBottomBar: false

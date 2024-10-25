@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {loadAddresses} from "../../services/storage";
-import {pageGlobalState, userAddressesState, userEditingAddressState} from "../../state";
+import {isFromSettingState, pageGlobalState, userAddressesState, userEditingAddressState} from "../../state";
 import {Button, Icon, List, Text, useNavigate} from "zmp-ui";
 import Container from "../../components/layout/Container";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
@@ -20,6 +20,9 @@ const UserAddresses: React.FunctionComponent = () =>{
     const setErrMsg = useSetRecoilState(pageGlobalState);
     const [userEditingAddress, setUserEditingAddress] = useRecoilState<Address>(
         userEditingAddressState
+    );
+    const [isFromSetting, setIsFromSetting] = useRecoilState<boolean>(
+        isFromSettingState
     );
     const setHeader = useSetHeader();
     const [shippingAddress, setShippingAddress] = useRecoilState<Address>(
@@ -66,6 +69,7 @@ const UserAddresses: React.FunctionComponent = () =>{
                 suffix={<Button variant={`tertiary`} className={"p-0 min-w-0 h-8 w-8 leading-0 rounded-full zui-container-background-color mt-5" } onClick={()=>{
                     setUserEditingAddress(address);
                     navigate('/edit-address/${from}');
+                    setIsFromSetting(false)
                 }}><Icon icon="zi-edit-text" size={16} /></Button>}/>)
             })}
         </List>}
@@ -80,6 +84,8 @@ const UserAddresses: React.FunctionComponent = () =>{
                         default: false
                     });
                     navigate(`/edit-address/${from}`);
+                         setIsFromSetting(false)
+
                 }}><Icon icon="zi-plus-circle" size={24} /> {`Thêm địa chỉ`}</Button>
 
 

@@ -2,11 +2,12 @@ import React, {useEffect,useState} from "react";
 import {Box, Icon, List, useNavigate} from "zmp-ui";
 import Container from "../../components/layout/Container";
 import {HiOutlineFlag, HiOutlineShoppingCart, HiOutlineUser} from "react-icons/hi";
-import {useRecoilValue} from "recoil";
+import {useRecoilState, useRecoilValue} from "recoil";
 import {authState} from "../../states/auth";
 import useSetHeader from "../../hooks/useSetHeader";
 import {showOAWidget} from "zmp-sdk/apis";
 import {getPhoneNumberUser} from "../../services/zalo"
+import {isFromSettingState, isMappingState} from "../../state";
 
 const { Item } = List;
 const UserProfile = () => {
@@ -14,6 +15,9 @@ const UserProfile = () => {
     const authDt = useRecoilValue(authState);
     const setHeader = useSetHeader();
     const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
+    const [isMapping, setIsMapping] = useRecoilState<boolean>(
+        isFromSettingState
+    );
     useEffect(() => {
         setHeader({
             customTitle:  "Trang cá nhân",
@@ -75,13 +79,16 @@ const UserProfile = () => {
         <Box m={4} p={0} className={"rounded-lg bg-white"}>
             <List>
                 <Item title="Thông tin tài khoản" prefix={<HiOutlineUser size={20} />} className={"text-sm m-0"} suffix={<Icon icon="zi-chevron-right" />} onClick={()=> {
-                  
+                    setIsMapping(true);
                     navigate('/user-info');
                 }} />
                 <Item title="Địa chỉ đã lưu" prefix={<HiOutlineFlag size={20} />} suffix={<Icon icon="zi-chevron-right" />} className={"text-sm m-0"}  onClick={()=> {
+                    setIsMapping(true);
                     navigate('/my-addresses/profile');
+
                 }} />
                 <Item title="Lịch sử đơn hàng" prefix={<HiOutlineShoppingCart size={20} />} suffix={<Icon icon="zi-chevron-right" />} className={"text-sm m-0"}  onClick={()=> {
+                    setIsMapping(true);
                     navigate('/my-orders');
                 }} />
             </List>
@@ -89,12 +96,15 @@ const UserProfile = () => {
         <Box m={4} p={0} className={"rounded-lg bg-white"}>
             <List>
                 <Item title="Chính sách riêng tư"  className={"text-sm m-0"} suffix={<Icon icon="zi-chevron-right" />} onClick={()=> {
+                    setIsMapping(true);
                     navigate('/detail-new/3');
                 }} />
                 <Item title="Điều khoản dịch vụ" suffix={<Icon icon="zi-chevron-right" />} className={"text-sm m-0"}  onClick={()=> {
+                    setIsMapping(true);
                     navigate('/detail-new/4');
                 }} />
                 <Item title="Hướng dẫn sử dụng" suffix={<Icon icon="zi-chevron-right" />} className={"text-sm m-0"}  onClick={()=> {
+                    setIsMapping(true);
                     navigate('/detail-new/1');
                 }} />
             </List>

@@ -135,6 +135,11 @@ export const isMappingState = atom<boolean>({
   default: false,
 });
 
+export const isFromSettingState = atom<boolean>({
+  key: "isFromSetting",
+  default: false,
+});
+
 export const branchValState = atom<number>({
   key: "branchVal",
   default: 0,
