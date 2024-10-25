@@ -16,6 +16,8 @@ const UserInfo = () => {
     const [authDt, setAuthDt] = useRecoilState<AuthData>(
         authState
     );
+
+    const [open, setOpen] = useState(false);
     const [isEdit,setIsEdit] = useState(false);
     const [editType,setEditType] = useState('');//phone, email, birthday
     const [phone,setPhone] = useState('');
