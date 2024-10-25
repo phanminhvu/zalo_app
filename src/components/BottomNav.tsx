@@ -33,7 +33,6 @@ const BottomNav = () => {
                     {(cart && cart?.cartItems && cart?.cartItems?.length > 0) && (
                         <span
                             className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center"
-                            className="absolute -top-1 -right-0 bg-red-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center"
                         >
         {cart?.cartItems?.filter(cItem => cItem.parent == 0)?.length || 0}
       </span>
