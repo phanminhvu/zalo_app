@@ -321,7 +321,8 @@ const UserCart = () => {
                             }
                             <Text size={`xSmall`}
                                   style={{float: 'right'}}
-                                  className={`zaui-link-text-color bg-green-600 text-white rounded-3xl pt-1 pb-1 pl-3 pr-3 bg-blue-200 font-semibold`}
+
+                                  className={`zaui-link-text-color bg-[#088c4c] text-white rounded-3xl pt-1 pb-1 pl-3 pr-3  font-semibold`}
                                   onClick={() => {
                                       setOpenProductsSheet(true);
                                   }}>Thêm +</Text></div>
