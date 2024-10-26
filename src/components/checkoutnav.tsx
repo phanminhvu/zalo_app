@@ -72,8 +72,9 @@ const CheckoutNav = () => {
                     <Text size="xxxSmall"  className={'w-full'} >{cart.cartItems.length} Món ăn</Text>
                     <Text size="xLarge" className={`font-semibold`}>{`${convertPrice(Number(cart?.totalCart || 0) + (cart?.deliveryFee || 0))} đ`}</Text>
             </Box>
+
             <Button
-                className="w-full "
+                className="w-full bg-[#088c4c] text-white"
                 variant={((shippingAddress && shippingAddress.id > 0 || shippingDate) && branchVal && selectedPaymentMethod && selectedPaymentMethod.id > 0) ? `primary` : `secondary`}
                 size="large"
                 onClick={async () => {

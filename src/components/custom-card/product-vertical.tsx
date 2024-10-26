@@ -57,14 +57,14 @@ const CardProductVertical = ({
                                     </p>
                                 </del>
                             )}
-                            <p className="text-xs text-[#1677ff] cursor-auto font-lato font-[570]">
+                            <p className="text-xs text-[#088c4c] cursor-auto font-lato font-[570 ] ">
                                 {convertPrice((product.on_sale == 1 && product.sale_price > 0) ? product.sale_price : product.price)}đ
                             </p>
                         </div>
                     )}
                 </div>
                 {canAdd && <div className="mr px-0 py-0 min-w-0 w-[20px] h-[20px]">
-               <Icon icon="zi-plus-circle-solid" className="text-[#00884880]" size={27}  />
+               <Icon icon="zi-plus-circle-solid" className="text-[#088c4c]" size={27}  />
                     </div>}
                 {/*{canAdd && <span className=" px-0 py-0 min-w-0 w-[20px] h-[20px]">*/}
                 {/*        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"*/}
