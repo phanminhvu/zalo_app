@@ -46,7 +46,6 @@ const StorePage = () => {
                 <InfiniteScroll
                     className="w-fit mx-auto grid grid-cols-2 gap-3 mt-10 mb-5"
                     dataLength={products ? products.length : 0}
-                    next={()=>{console.log("page are",page);setPage(oldPage => oldPage+1)}}
                     hasMore={hasNext}
                     loader={<h4>Loading...</h4>}
                 >{products && products.map((product,pIndex) => (

@@ -108,7 +108,6 @@ const HomeMain: React.FunctionComponent = () =>{
            const cachedCart = await loadCartFromCache();
             setCart(cachedCart);
             const cachedOrders = await loadOrderFromCache();
-            console.log("Me kiep order ",cachedOrders)
             setUserOrders(cachedOrders);
 
             /**/

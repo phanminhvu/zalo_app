@@ -40,14 +40,12 @@ const CategoriesPage = () => {
         setSearchString(e.target.value.split(' '));
     }
     useEffect(()=> {
-        console.log("activeCategory",activeCategory)
         let poptions;let searchPattern;
         if (searchString && searchString.length) {
             searchPattern = new RegExp(searchString.map(term => `(?=.*${removeVietnameseTones(term.toLowerCase())})`).join(''), 'i');
         }
         if(activeCategory){
             poptions = allProducts.filter(p => (p.category_id === activeCategory.id))
-            console.log("poptions",poptions)
         }
         if(poptions && poptions?.length > 0 && searchPattern){
             poptions = poptions.filter(pr =>(removeVietnameseTones(pr.name).toLowerCase().match(searchPattern)));

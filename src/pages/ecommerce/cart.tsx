@@ -116,9 +116,7 @@ const UserCart = () => {
 
     useEffect(() => {
         if(!shippingAddress || Object.keys(shippingAddress).length === 0){
-            console.log('alo')
             if(userAddresses.filter(data => data.default).length > 0){
-                console.log('userAddresses', userAddresses.filter(data => data.default)[0])
                 setShippingAddress(userAddresses.filter(data => data.default)[0])
             }
         }
@@ -165,7 +163,7 @@ const UserCart = () => {
         let dateList: string[] = [];
         let today = new Date();
         for (let i = 0; i < days; i++) {
-            if (today.getHours() < 22 || i != 0) {
+            if (today.getHours() <= 23 || i != 0) {
                 let currentDate = new Date(today);
                 currentDate.setDate(today.getDate() + i); // Tăng ngày thêm i ngày
                 dateList.push(currentDate.toISOString().split('T')[0]); // Chuyển đổi thành định dạng YYYY-MM-DD
@@ -180,7 +178,7 @@ const UserCart = () => {
         let currentHour = i == 1 ? now.getHours() : 0; // Lấy số giờ hiện tại (0-23)
         currentHour = currentHour < 9 ? 9 : currentHour;
         const data: { value: number, displayName: string }[] = [];
-        for (let i = currentHour; i < 22; i++) {
+        for (let i = currentHour; i <= 23; i++) {
             data.push({
                 value: i,
                 displayName: `${i < 10 ? `0${i}` : i}`,
@@ -215,7 +213,7 @@ const UserCart = () => {
         let listDate = generateDateListFromToday(3);
         let daysOfYear: { value: string, displayName: string }[] = [];
         let today = new Date();
-        if (today.getHours() < 22) {
+        if (today.getHours() <= 23) {
             listDate.forEach((element, i) => {
                 daysOfYear.push({
                     value: moment(element).format("DD/MM/YYYY"),
@@ -505,7 +503,6 @@ const UserCart = () => {
                                                         },
                                                     ]}
                                                     onChange={(value) => {
-                                                        console.log('on change');
                                                         if (value?.date?.value != buyDate) {
                                                             setBuyDate(value?.date?.value);
                                                             if (value.date?.displayName == "Hôm nay") {

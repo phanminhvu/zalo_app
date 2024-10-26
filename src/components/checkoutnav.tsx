@@ -28,7 +28,6 @@ const CheckoutNav = () => {
         cartState
     );
 
-    console.log('cart', cart)
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useRecoilState<PaymentMethod>(
         selectedPaymentMethodState
     );
@@ -67,14 +66,7 @@ const CheckoutNav = () => {
     */
 
     //const location = useLocation();
-    //console.log(location.pathname)
 
-
-    console.log('shippingAddress', shippingAddress)
-    console.log('shippingDate', shippingDate)
-    console.log('branchVal', branchVal)
-    console.log('branchType', branchType)
-    console.log('selectedPaymentMethod', selectedPaymentMethod)
 
 
 
@@ -100,12 +92,7 @@ const CheckoutNav = () => {
     }
 
 
-    console.log('check', check())
-
-
-
-
-    return (cart && cart?.cartItems && cart?.cartItems?.length > 0 && showTotalCart) ? (<div className={`w-full fixed ${showBottomBar ? `bottom-[55px]` : `bottom-0`} left-0 shadow-btn-fixed`}>
+    return ( !!(cart && cart?.cartItems && cart?.cartItems?.length > 0 && showTotalCart)) ? (<div className={`w-full fixed ${showBottomBar ? `bottom-[55px]` : `bottom-0`} left-0 shadow-btn-fixed`}>
         <div className="flex bg-white p-4 items-start justify-between">
             <Box  className="w-1/2">
                     <Text size="xxxSmall"  className={'w-full'} >{cart.cartItems.length} Món ăn</Text>
@@ -227,7 +214,7 @@ const CheckoutNav = () => {
                                             totalCheckout: 0,
                                             isFetching: false
                                         })
-                                        setBranchVal(0); setBranchType(0); setShippingAddress(null); setShippingDate(null); setSelectedCoupon(null); setSelectedPaymentMethod(null);
+                                        setBranchVal(0); setBranchType(0); setShippingAddress(null); setShippingDate(null); setSelectedCoupon(null);
                                         navigate(`/my-orders`);
                                     },
                                     fail: (e) => {

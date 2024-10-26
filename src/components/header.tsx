@@ -97,7 +97,6 @@ const Header = () => {
 
                                         setAddressAuto(false);
 
-                                        console.log('isFromSetting', isFromSetting)
 
                                         if (isMapping) {
                                             setIsMapping(false)

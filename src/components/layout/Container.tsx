@@ -41,7 +41,6 @@ const Container = ({children,...other})=> {
                 type={btn?.type ?? "highlight"}
                 className="mr-1"
                 onClick={ (btn?.isCLosed === true ) ? () => setErrMsg(oldErr => {
-                    console.log("OK dong");
                     return {
                         ...oldErr,
                         confirmModal: null
@@ -49,7 +48,6 @@ const Container = ({children,...other})=> {
                 }) : () => {
                     btn.action();
                     setErrMsg(oldErr => {
-                        console.log("OK dong");
                         return {
                             ...oldErr,
                             confirmModal: null
