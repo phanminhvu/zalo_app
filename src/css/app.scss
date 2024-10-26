@@ -12,6 +12,11 @@
   --zmp-button-border-radius: 8px;
   --custom-header: 56px;
 }
+
+.zaui-tabs-tabbar-active-line {
+  background-color: var(--zmp-primary-color)!important;
+}
+
 .grey-price-color{
   color: var(--zmp-cart-price-color);
 }
@@ -22,7 +27,7 @@
   background-color: var(--zmp-container-bg-color)
 }
 .zaui-link-text-color{
-  color: var(--zmp-link-text-color);
+  color: var(--zmp-primary-color);
 }
 .zaui-page {
   padding-top: var(--custom-header);

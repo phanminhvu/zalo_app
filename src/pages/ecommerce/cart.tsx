@@ -421,7 +421,7 @@ const UserCart = () => {
                                                     setOpenStoreSheet(true);
                                                 }}
                                                 prefix={<HiMap className="h-5 w-5 "/>}
-                                                title={<Text bold className={'text-blue-500'}>Vị trí cửa hàng</Text>}
+                                                title={<Text bold className={'zaui-link-text-color'}>Vị trí cửa hàng</Text>}
                                                 suffix={<Icon icon="zi-chevron-right"/>}
                                                 subTitle={(branchVal > 0 && branchType == 1) ? branchs.find(bit => (bit.id === branchVal))?.name : `Vui lòng chọn cửa hàng`}
                                             >{(branchVal > 0 && branchType == 1) ? branchs.find(bit => (bit.id === branchVal))?.address : ""}</List.Item>
@@ -433,7 +433,7 @@ const UserCart = () => {
                                                     setOpenAddressSheet(true);
                                                 }}
                                                 prefix={<HiLocationMarker className="h-5 w-5 "/>}
-                                                title={<Text bold className={'text-blue-500'}>Địa chỉ</Text>}
+                                                title={<Text bold className={'zaui-link-text-color'}>Địa chỉ</Text>}
                                                 suffix={<Icon icon="zi-chevron-right"/>}
                                                 subTitle={(shippingAddress && shippingAddress?.id) ? shippingAddress.name + `  ${shippingAddress.phone ? `- ${shippingAddress.phone}` : ''}` : `Vui lòng chọn địa chỉ`}
                                             >{(shippingAddress && shippingAddress?.id) ? shippingAddress.address : ``}</List.Item>
@@ -449,7 +449,7 @@ const UserCart = () => {
                                                     setOpenStoreSheet(true);
                                                 }}
                                                 prefix={<HiMap className="h-5 w-5 "/>}
-                                                title={<Text bold className={'text-blue-500'}>Vị trí cửa hàng</Text>}
+                                                title={<Text bold className={'zaui-link-text-color'}>Vị trí cửa hàng</Text>}
 
                                                 suffix={<Icon icon="zi-chevron-right"/>}
                                                 subTitle={(branchVal > 0 && branchType == 2) ? branchs.find(bit => (bit.id === branchVal))?.name : ``}
