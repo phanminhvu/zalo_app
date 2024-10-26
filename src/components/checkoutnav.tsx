@@ -74,7 +74,7 @@ const CheckoutNav = () => {
             </Box>
 
             <Button
-                className="w-full bg-[#088c4c] text-white"
+                className="w-full text-white"
                 variant={((shippingAddress && shippingAddress.id > 0 || shippingDate) && branchVal && selectedPaymentMethod && selectedPaymentMethod.id > 0) ? `primary` : `secondary`}
                 size="large"
                 onClick={async () => {
@@ -205,6 +205,7 @@ const CheckoutNav = () => {
                         navigate(`/cart`);
                     }
                 }}
+                disabled={!(shippingAddress && shippingAddress.id > 0 || shippingDate) || !branchVal || !selectedPaymentMethod || selectedPaymentMethod?.id <= 0}
             >
                 Mua hàng
             </Button>

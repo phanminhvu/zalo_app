@@ -17,6 +17,21 @@
   background-color: var(--zmp-primary-color)!important;
 }
 
+.zaui-btn {
+  background-color: var(--zmp-primary-color)!important;
+  .zaui-icon {
+    color: #fff;
+  }
+  .zaui-btn-text {
+    color: #fff;
+  }
+}
+
+.zaui-btn-disabled[disabled] {
+  background-color: rgba(var(--zmp-disabled-border-color), 0.089)!important;
+}
+
+
 .no-border-focus:focus {
   outline: none;
   border: none!important;

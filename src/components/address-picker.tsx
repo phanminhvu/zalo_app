@@ -111,7 +111,7 @@ const AddressesPicker: React.FunctionComponent = () => {
                             setIsMapping(true);
                             setOpenSheet(false)
                             navigate(`/edit-address/${from}`);
-                        }}><Icon icon="zi-plus-circle" size={24}/> {`Thêm địa chỉ`}</Button>
+                        }}><Icon icon="zi-plus-circle"  size={23}/> {`Thêm địa chỉ`}</Button>
                 </div>
         </Sheet>
 );

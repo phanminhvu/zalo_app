@@ -89,7 +89,7 @@ const UserAddresses: React.FunctionComponent = () =>{
                     navigate(`/edit-address/${from}`);
                          setIsFromSetting(false)
 
-                }}><Icon icon="zi-plus-circle" size={24} /> {`Thêm địa chỉ`}</Button>
+                }}><Icon icon="zi-plus-circle" size={23} /> {`Thêm địa chỉ`}</Button>
 
 
     </div></Container>);
