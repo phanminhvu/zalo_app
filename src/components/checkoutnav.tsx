@@ -10,7 +10,7 @@ import {
 } from "../states/cart";
 import { convertPrice } from "../utils";
 import React, { useEffect } from "react";
-import { branchTypeState, branchValState, headerState, pageGlobalState } from "../state";
+import {branchTypeState, branchValState, currenTabState, headerState, pageGlobalState} from "../state";
 import { Address, CartData, Coupon, Order, PaymentMethod, ShippingDate } from "../models";
 import moment from "moment";
 import { authState } from "../states/auth";
@@ -50,6 +50,10 @@ const CheckoutNav = () => {
     const [branchVal, setBranchVal] = useRecoilState<number>(
         branchValState
     );
+
+    const [currenTab, setCurrentTab] = useRecoilState<string>(
+        currenTabState
+    );
     /*
     product_id: number;
   name: string;
@@ -61,11 +65,46 @@ const CheckoutNav = () => {
   parent: number;
   user_note: string;
     */
-    useEffect(() => {
 
-    }, []);
     //const location = useLocation();
     //console.log(location.pathname)
+
+
+    console.log('shippingAddress', shippingAddress)
+    console.log('shippingDate', shippingDate)
+    console.log('branchVal', branchVal)
+    console.log('branchType', branchType)
+    console.log('selectedPaymentMethod', selectedPaymentMethod)
+
+
+
+    const check =  () => {
+        const checkItem = cart?.cartItems?.length > 0;
+        let checkBranch = false
+            switch(currenTab) {
+                case 'giao_hang_tan_noi':
+                    checkBranch = !!((shippingAddress && shippingAddress.id > 0) && branchVal && branchType === 1);
+                    break;
+                case 'tai_cua_hang':
+                    checkBranch = !!(shippingDate.date !== "" && branchVal && branchType === 2);
+                    break;
+                default:
+                    checkBranch = false;
+            }
+            const checkPayment = !!selectedPaymentMethod && selectedPaymentMethod?.id > 0;
+
+
+        return !(checkItem && checkBranch && checkPayment)
+
+
+    }
+
+
+    console.log('check', check())
+
+
+
+
     return (cart && cart?.cartItems && cart?.cartItems?.length > 0 && showTotalCart) ? (<div className={`w-full fixed ${showBottomBar ? `bottom-[55px]` : `bottom-0`} left-0 shadow-btn-fixed`}>
         <div className="flex bg-white p-4 items-start justify-between">
             <Box  className="w-1/2">
@@ -205,8 +244,7 @@ const CheckoutNav = () => {
                         navigate(`/cart`);
                     }
                 }}
-                disabled={!(shippingAddress && shippingAddress.id > 0 || shippingDate) || !branchVal || !selectedPaymentMethod || selectedPaymentMethod?.id <= 0}
-            >
+                disabled={check()}            >
                 Mua hàng
             </Button>
         </div>

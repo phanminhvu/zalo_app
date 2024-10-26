@@ -130,6 +130,13 @@ export const openAddressPickerState = atom<boolean>({
   default: false,
 });
 
+
+export const currenTabState = atom<string>({
+  key: "currenTab",
+  default: 'giao_hang_tan_noi',
+});
+
+
 export const isMappingState = atom<boolean>({
   key: "isMapping",
   default: false,

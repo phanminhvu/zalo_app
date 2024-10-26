@@ -14,7 +14,7 @@ import {convertPrice} from "../../utils";
 import {Address, Branch, CartData, Coupon, PaymentMethod, Product, ProductInfoPicked, ShippingDate} from "../../models";
 import {useAddProductToCart} from "../../hooks";
 import {
-    branchLatState,
+    branchLatState,currenTabState,
     branchLngState,
     //branchPointState,
     branchTypeState,
@@ -43,7 +43,6 @@ const UserCart = () => {
     );
     const [distance, setDistance] = useState<number >(0);
     const [deliveryFee, setDeliveryFee] = useState<number | null>(null);
-    console.log('distance', distance)
     useEffect(() => {
             setDeliveryFee(phiGiaohang(distance / 1000));
             setCart({
@@ -51,7 +50,12 @@ const UserCart = () => {
                 deliveryFee: phiGiaohang(distance / 1000)
             })
     }, [distance])
-    const [currenTab, setCurrentTab] = useState("giao_hang_tan_noi");
+
+    const [currenTab, setCurrentTab] = useRecoilState<string>(
+        currenTabState
+    );
+
+
     const [buyDate, setBuyDate] = useState('');
     const [buyHour, setBuyHour] = useState(0);
     const [buyMinute, setBuyMinute] = useState(0);

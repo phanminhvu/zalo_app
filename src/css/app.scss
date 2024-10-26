@@ -14,13 +14,22 @@
 }
 
 .zaui-switch:checked {
-  background-color: var(--zmp-primary-color)!important;
+  background-color: var(--zmp-primary-color);
 }
 
-.zaui-btn {
-  background-color: var(--zmp-primary-color)!important;
-  .zaui-icon {
-    color: #fff;
+.zaui-btn:not(.zaui-btn-tertiary) {
+  .zaui-btn:not(.zaui-btn-tertiary) {
+    background-color: var(--zmp-primary-color);
+    .zaui-icon {
+      background-color: var(--zmp-primary-color);
+      .zaui-icon {
+        color: #fff;
+      }
+      .zaui-btn-text {
+        color: #fff;
+      }
+    }
+   color: #fff;
   }
   .zaui-btn-text {
     color: #fff;
@@ -28,7 +37,7 @@
 }
 
 .zaui-btn-disabled[disabled] {
-  background-color: rgba(var(--zmp-disabled-border-color), 0.089)!important;
+  background-color: rgba(var(--zmp-disabled-border-color), 0.089);
 }
 
 
