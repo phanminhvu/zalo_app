@@ -108,12 +108,10 @@ const UserCart = () => {
         branchLngState
     );
 
-    console.log(Object.keys(shippingAddress).length === 0);
 
 
-    console.log(shippingAddress == {})
     useEffect(() => {
-        if(Object.keys(shippingAddress).length === 0){
+        if(!shippingAddress || Object.keys(shippingAddress).length === 0){
             console.log('alo')
             if(userAddresses.filter(data => data.default).length > 0){
                 console.log('userAddresses', userAddresses.filter(data => data.default)[0])
