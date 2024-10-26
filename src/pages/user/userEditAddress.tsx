@@ -138,14 +138,19 @@ const UserEditAddress = () => {
                         className="border-slate-200"
                     />
                 </div>
-                <div className={" mt-4"}>
-                    <Switch label="Đặt làm mặc định" className={" "} size={"medium"} onChange={(e) => {
-                        setUserEditingAddress({
-                            ...userEditingAddress,
-                            default: e.target.checked
-                        })
-                    }} checked={userEditingAddress?.default || false}/>
+
+                <div className={'mt-4'}>
+                    <Switch label="Đặt làm mặc định"
+
+                            size={"medium"}
+                            onChange={(e) => {
+                                setUserEditingAddress({
+                                    ...userEditingAddress,
+                                    default: e.target.checked
+                                })
+                            }} checked={userEditingAddress?.default || false}/>
                 </div>
+
 
             </Box>}
             {(!addressAuto && userEditingAddress?.id && userEditingAddress?.address) ? <Button variant={`tertiary`}

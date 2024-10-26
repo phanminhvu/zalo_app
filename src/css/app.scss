@@ -13,6 +13,26 @@
   --custom-header: 56px;
 }
 
+.zaui-switch:checked {
+  background-color: var(--zmp-primary-color)!important;
+}
+
+.no-border-focus:focus {
+  outline: none;
+  border: none!important;
+  outline: none!important;
+  --tw-ring-shadow: '0 0 0 3px rgba(66, 153, 225, 0.5)'!important;
+  box-shadow: none!important;
+}
+
+.zaui-input-affix-wrapper-focused {
+  border: none!important;
+  outline: none!important;
+  --tw-ring-shadow: '0 0 0 3px rgba(66, 153, 225, 0.5)'!important;
+  box-shadow: none!important;
+}
+
+
 .zaui-tabs-tabbar-active-line {
   background-color: var(--zmp-primary-color)!important;
 }

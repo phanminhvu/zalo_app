@@ -96,16 +96,20 @@ const Header = () => {
                                     <Icon icon="zi-chevron-left" style={{marginBottom: "4px"}} onClick={() => {
 
                                         setAddressAuto(false);
+
+                                        console.log('isFromSetting', isFromSetting)
+
                                         if (isMapping) {
                                             setIsMapping(false)
                                             navigate('/cart')
                                         }else {
-                                            if(isFromSetting) {
+                                            if(isFromSetting || customTitle == "Sửa địa chỉ") {
                                                 navigate('/my-profile')
                                                 setIsFromSetting(false)
                                             }
                                             else {
-                                                setIsMapping(false)
+                                                setIsFromSetting(false)
+
                                                 navigate('/my-addresses/profile')
                                             }
 

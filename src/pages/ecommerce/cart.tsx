@@ -25,7 +25,7 @@ import {
     openProductsPickerState,
     openStoresPickerState,
     pageGlobalState,
-    productInfoPickedState, userEditingAddressState
+    productInfoPickedState, userAddressesState, userEditingAddressState
 } from "../../state";
 import Container from "../../components/layout/Container";
 import {branchsState, couponsState, homeProductsState} from "../../states/home";
@@ -72,6 +72,10 @@ const UserCart = () => {
         selectedPaymentMethodState
     );
 
+    const [userAddresses, setUserAddresses] = useRecoilState<Address[]>(
+        userAddressesState
+    );
+
     const [shippingAddress, setShippingAddress] = useRecoilState<Address>(
         shippingAddressState
     );
@@ -104,6 +108,19 @@ const UserCart = () => {
         branchLngState
     );
 
+    console.log(Object.keys(shippingAddress).length === 0);
+
+
+    console.log(shippingAddress == {})
+    useEffect(() => {
+        if(Object.keys(shippingAddress).length === 0){
+            console.log('alo')
+            if(userAddresses.filter(data => data.default).length > 0){
+                console.log('userAddresses', userAddresses.filter(data => data.default)[0])
+                setShippingAddress(userAddresses.filter(data => data.default)[0])
+            }
+        }
+    }, []);
 
     const vietmapApi = new VietmapApi({apiKey: VIET_MAP_KEY})
     const getDistance = async () => {
@@ -116,6 +133,8 @@ const UserCart = () => {
         //     setDeliveryFee(phiGiaohang(distance /1000));
         // }
     }
+
+
 
     useEffect(() => {
         if ( branchType === 1 && branchLat && branchLng && shippingAddress && shippingAddress?.lat && shippingAddress?.lng && branchLat > 0 && branchLng > 0 && currenTab == "giao_hang_tan_noi") {
@@ -450,7 +469,6 @@ const UserCart = () => {
                                                 }}
                                                 prefix={<HiMap className="h-5 w-5 "/>}
                                                 title={<Text bold className={'zaui-link-text-color'}>Vị trí cửa hàng</Text>}
-
                                                 suffix={<Icon icon="zi-chevron-right"/>}
                                                 subTitle={(branchVal > 0 && branchType == 2) ? branchs.find(bit => (bit.id === branchVal))?.name : ``}
                                             >{(branchVal > 0 && branchType == 2) ? branchs.find(bit => (bit.id === branchVal))?.address : ``}</List.Item>
@@ -459,7 +477,6 @@ const UserCart = () => {
                                             <List.Item  >
                                                 <Picker
                                                     placeholder="Chọn thời gian"
-
                                                     mask
                                                     title="Thời gian nhận hàng"
                                                     maskClosable
@@ -595,7 +612,7 @@ const UserCart = () => {
                                             setOpenCouponSheet(true)
                                         }}
                                         prefix={<Icon icon="zi-star"/>}
-                                        title={'Chọn mã khuyến mãi'}
+                                        title={<Text  bold className={'text-[#088c4c]'}>Chọn mã khuyến mãi</Text>}
                                         suffix={<Icon icon="zi-chevron-right"/>}
                                         subTitle=  {(selectedCoupon && selectedCoupon?.code) ? (parseInt(selectedCoupon?.discount_type || '0') !== 1 ? `${convertPrice(Number(selectedCoupon?.amount || 0))} đ` : `${convertPrice(Number(selectedCoupon?.amount || 0) * cart?.totalCart / 100)} đ`) : ''}
 
@@ -605,12 +622,11 @@ const UserCart = () => {
 
                                         prefix={<Icon icon="zi-note"/>}
                                         title={<Input
-
+                                            focused={false}
                                             size={"small"}
-                                            className={'border-none pb-3'}
+                                            className={'border-none w-full no-border-focus pb-3'}
                                         placeholder="Nhập ghi chú..."
                                         />}
-                                        subTitle=  {(selectedCoupon && selectedCoupon?.code) ? (parseInt(selectedCoupon?.discount_type || '0') !== 1 ? `${convertPrice(Number(selectedCoupon?.amount || 0))} đ` : `${convertPrice(Number(selectedCoupon?.amount || 0) * cart?.totalCart / 100)} đ`) : ''}
 
                                     />
                                 </List>
@@ -638,7 +654,7 @@ const UserCart = () => {
                                         }}
                                         prefix={<img className="w-9 h-9"
                                                      src={getImageSource(selectedPaymentMethod?.code as string) }/>}
-                                        title={(selectedPaymentMethod && selectedPaymentMethod?.id) ? selectedPaymentMethod?.title : ``}
+                                        title={<Text  bold className={'text-[#088c4c]'}>{    (selectedPaymentMethod && selectedPaymentMethod?.id) ? selectedPaymentMethod?.title : ``}</Text>}
                                         suffix={<Icon icon="zi-chevron-right"/>}
                                         subTitle={
                                             <p

@@ -266,7 +266,7 @@ const ProductPicker = () => {
                     variant="tertiary"
                     size="medium"
                     icon={
-                      <Icon icon="zi-minus-circle-solid" className="text-[#00884880]" size={27}  />
+                      <Icon icon="zi-minus-circle-solid" className="text-[#088c4c]" size={27}  />
                     }
                     onClick={() => {
                       if (quantity > 0) setQuantity((q) => q - 1);
@@ -276,7 +276,7 @@ const ProductPicker = () => {
                 <Button
                     variant="tertiary"
                     size="medium"
-                    icon={  <Icon icon="zi-plus-circle-solid" className="text-[#00884880]" size={27}  />}
+                    icon={  <Icon icon="zi-plus-circle-solid" className="text-[#088c4c]" size={27}  />}
                     onClick={() => setQuantity((q) => q + 1)}
                 />
 
