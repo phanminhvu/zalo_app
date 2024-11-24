@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { cx } from '../utils'
 import { Avatar, Box, Icon, Input, Text, useNavigate, Button } from 'zmp-ui'
 import { useRecoilState, useRecoilValue } from 'recoil'
@@ -7,6 +7,7 @@ import { HiShoppingCart, HiSearch } from 'react-icons/hi'
 import { AuthData } from '../models'
 import { authState } from '../states/auth'
 import { addressAutoState } from '../states/cart'
+import { loadPhoneFromCache, loadUserFromCache } from '../services/storage'
 
 const typeColor = {
 	primary: {
@@ -36,6 +37,21 @@ const typeColor = {
 }
 
 const Header = () => {
+	useEffect(() => {
+		const loadUserInfo = async () => {
+			let userInfo: any = {}
+			userInfo = await loadUserFromCache()
+			const phoneNumber = await loadPhoneFromCache()
+			userInfo.phone = phoneNumber
+			if (userInfo && userInfo?.id) {
+				setAuthDt({
+					...authDt,
+					profile: userInfo,
+				})
+			}
+		}
+		loadUserInfo()
+	}, [])
 	const {
 		route,
 		hasLeftIcon,
@@ -48,8 +64,11 @@ const Header = () => {
 		onSearchChange,
 		showCart,
 		onSearchButtonClick,
+		hidden,
+		onLeftClick,
 	} = useRecoilValue(headerState)
 	const [authDt, setAuthDt] = useRecoilState<AuthData>(authState)
+
 	const { headerColor, textColor, iconColor, size } = typeColor[type! || 'primary']
 	const navigate = useNavigate()
 	const [isMapping, setIsMapping] = useRecoilState<boolean>(isMappingState)
@@ -64,6 +83,8 @@ const Header = () => {
 		customTitle === 'Tìm kiếm' ||
 		customTitle === 'Danh mục'
 
+	if (hidden) return null
+
 	return (
 		<div
 			className={cx(
@@ -75,10 +96,10 @@ const Header = () => {
 				<div className="flex items-center justify-between w-full">
 					{showAvatar && (
 						<Box flex py={0}>
-							<Avatar size={36} src={authDt.profile.avatar} />
+							<Avatar size={36} src={authDt?.profile?.avatar} />
 							<div className={'ml-4'}>
 								<Text bold size={'small'}>
-									Xin chào, {authDt.profile.name}
+									Xin chào, {authDt?.profile?.name}
 								</Text>
 								<Text size={'xxSmall'}>Chúc ngày mới tốt lành!</Text>
 							</div>
@@ -103,23 +124,27 @@ const Header = () => {
 									<Icon
 										icon="zi-chevron-left"
 										style={{ marginBottom: '4px' }}
-										onClick={() => {
-											setAddressAuto(false)
+										onClick={
+											onLeftClick
+												? onLeftClick
+												: () => {
+														setAddressAuto(false)
 
-											if (isMapping) {
-												setIsMapping(false)
-												navigate('/cart')
-											} else {
-												if (isFromSetting || customTitle == 'Sửa địa chỉ') {
-													navigate('/my-profile')
-													setIsFromSetting(false)
-												} else {
-													setIsFromSetting(false)
+														if (isMapping) {
+															setIsMapping(false)
+															navigate('/cart')
+														} else {
+															if (isFromSetting || customTitle == 'Sửa địa chỉ') {
+																navigate('/my-profile')
+																setIsFromSetting(false)
+															} else {
+																setIsFromSetting(false)
 
-													navigate('/my-addresses/profile')
-												}
-											}
-										}}
+																navigate('/my-addresses/profile')
+															}
+														}
+												  }
+										}
 										className={iconColor}
 										size={25}
 									/>

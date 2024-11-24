@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'zmp-ui'
 import { openChat } from 'zmp-sdk/apis'
-
+import { openWebview } from 'zmp-sdk/apis'
 import {
 	HiOutlineChat,
 	HiOutlineHome,
@@ -13,8 +13,10 @@ import { useRecoilValue } from 'recoil'
 import { headerState } from '../state'
 import { cartState } from '../states/cart'
 import { ZALO_OA_ID } from '../utils/constants'
-
+import { openSheetChatState } from '../state'
+import { useRecoilState } from 'recoil'
 const BottomNav = () => {
+	const [openSheetChat, setOpenSheetchat] = useRecoilState<boolean>(openSheetChatState)
 	const navigate = useNavigate()
 	const { route, hasLeftIcon, rightIcon, title, customTitle, type, showBottomBar } =
 		useRecoilValue(headerState)
@@ -47,6 +49,7 @@ const BottomNav = () => {
 				</a>
 				<a
 					onClick={() => {
+						// setOpenSheetchat(true);
 						//navigate('/affiliate');
 						openChat({
 							type: 'oa',
@@ -63,6 +66,21 @@ const BottomNav = () => {
 				</a>
 				<a
 					onClick={() => {
+						// openWebview({
+						//     url: "https://nemnuongquequan.com/blogs/news",
+						//     config: {
+						//         style: "normal",
+						//         leftButton: "back"
+						//     },
+						//     success: (res) => {
+						//         // xử lý khi gọi api thành công
+						//     },
+						//     fail: (error) => {
+						//         // xử lý khi gọi api thất bại
+						//         console.log(error);
+						//     }
+						// });
+
 						navigate('/news-page')
 					}}
 					className="w-full focus:text-teal-500 hover:text-teal-500 justify-center inline-block text-center pt-2 pb-1">

@@ -1,6 +1,6 @@
-import React, {useEffect} from "react";
-import {useNavigate, useParams} from "react-router-dom";
-import {useSetHeader} from "../../hooks";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSetHeader } from "../../hooks";
 import {
     branchPointState,
     isMappingState,
@@ -8,21 +8,22 @@ import {
     userAddressesState,
     userEditingAddressState
 } from "../../state";
-import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
-import {Address, AuthData} from "../../models";
-import {Box, Button, Icon, Input, Switch, Text} from "zmp-ui";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { Address, AuthData } from "../../models";
+import { Box, Button, Icon, Input, Switch, Text } from "zmp-ui";
 import Container from "../../components/layout/Container";
-import {loadAddresses, resetAddress, saveAddress} from "../../services/storage";
+import { loadAddresses, resetAddress, saveAddress } from "../../services/storage";
 import AddressSearchItemList from "../../components/auto-complete-address-item-list";
-import {HiLocationMarker} from 'react-icons/hi';
-import {addressAutoState, shippingAddressState} from "../../states/cart";
-import {authState} from "../../states/auth";
+import { HiLocationMarker } from 'react-icons/hi';
+import { addressAutoState, shippingAddressState } from "../../states/cart";
+import { authState } from "../../states/auth";
+import UserInfo from "./Info";
 
 const UserEditAddress = () => {
     const setHeader = useSetHeader();
     const navigate = useNavigate();
     const setErrMsg = useSetRecoilState(pageGlobalState);
-    let {from} = useParams();
+    let { from } = useParams();
     const [addressAuto, setAddressAuto] = useRecoilState<boolean>(
         addressAutoState
     );
@@ -41,7 +42,7 @@ const UserEditAddress = () => {
             customTitle: (addressAuto == true) ? "Tìm địa chỉ" : ((userEditingAddress && userEditingAddress?.id > 0) ? "Sửa địa chỉ" : "Thêm địa chỉ mới"),
             hasLeftIcon: true,
             type: "secondary",
-            showBottomBar: false,
+            showBottomBar: true,
             showTotalCart: false,
         });
     }, [addressAuto, userEditingAddress]);
@@ -58,16 +59,24 @@ const UserEditAddress = () => {
         }
     }, [userEditingAddress])
     useEffect(() => {
-
         if (!addressAuto && userEditingAddress?.name === "" && userEditingAddress?.phone === "") {
             setUserEditingAddress({
                 ...userEditingAddress,
                 name: authDt?.profile?.name,
-                phone: authDt?.profile?.phone,
+                phone: sessionStorage.getItem("phoneNumber"),
                 email: authDt?.profile?.email
             })
         }
     }, [addressAuto])
+    const [error, setError] = useState("");
+    const phoneRegex = /^[0-9]{10,11}$/;
+    const validatePhoneNumber = (value) => {
+        if (!phoneRegex.test(value)) {
+            setError("Vui lòng nhập số điện thoại");
+        } else {
+            setError(""); // Clear the error if the phone number is valid
+        }
+    };
     return (<Container className={"zui-container-background-color"}>
         <Box mt={1} className={"zui-container-background-color pt-4 "}>
 
@@ -82,12 +91,12 @@ const UserEditAddress = () => {
                 }}
                 language={`vi`}
                 />*/}
-            {addressAuto && <AddressSearchItemList/>}
+            {addressAuto && <AddressSearchItemList />}
             {(!addressAuto && userEditingAddress?.address) &&
                 <div className=" w-11/12 bg-white rounded-lg ml-auto mr-auto p-4 flex" onClick={() => {
                     setAddressAuto(true);
-                }}><HiLocationMarker className="mr-2 h-5 w-5 inline-block"/>
-                    <Text>{userEditingAddress?.address}</Text><Icon icon="zi-chevron-right" size={24}/></div>}
+                }}><HiLocationMarker className="mr-2 h-5 w-5 inline-block" />
+                    <Text>{userEditingAddress?.address}</Text><Icon icon="zi-chevron-right" size={24} /></div>}
 
             {(!addressAuto && userEditingAddress?.address) && <Box className={"bg-white p-4 mt-4"}>
                 <div className={" mt-4"}>
@@ -113,6 +122,8 @@ const UserEditAddress = () => {
                         size={"medium"}
                         placeholder="Số điện thoại"
                         onChange={(e) => {
+
+                            validatePhoneNumber(e.target.value);
                             setUserEditingAddress({
                                 ...userEditingAddress,
                                 phone: e.target.value
@@ -121,6 +132,7 @@ const UserEditAddress = () => {
                         value={userEditingAddress?.phone}
                         className="border-slate-200"
                     />
+                     {error && <p style={{ color: "red" }}>{error}</p>}
                 </div>
                 <div className={" mt-4"}>
                     <Text>Ghi chú khác</Text>
@@ -142,30 +154,37 @@ const UserEditAddress = () => {
                 <div className={'mt-4'}>
                     <Switch label="Đặt làm mặc định"
 
-                            size={"medium"}
-                            onChange={(e) => {
-                                setUserEditingAddress({
-                                    ...userEditingAddress,
-                                    default: e.target.checked
-                                })
-                            }} checked={userEditingAddress?.default || false}/>
+                        size={"medium"}
+                        onChange={(e) => {
+                            setUserEditingAddress({
+                                ...userEditingAddress,
+                                default: e.target.checked
+                            })
+                        }} checked={userEditingAddress?.default || false} />
                 </div>
 
 
             </Box>}
-            {(!addressAuto && userEditingAddress?.id && userEditingAddress?.address) ? <Button variant={`tertiary`}
-                                                                                                className={'border-l-0 border-b-0 ml-auto mr-auto block mt-6 px-0 py-2 text-sm  text-rose-600'}
-                                                                                                onClick={() => {
-                                                                                                    setUserAddresses(old => {
-                                                                                                        return old.filter(oAddress => oAddress.id !== userEditingAddress.id);
-                                                                                                    });
-                                                                                                    resetAddress(userAddresses.filter(oAddress => oAddress.id !== userEditingAddress.id));
-                                                                                                    navigate(`/my-addresses/${from}`);
-                                                                                                }}>
-                <Icon icon="zi-delete"/>Xóa địa chỉ</Button> : ""}
-            {(!addressAuto && userEditingAddress?.address) && <Button
+                   
+            {!error&&(!addressAuto && userEditingAddress?.id && userEditingAddress?.address) ? <Button variant={`tertiary`}
+                className={'border-l-0 border-b-0 ml-auto mr-auto block mt-6 px-0 py-2 text-sm  text-rose-600'}
+                onClick={() => {
+                    setUserAddresses(old => {
+                        return old.filter(oAddress => oAddress.id !== userEditingAddress.id);
+                    });
+                    resetAddress(userAddresses.filter(oAddress => oAddress.id !== userEditingAddress.id));
+                    navigate(`/my-addresses/${from}`);
+                }}>
+                <Icon icon="zi-delete" />Xóa địa chỉ</Button> : ""}
+            {!error && (!addressAuto && userEditingAddress?.address) && <Button
                 className={`h-10 w-10/12 border-l-0 border-b-0 rounded-full ml-auto mr-auto block mt-6 px-0 py-2`}
                 onClick={async () => {
+                    // console.log("@123", userEditingAddress?.phone)
+                    // if (!(userEditingAddress?.phone)) {
+                    //     console.log("vui lòng nhập số điện thoại");
+                    //     return;
+                    // }
+
                     const selectedAddress = await saveAddress(userEditingAddress)
                     const cachedUserAddresses = await loadAddresses();
                     setUserAddresses(cachedUserAddresses);
@@ -177,7 +196,8 @@ const UserEditAddress = () => {
                     }
 
 
-                }}><Icon icon="zi-plus-circle" size={24}/> {`Lưu thông tin`}</Button>
+                }}>
+                    <Icon icon="zi-plus-circle" size={24} /> {`Lưu thông tin`}</Button>
             }
 
         </Box>

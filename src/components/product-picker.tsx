@@ -127,6 +127,7 @@ const ProductPicker = () => {
 										quantity,
 										parent: 0,
 										user_note: note,
+										weight: product.weight,
 									} as CartProduct,
 									isEdit: currentItem && product && currentItem?.product_id == product.id,
 									childProductCarts: relateItems,
@@ -160,6 +161,7 @@ const ProductPicker = () => {
 									image: product.image,
 									price: product.price,
 									sale_price: product.sale_price,
+									weight: product.weight,
 									quantity,
 									parent: 0,
 									user_note: note,
@@ -235,6 +237,7 @@ const ProductPicker = () => {
 											)}
 											đ
 										</p>
+										<p className="text-sm font-lato text-black ">{product.description}</p>
 									</div>
 								</div>
 							</div>
@@ -261,6 +264,7 @@ const ProductPicker = () => {
 																	image: rrItem.image,
 																	price: rrItem.price,
 																	sale_price: rrItem.sale_price,
+																	weight: rrItem.weight,
 																	quantity,
 																	parent: product.id,
 																}

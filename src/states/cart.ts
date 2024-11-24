@@ -41,6 +41,10 @@ export const shippingDateState = atom<ShippingDate>({
 	key: 'shippingDate',
 	default: {},
 })
+export const shippingDateaState = atom<ShippingDate>({
+	key: 'shippingDatea',
+	default: {},
+})
 export const shippingAddressState = atom<Address>({
 	key: 'shippingAddress',
 	default: {},

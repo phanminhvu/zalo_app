@@ -21,6 +21,8 @@ const useSetHeader = () => {
 			showCart = false,
 			showTotalCart = false,
 			onSearchButtonClick = null,
+			onLeftClick,
+			hidden,
 		}: HeaderType) =>
 			setHeader({
 				route,
@@ -36,6 +38,8 @@ const useSetHeader = () => {
 				showCart,
 				showTotalCart,
 				onSearchButtonClick,
+				onLeftClick,
+				hidden,
 			}),
 		[setHeader],
 	)

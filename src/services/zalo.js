@@ -1,9 +1,8 @@
-import { zmp } from 'zmp-framework/react'
 import api from 'zmp-sdk'
 import { authorize, getSetting } from 'zmp-sdk/apis'
 import { getAccessToken, getPhoneNumber } from 'zmp-sdk/apis'
 import { followOA } from 'zmp-sdk/apis'
-import { loadUserFromCache } from '../services/storage'
+import { loadUserFromCache, savePhoneToCache } from '../services/storage'
 export const getSettingV2 = () =>
 	new Promise((resolve) => {
 		getSetting({
@@ -21,7 +20,7 @@ export const getSettingV2 = () =>
 export const authorizeV2 = () =>
 	new Promise((resolve) => {
 		authorize({
-			scopes: ['scope.userInfo'], //, "scope.userPhonenumber"
+			scopes: ['scope.userInfo', 'scope.userPhonenumber'], //, "scope.userPhonenumber"
 			success: (data) => {
 				// xử lý khi gọi api thành công
 				if (data['scope.userInfo'] == true) {
@@ -60,6 +59,9 @@ export const authorizeV2 = () =>
 					console.log('Access token zalo ERR3 ')
 					resolve(false)
 				}
+				// if (data['scope.userPhonenumber'] == true) {
+
+				// }
 			},
 			fail: (error) => {
 				console.log('Access token zalo ERR4 ', error)
@@ -101,9 +103,10 @@ export const getPhoneNumberUser = async () => {
 					let formattedPhoneNumber = result.phoneNumber.startsWith('84')
 						? result.phoneNumber.replace(/^84/, '0')
 						: result.phoneNumber
-					console.log('Số điện thoại đã định dạng:', formattedPhoneNumber)
-					sessionStorage.setItem('phoneNumber', formattedPhoneNumber)
-					// setPhoneNumber(formattedPhoneNumber);
+					savePhoneToCache(formattedPhoneNumber)
+					//sessionStorage.setItem("phoneNumber", formattedPhoneNumber);
+					// resolve(formattedPhoneNumber);
+					//getPhoneNumber(formattedPhoneNumber);
 				} catch (error) {
 					console.error('Lỗi khi kiểm tra số điện thoại:', error)
 				}

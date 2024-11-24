@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.picker-custom{
+    color:rgb(0, 136, 72)!important
+}
+.picker-custom:focus {
+    border: none !important
+}
+
+.zaui-picker-item-selected{
+    color:rgb(0, 136, 72)!important
+}
+[type='text']:focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, textarea:focus, select:focus {
+    --tw-ring-shadow: none !important
+}
+
+.bggreen{
+    background-color:#008848!important
+}

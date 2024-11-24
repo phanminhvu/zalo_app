@@ -19,11 +19,11 @@ const EditAddress = () => {
             customTitle:  "Sửa địa chỉ",
             hasLeftIcon: true,
             type: "secondary",
-            showBottomBar: false
+            showBottomBar: true
         });
     }, []);
     const [name,setName] = useState('');
-    const [phone,setPhone] = useState('');
+    const [phone,setPhone] = useState(sessionStorage.getItem("phoneNumber"));
     const [street,setStreet] = useState('');
     const [wardId,setWardId] = useState('');
     const [districtId,setDistrictId] = useState('');

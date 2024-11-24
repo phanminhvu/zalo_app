@@ -54,6 +54,7 @@ const HomeMain: React.FunctionComponent = () => {
 	const [cart, setCart] = useRecoilState<CartData>(cartState)
 	const [loading, setLoading] = useState(false)
 	useEffect(() => {
+		console.log(loadUserFromCache())
 		setHeader({
 			customTitle: 'Trang chủ',
 			hasLeftIcon: false,
@@ -71,61 +72,58 @@ const HomeMain: React.FunctionComponent = () => {
 	}, [])
 
 	// /*"NODE_TLS_REJECT_UNAUTHORIZED=0 RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED=false zmp start"*/
-	useEffect(() => {
-		const loginEff = async () => {
-			//setLoading(true);
-			let userInfo = {}
-			userInfo = await loadUserFromCache()
-			if (userInfo && userInfo?.id) {
-				setAuthDt({
-					...authDt,
-					profile: userInfo,
-				})
-			} else {
-				userInfo = await authorizeV2()
-				let zaloSettings = await getSettingV2()
-				if (zaloSettings['authSetting']['scope.userInfo'] === true) {
-					setAuthDt({
-						...authDt,
-						profile: userInfo,
-					})
-					saveUserToCache(userInfo)
-				}
-				setAuthDt({
-					...authDt,
-					profile: {
-						birthday: '',
-						email: '4855948733451676664@zalo.vn',
-						id: 26,
-						name: 'Ctygram',
-						sex: 0,
-						phone: '',
-						picture:
-							'https://s120-ava-talk.zadn.vn/5/d/5/6/5/120/7fd4d3350d3b52b18958e939d974a026.jpg',
-						zalo_data: {
-							avatar:
-								'https://s120-ava-talk.zadn.vn/5/d/5/6/5/120/7fd4d3350d3b52b18958e939d974a026.jpg',
-							followedOA: false,
-							id: '4855948733451676664',
-							isSensitive: false,
-							name: 'Ctygram',
-						},
-						zalo_id: '4855948733451676664',
-					},
-					token:
-						'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2N0eWdyYW0uY29tIiwiaWF0IjoxNzI3MjAwMDI0LCJuYmYiOjE3MjcyMDAwMjQsImV4cCI6MTcyNzgwNDgyNCwiZGF0YSI6eyJ1c2VyIjp7ImlkIjoyNn19fQ.MuI5JUapLwVev9uUzb4HRhg6CbejV26gQipZ0FaeK30',
-				})
-			}
+	// useEffect(() => {
+	//     const loginEff = async () => {
+	//         //setLoading(true);
+	//         let userInfo = {};
+	//         userInfo = await loadUserFromCache();
+	//         if (userInfo && userInfo?.id) {
+	//             setAuthDt({
+	//                 ...authDt,
+	//                 profile: userInfo
+	//             });
+	//         } else {
+	//             userInfo = await authorizeV2();
+	//             let zaloSettings = await getSettingV2();
+	//             if (zaloSettings['authSetting']['scope.userInfo'] === true) {
+	//                 setAuthDt({
+	//                     ...authDt,
+	//                     profile: userInfo
+	//                 });
+	//                 saveUserToCache(userInfo);
+	//             }
+	//             setAuthDt({
+	//                 ...authDt,
+	//                 profile: {
+	//                     birthday: "",
+	//                     email: "",
+	//                     id: 26,
+	//                     name: "",
+	//                     sex: 0,
+	//                     phone: "",
+	//                     picture: "",
+	//                     zalo_data: {
+	//                         avatar: "",
+	//                         followedOA: false,
+	//                         id: "",
+	//                         isSensitive: false,
+	//                         name: ""
+	//                     }, zalo_id: "4855948733451676664"
+	//                 },
+	//                 token: ""
+	//             });
+	//         }
 
-			const cachedCart = await loadCartFromCache()
-			setCart(cachedCart)
-			const cachedOrders = await loadOrderFromCache()
-			setUserOrders(cachedOrders)
+	//         const cachedCart = await loadCartFromCache();
+	//         setCart(cachedCart);
+	//         const cachedOrders = await loadOrderFromCache();
+	//         setUserOrders(cachedOrders);
 
-			/**/
-		}
-		loginEff()
-	}, [])
+	//         /**/
+	//     }
+	//     loginEff();
+	// }, [])
+
 	const handleScroll = (e) => {
 		const position = e.target.scrollTop
 		if (position > 20) {
@@ -174,7 +172,7 @@ const HomeMain: React.FunctionComponent = () => {
 							style={{ width: '100%', height: '190px', objectFit: 'cover', borderRadius: '8px' }}
 							role="presentation"
 							onClick={() => {}}
-							src={'https://ctygram.com/wp-content/uploads/2024/09/nem_banner.jpg'}
+							src={'https://quequan.vn:8081/images/products/Anh bia.jpg'}
 							alt={''}
 						/>
 					</div>

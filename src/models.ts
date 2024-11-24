@@ -1,4 +1,4 @@
-import {ReactNode} from "react";
+import { ReactNode } from "react";
 
 export type OrderStatus = "pending" | "shipping" | "finish";
 
@@ -16,12 +16,13 @@ export type CartProduct = {
   product_id: number;
   name: string;
   image: string;
-  sale_price:  number | string;
+  sale_price: number | string;
   price: number | string;
   quantity: number;
   selected: boolean;
   parent: number;
   user_note: string;
+  weight: number;
 };
 export type CartData = {
   cartItems: CartProduct[];
@@ -73,10 +74,11 @@ export type Product = {
   name: string;
   category_id: number;
   price: number;
-  sale_price:number;
-  on_sale:number;
-  description:string;
+  sale_price: number;
+  on_sale: number;
+  description: string;
   related_products: number[];
+  weight: number;
 };
 export type Payment = {
   paypal?: string[];
@@ -144,7 +146,7 @@ export type Address = {
   email?: string;
   address?: string;
   notes?: string;
-  default?:boolean;
+  default?: boolean;
 };
 
 export type HeaderType = {
@@ -161,6 +163,8 @@ export type HeaderType = {
   onSearchButtonClick?: any;
   showCart?: boolean;
   showTotalCart?: boolean;
+  hidden?: boolean;
+  onLeftClick?: () => void
 };
 
 export type AddressFormType = {
@@ -182,14 +186,14 @@ export type ProductInfoPicked = {
 };
 export type ConfirmButton = {
   label: string;
-  action?:any;
-  type?:string;
+  action?: any;
+  type?: string;
   isCLosed?: boolean;
 }
 export type ConfirmModal = {
   buttons?: ConfirmButton[];
-  showModal?:boolean;
-  title?:string;
+  showModal?: boolean;
+  title?: string;
   description?: string;
 }
 export type PageGolobal = {
@@ -219,7 +223,7 @@ export type ShippingMethodSettingCost = {
   tip: string;
 }
 export type ShippingMethodSetting = {
-  cost:ShippingMethodSettingCost;
+  cost: ShippingMethodSettingCost;
 }
 export type ShippingMethod = {
   id: number;
@@ -259,9 +263,9 @@ export type User = {
   idByOA?: string;
   followedOA?: boolean;
   name?: string;
-  phone?:string;
-  email?:string;
-  birthday?:string|number|Date;
+  phone?: string;
+  email?: string;
+  birthday?: string | number | Date;
   avatar?: string;
   isSensitive?: boolean;
 }
@@ -313,7 +317,7 @@ export type OrderStore = {
   address: Address;
 }
 export type Order = {
-  id: number;
+  id: string;
   parent_id: number;
   status: string;
   currency: string;
@@ -323,8 +327,9 @@ export type Order = {
   date_modified: string;
   discount_total: string;
   discount_tax: string;
-  shipping_total: string;
-  total: string;
+  shipping_total: number;
+  total_item: number;
+  total: number;
   customer_id: number;
   shipping: Address;
   payment_method: string;
@@ -335,7 +340,7 @@ export type Order = {
   branch_id: number;
   branch_type: number;
   line_items: OrderLineItem[];
-
+  cua_hang: Branch[]
 }
 export type OrderLineItem = {
   id: number;
@@ -357,9 +362,9 @@ export type District = {
   province_code: number;
 }
 export type Branch = {
-  id:number;
+  id: number;
   point: number;
-  district:number;
+  district: number;
   let: number;
   lng: number;
   province: number;

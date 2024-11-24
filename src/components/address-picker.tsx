@@ -7,7 +7,6 @@ import {
 	userEditingAddressState,
 } from '../state'
 import { Button, Icon, List, Sheet, Text, useNavigate } from 'zmp-ui'
-import Container from '../../components/layout/Container'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { Address, AuthData, Branch } from '../models'
 import { useSetHeader } from '../hooks'
@@ -15,7 +14,6 @@ import { useParams } from 'react-router-dom'
 import { shippingAddressState } from '../states/cart'
 import { authState } from '../states/auth'
 import { HiOutlineLocationMarker } from 'react-icons/hi'
-import { branchsState } from '../../states/home'
 import { openAddressPickerState, openStoresPickerState } from '../state'
 
 const AddressesPicker: React.FunctionComponent = () => {
@@ -33,12 +31,12 @@ const AddressesPicker: React.FunctionComponent = () => {
 	const authDt = useRecoilValue<AuthData>(authState)
 	const navigate = useNavigate()
 	useEffect(() => {
-		setHeader({
-			customTitle: 'Quản lý địa chỉ',
-			hasLeftIcon: true,
-			type: 'secondary',
-			showBottomBar: true,
-		})
+		// setHeader({
+		//     customTitle: "Quản lý địa chỉ",
+		//     hasLeftIcon: true,
+		//     type: "secondary",
+		//     showBottomBar: true
+		// });
 		const gAddresses = async () => {
 			//await saveAddress(uaddresses[0])
 			const cachedUserAddresses = await loadAddresses()

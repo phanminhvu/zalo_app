@@ -17,7 +17,7 @@ const ShippingMethods = () => {
             customTitle:  "Phương thức vận chuyển",
             hasLeftIcon: true,
             type: "secondary",
-            showBottomBar: false
+            showBottomBar: true
         });
     }, []);
     const { Item } = List;

@@ -7,7 +7,7 @@ import {authState} from "../../states/auth";
 import useSetHeader from "../../hooks/useSetHeader";
 import moment from "moment";
 import {AuthData} from "../../models";
-import {loadUserFromCache, saveUserToCache} from "../../services/storage";
+import {loadPhoneFromCache, loadUserFromCache, saveUserToCache} from "../../services/storage";
 
 
 const UserInfo = () => {
@@ -21,7 +21,7 @@ const UserInfo = () => {
     const [isEdit,setIsEdit] = useState(false);
     const [editType,setEditType] = useState('');//phone, email, birthday
     const [name, setName] = useState('');
-    const [phone,setPhone] = useState('');
+    const [phone,setPhone] = useState("");
     const [email,setEmail] = useState('');
     const [sex,setSex] = useState(0)
     const [birthday,setBirthday] = useState(new Date());
@@ -30,7 +30,8 @@ const UserInfo = () => {
         const loadUserInfo = async () => {
             let userInfo: any = {};
             userInfo = await loadUserFromCache();
-            userInfo.phone = sessionStorage.getItem("phoneNumber");
+            const phoneNumber = await loadPhoneFromCache();
+            userInfo.phone = phoneNumber;
             if(userInfo && userInfo?.id ){
                 setAuthDt({
                     ...authDt,
@@ -48,7 +49,7 @@ const UserInfo = () => {
             customTitle:  "Hồ sơ của tôi",
             hasLeftIcon: true,
             type: "secondary",
-            showBottomBar: false
+            showBottomBar: true
         });
         loadUserInfo();
 

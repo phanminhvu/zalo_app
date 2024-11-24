@@ -25,7 +25,7 @@ const CategoriesPage = () => {
 			customTitle: 'Danh mục',
 			hasLeftIcon: true,
 			type: 'secondary',
-			showBottomBar: false,
+			showBottomBar: true,
 		})
 		if (!activeCategory) {
 			if (Number(catId) > 0) {
@@ -60,7 +60,7 @@ const CategoriesPage = () => {
 	}, [activeCategory, searchString])
 
 	return (
-		<Container className={'bg-white px-4 '}>
+		<Container className={'bg-white px-4 mb-20'}>
 			<div className="w-full border-b border-gray-200 overflow-auto">
 				{categories && (
 					<nav className="flex space-x-2 overscroll-x-auto " aria-label="Tabs" role="tablist">
@@ -112,7 +112,7 @@ const CategoriesPage = () => {
 					<Text>Không tìm thấy kết quả. Vui lòng thử lại</Text>
 				</div>
 			)}
-			<section className="w-fit mx-auto grid grid-cols-2 gap-3 mt-10 mb-5">
+			<section className="w-fit mx-auto grid grid-cols-2 gap-3 mt-5">
 				{products &&
 					products.length > 0 &&
 					products.map((product) => (

@@ -1,20 +1,20 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import useSetHeader from "../../hooks/useSetHeader";
-import {Box, Picker, Tabs, Text, useNavigate, Page, List, Icon, Button, Input} from "zmp-ui";
-import {HiLocationMarker, HiMap, HiOutlineArrowRight, HiOutlineClock} from 'react-icons/hi';
-import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import { Box, Picker, Tabs, Text, useNavigate, Page, List, Icon, Button, Input, Modal } from "zmp-ui";
+import { HiLocationMarker, HiMap, HiOutlineArrowRight, HiOutlineClock } from 'react-icons/hi';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
     cartState,
     selectedCouponState,
     selectedPaymentMethodState,
-    shippingAddressState,
+    shippingAddressState, shippingDateaState,
     shippingDateState
 } from "../../states/cart";
-import {convertPrice} from "../../utils";
-import {Address, Branch, CartData, Coupon, PaymentMethod, Product, ProductInfoPicked, ShippingDate} from "../../models";
-import {useAddProductToCart} from "../../hooks";
+import { convertPrice } from "../../utils";
+import { Address, AuthData, Branch, CartData, Coupon, PaymentMethod, Product, ProductInfoPicked, ShippingDate } from "../../models";
+import { useAddProductToCart } from "../../hooks";
 import {
-    branchLatState,currenTabState,
+    branchLatState, currenTabState,
     branchLngState,
     //branchPointState,
     branchTypeState,
@@ -25,49 +25,109 @@ import {
     openProductsPickerState,
     openStoresPickerState,
     pageGlobalState,
-    productInfoPickedState, userAddressesState, userEditingAddressState
+    productInfoPickedState, userAddressesState, userEditingAddressState,
+    noteState
 } from "../../state";
 import Container from "../../components/layout/Container";
-import {branchsState, couponsState, homeProductsState} from "../../states/home";
+import { branchsState, couponsState, homeProductsState } from "../../states/home";
 import ArrowObject from "../../components/checkout/arrow-object";
-import moment from 'moment'
-import {VIET_MAP_KEY} from "../../utils/constants";
-import {VietmapApi} from "@vietmap/vietmap-api";
+import moment, { now } from 'moment'
+import { VIET_MAP_KEY } from "../../utils/constants";
+import { VietmapApi } from "@vietmap/vietmap-api";
 import cod from "../../components/buy.png";
 import bank from "../../components/bank.png";
+import { loadCartFromCache, loadOrderFromCache, loadPhoneFromCache, loadUserFromCache, saveUserToCache } from "../../services/storage";
+import { authorizeV2, getPhoneNumberUser, getSettingV2 } from "../../services/zalo";
+import { authState } from "../../states/auth";
+
 
 const UserCart = () => {
     const navigate = useNavigate();
     const [cart, setCart] = useRecoilState<CartData>(
         cartState
     );
-    const [distance, setDistance] = useState<number >(0);
+    const [distance, setDistance] = useState<number>(0);
     const [deliveryFee, setDeliveryFee] = useState<number | null>(null);
     useEffect(() => {
-            setDeliveryFee(phiGiaohang(distance / 1000));
-            setCart({
-                ...cart,
-                deliveryFee: phiGiaohang(distance / 1000)
-            })
+        setDeliveryFee(phiGiaohang(distance / 1000));
+        setCart({
+            ...cart,
+            deliveryFee: phiGiaohang(distance / 1000)
+        })
     }, [distance])
 
     const [currenTab, setCurrentTab] = useRecoilState<string>(
         currenTabState
     );
+    const [note, setNote] = useRecoilState<string>(
+        noteState
+    );
 
+    const [buyDatea, setBuyDatea] = useState('');
+    const [buyHoura, setBuyHoura] = useState(0);
+    const [buyMinutea, setBuyMinutea] = useState(0);
 
-    const [buyDate, setBuyDate] = useState('');
-    const [buyHour, setBuyHour] = useState(0);
-    const [buyMinute, setBuyMinute] = useState(0);
-    const addProductToCart = useAddProductToCart();
-    const setErrMsg = useSetRecoilState(pageGlobalState);
     const coupons = useRecoilValue<Coupon[]>(couponsState);
     const selectedCoupon = useRecoilValue<Coupon>(selectedCouponState);
     const setHeader = useSetHeader();
     const setProductInfoPicked = useSetRecoilState(productInfoPickedState);
     const setOpenSheet = useSetRecoilState(openProductPickerState);
     const products = useRecoilValue<Product[]>(homeProductsState);
+    const setNotes = useSetRecoilState<string[]>(noteState);
     const setOpenProductsSheet = useSetRecoilState(openProductsPickerState);
+    const mintime = 8;
+    const maxtime = 18;
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 15);
+    //now.setHours(10)//now.getHours()+18)
+    const roundMinutes = (mm: number) => {
+        if (mm == 0) {
+            return 0;
+        } else if (mm <= 15) {
+            return 15
+        } else if (mm <= 30) {
+            return 30
+        } else {
+            return 45
+        }
+
+    }
+
+    const deftime = (mintime: number, maxtime: number) => {
+        const hh = now.getHours();
+        const mm = now.getMinutes();
+        const defValue: { hh: number; mm: number; } = { hh: 0, mm: 0 };
+        if (hh < mintime || hh > maxtime) {
+            defValue.hh = mintime;
+            defValue.mm = 0;
+        } else if (hh == maxtime && mm <= 45) {
+            defValue.hh = maxtime;
+            defValue.mm = roundMinutes(mm);
+
+        } else if ((hh == maxtime && mm > 45)) {
+            defValue.hh = mintime;
+            defValue.mm = 0;
+        } else if (hh >= mintime && hh < maxtime && mm <= 45) {
+            defValue.hh = hh;
+            defValue.mm = roundMinutes(mm);
+        } else {
+            defValue.hh = hh + 1;
+            defValue.mm = 0;
+        }
+        return defValue;
+    }
+
+    const [buyDate, setBuyDate] = useState('');
+    const [buyHour, setBuyHour] = useState(0);
+    const [buyMinute, setBuyMinute] = useState(0);
+
+
+
+
+
+
+
+
     const [openAddressSSheet, setOpenAddressSheet] = useRecoilState<boolean>(
         openAddressPickerState
     );
@@ -86,6 +146,11 @@ const UserCart = () => {
     const [shippingDate, setShippingDate] = useRecoilState<ShippingDate>(
         shippingDateState
     );
+
+    const [shippingDatea, setShippingDatea] = useRecoilState<ShippingDate>(
+        shippingDateaState
+    );
+
 
     const [openStoreSheet, setOpenStoreSheet] = useRecoilState<boolean>(
         openStoresPickerState
@@ -111,22 +176,24 @@ const UserCart = () => {
     const [branchLng, setBranchLng] = useRecoilState<number>(
         branchLngState
     );
+    const [popupVisible, setPopupVisible] = useState(false);
 
 
 
     useEffect(() => {
-        if(!shippingAddress || Object.keys(shippingAddress).length === 0){
-            if(userAddresses.filter(data => data.default).length > 0){
+        // setBranchType(0);
+        if (!shippingAddress || Object.keys(shippingAddress).length === 0) {
+            if (userAddresses.filter(data => data.default).length > 0) {
                 setShippingAddress(userAddresses.filter(data => data.default)[0])
             }
         }
     }, []);
 
-    const vietmapApi = new VietmapApi({apiKey: VIET_MAP_KEY})
+    const vietmapApi = new VietmapApi({ apiKey: VIET_MAP_KEY })
     const getDistance = async () => {
         const distance = await vietmapApi.route(
             [[branchLat, branchLng], [shippingAddress.lat as number, shippingAddress.lng as number]],
-            ({vehicle: 'motorcycle', apikey: VIET_MAP_KEY, points_encoded: true, optimize: true}),
+            ({ vehicle: 'motorcycle', apikey: VIET_MAP_KEY, points_encoded: true, optimize: false }),
         )
         setDistance(distance.paths[0].distance)
         // if(distance && distance > 0) {
@@ -137,48 +204,69 @@ const UserCart = () => {
 
 
     useEffect(() => {
-        if ( branchType === 1 && branchLat && branchLng && shippingAddress && shippingAddress?.lat && shippingAddress?.lng && branchLat > 0 && branchLng > 0 && currenTab == "giao_hang_tan_noi") {
+        if (branchType === 0 && branchLat && branchLng && shippingAddress && shippingAddress?.lat && shippingAddress?.lng && branchLat > 0 && branchLng > 0 && currenTab == "giao_hang_tan_noi") {
             getDistance()
         }
-        if (currenTab == "tai_cua_hang" ) {
+        if (currenTab == "tai_cua_hang") {
             setDistance(0)
         }
-        if (branchType !== 1 ) {
+        if (branchType !== 0) {
             setDistance(0)
         }
-    }, [branchLng, branchLat, shippingAddress , currenTab, branchType]);
-
+    }, [branchLng, branchLat, shippingAddress, currenTab, branchType]);
     const branchs = useRecoilValue<Branch[]>(branchsState);
+    const [authDt, setAuthDt] = useRecoilState<AuthData>(
+        authState
+    );
     useEffect(() => {
         setHeader({
             customTitle: "Giỏ hàng",
             hasLeftIcon: true,
             type: "secondary",
-            showBottomBar: false,
+            showBottomBar: true,
             showTotalCart: true
         });
+        let userInfo = {};
+        const getinfouser = async () => {
+            userInfo = await loadUserFromCache();
+            if(!(userInfo && userInfo?.id)){
+                setPopupVisible(true);
+            }
+            const  phone = await loadPhoneFromCache();
+           if (!(phone)){
+            setPopupVisible(true);
+           }
+
+
+
+        }
+        getinfouser();
+       
+         
+        
     }, []);
 
     function generateDateListFromToday(days: number): string[] {
         let dateList: string[] = [];
-        let today = new Date();
+        let today = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+        let j = 0;
+
+        if (now.getHours() > maxtime || (now.getHours() == maxtime && now.getMinutes() > 45)) {
+            j = 1;
+        }
         for (let i = 0; i < days; i++) {
-            if (today.getHours() <= 23 || i != 0) {
-                let currentDate = new Date(today);
-                currentDate.setDate(today.getDate() + i); // Tăng ngày thêm i ngày
-                dateList.push(currentDate.toISOString().split('T')[0]); // Chuyển đổi thành định dạng YYYY-MM-DD
-            }
+            let currentDate = new Date(today);
+            currentDate.setDate(today.getDate() + i + j); // Tăng ngày thêm i ngày
+            dateList.push(currentDate.toISOString().split('T')[0]); // Chuyển đổi thành định dạng YYYY-MM-DD
         }
         return dateList;
     }
 
 
     const genHourData = (i: number) => {
-        let now = new Date();
-        let currentHour = i == 1 ? now.getHours() : 0; // Lấy số giờ hiện tại (0-23)
-        currentHour = currentHour < 9 ? 9 : currentHour;
+        let currentHour = i == 1 ? deftime(mintime, maxtime).hh : mintime;
         const data: { value: number, displayName: string }[] = [];
-        for (let i = currentHour; i <= 23; i++) {
+        for (let i = currentHour; i <= maxtime; i++) {
             data.push({
                 value: i,
                 displayName: `${i < 10 ? `0${i}` : i}`,
@@ -187,6 +275,7 @@ const UserCart = () => {
         return data;
     };
     const [genHourDataState, setgenHourDataState] = useState(genHourData(1));
+
     const getImageSource = (code: string) => {
         let source = ''
         switch (code) {
@@ -199,21 +288,43 @@ const UserCart = () => {
         }
         return source
     }
-    const genMinuteData = () => {
+    const genMinuteData = (daysString: string, hourSelect: number) => {
         const data: { value: number, displayName: string }[] = [];
-        for (let i = 0; i < 60; i = i + 15) {
-            data.push({
-                value: i,
-                displayName: `${i < 10 ? `0${i}` : i}`,
-            });
+        if (daysString != "Hôm nay") {
+            for (let i = 0; i < 60; i = i + 15) {
+                data.push({
+                    value: i,
+                    displayName: `${i < 10 ? `0${i}` : i}`,
+                });
+            }
+        }
+        else if (daysString == "Hôm nay" && hourSelect != deftime(mintime, maxtime).hh) {
+            for (let i = 0; i < 60; i = i + 15) {
+                data.push({
+                    value: i,
+                    displayName: `${i < 10 ? `0${i}` : i}`,
+                });
+            }
+
+        } else {
+            for (let i = deftime(mintime, maxtime).mm; i < 60; i = i + 15) {
+                data.push({
+                    value: i,
+                    displayName: `${i < 10 ? `0${i}` : i}`,
+                });
+            }
         }
         return data;
-    };
+    }
+
+
+    const [genMmDataState, setgenMmDataState] = useState(genMinuteData('Hôm nay', deftime(mintime, maxtime).hh))
+
     const genDateData = () => {
         let listDate = generateDateListFromToday(3);
         let daysOfYear: { value: string, displayName: string }[] = [];
-        let today = new Date();
-        if (today.getHours() <= 23) {
+        let today = now;
+        if (today.getHours() <= maxtime) {
             listDate.forEach((element, i) => {
                 daysOfYear.push({
                     value: moment(element).format("DD/MM/YYYY"),
@@ -231,6 +342,7 @@ const UserCart = () => {
         return daysOfYear;
     };
 
+
     useEffect(() => {
         setShippingDate({
             date: buyDate,
@@ -239,49 +351,199 @@ const UserCart = () => {
         })
     }, [buyDate, buyHour, buyMinute])
 
+    useEffect(() => {
+        setShippingDatea({
+            date: buyDatea,
+            hour: buyHoura,
+            minute: buyMinutea
+        })
+    }, [buyDatea, buyHoura, buyMinutea])
+
 
     const phiGiaohang = (distance: number) => {
+        if (distance == 0) {
+            return 0;
+        }
+        else if (distance <= 2) {
+            return 20000;
+        }
+        else if (distance <= 3) {
+            return 25000;
+        }
+        else if (distance <= 5) {
+            return 30000;
+        }
+        else if (distance <= 7) {
+            return 35000;
+        }
+        else if (distance <= 9) {
+            return 45000;
+        }
+        else if (distance <= 11) {
+            return 50000;
+        }
+        else return 55000;
+        // if (distance === 0) {
+        //     return 0
+        // }else if (distance <= 3) {
+        //     return 16000
+        // } else {
+        //     return 16000 + (distance - 3) * 5500
 
-        // if (distance<= 2 ){
-        //     return 20000;
         // }
-        // else if (distance<= 3) {
-        //     return 25000;
-        // }
-        // else if (distance<= 5) {
-        //     return 30000;
-        // }
-        // else if (distance<= 7) {
-        //     return 35000;
-        // }
-        // else if (distance<= 9) {
-        //     return 45000;
-        // }
-        // else if (distance<= 11) {
-        //     return 50000;
-        // }
-        // else return 300000;
-        if (distance === 0) {
-            return 0
-        }else if (distance <= 3) {
-            return 16000
-        } else {
-            return 16000 + (distance - 3) * 5500
+    }
+    const ChonCuaHang = () => {
+        return (<List.Item
+            onClick={() => {
+                setOpenStoreSheet(true);
+            }}
+            prefix={<HiMap className="h-5 w-5 " />}
+            title={<Text bold className={'zaui-link-text-color'}>Vị trí cửa hàng</Text>}
+            suffix={<Icon icon="zi-chevron-right" />}
+            subTitle={(branchVal > 0) ? branchs.find(bit => (bit.id === branchVal))?.name : `Vui lòng chọn cửa hàng`}
+        >{(branchVal > 0) ? branchs.find(bit => (bit.id === branchVal))?.address : ""}</List.Item>)
+    }
+
+
+    const onChangeSelectDatea = (value) => {
+        if (value?.date && (value?.date.value != buyDatea)) {
+            // run khi doi ngay
+            if (value.date?.displayName == "Hôm nay") {
+                setgenHourDataState(genHourData(1));
+                setgenMmDataState(genMinuteData(value.date?.displayName, deftime(mintime, maxtime).hh));
+                console.log(value)
+
+            } else {
+                setgenHourDataState(genHourData(0));
+                setgenMmDataState(genMinuteData(value.date?.displayName, 0))
+                console.log(value)
+
+
+            }
 
         }
+
+        if (value?.hour && (value?.hour.value != buyHoura)) {
+            setgenMmDataState(genMinuteData(value.date?.displayName, value?.hour.value))
+
+        }
+
+
+        if (value?.hour?.value) setBuyHoura(value.hour.value);
+        if (value?.minute?.value) setBuyMinutea(value.minute.value);
+        if (value?.date?.value)
+            setBuyDatea(value.date.value);
     }
+    const onChangeSelectDate = (value) => {
+        if (value?.date && (value?.date.value != buyDate)) {
+            // run khi doi ngay
+            if (value.date?.displayName == "Hôm nay") {
+                setgenHourDataState(genHourData(1));
+                setgenMmDataState(genMinuteData(value.date?.displayName, deftime(mintime, maxtime).hh));
+                console.log(value)
+
+            } else {
+                setgenHourDataState(genHourData(0));
+                setgenMmDataState(genMinuteData(value.date?.displayName, 0))
+                console.log(value)
+
+
+            }
+
+        }
+
+        if (value?.hour && (value?.hour.value != buyHour)) {
+            setgenMmDataState(genMinuteData(value.date?.displayName, value?.hour.value))
+
+        }
+
+
+        if (value?.hour?.value) setBuyHour(value.hour.value);
+        if (value?.minute?.value) setBuyMinute(value.minute.value);
+        if (value?.date?.value)
+            setBuyDate(value.date.value);
+    }
+
+    const loginEff = async() => {
+        
+            const userInfo = await authorizeV2();
+
+            let zaloSettings = await getSettingV2();
+            if (zaloSettings['authSetting']['scope.userInfo'] === true) {
+                setAuthDt({
+                    ...authDt,
+                    profile: userInfo
+                });
+                saveUserToCache(userInfo);
+                getPhoneNumberUser();
+            }
+            else{
+            setAuthDt({
+                ...authDt,
+                profile: {
+                    birthday: "",
+                    email: "",
+                    id: null,
+                    name: "",
+                    sex: 0,
+                    phone: "",
+                    picture: "",
+                    zalo_data: {
+                        avatar: "",
+                        followedOA: false,
+                        id: "",
+                        isSensitive: false,
+                        name: ""
+                    }, zalo_id: ""
+                },
+                token: ""
+            })};
+        
+
+
+        const cachedCart = await loadCartFromCache();
+        setCart(cachedCart);
+        const cachedOrders = await loadOrderFromCache();
+        setUserOrders(cachedOrders);
+    }
+
     return (<Container className={""}>
+
+        <Modal
+            visible={popupVisible}
+            title="Yêu cầu cấp quyền"
+            onClose={() => {
+                setPopupVisible(false);
+            }}
+            verticalActions
+            description="Cho phép chúng tôi truy cập số điện thoại để tăng cường trải nghiệm và thuận tiện cho công việc đặt hàng và giao hàng!"
+        >
+            <Box p={6}>
+                <Button
+                    onClick={() => {
+                        setPopupVisible(false);
+                        loginEff();
+                    }}
+                    fullWidth
+                >
+                    Xác nhận
+                </Button>
+            </Box>
+        </Modal>
+
+
+
         <div className="container mx-auto pt-4  pb-48  zui-container-background-color">
             <div className="flex flex-col md:flex-row gap-4">
                 <div className="md:w-3/4">
                     <div className="w-full">
                         <div className={`px-4`}>
                             {(cart && cart?.cartItems) ? <div
-                                    className={"w-full bg-white items-center justify-center align-middle rounded-lg mb-4 p-4 shadow-btn-fix--ed"}>
-                                    {
-                                        cart?.cartItems?.filter(cItem => cItem.parent === 0).length > 0 ?
-                                            <table className="w-full">
-                                                <tbody>
+                                className={"w-full bg-white items-center justify-center align-middle rounded-lg mb-4 p-4 shadow-btn-fix--ed"}>
+                                {
+                                    cart?.cartItems?.filter(cItem => cItem.parent === 0).length > 0 ?
+                                        <table className="w-full">
+                                            <tbody>
                                                 {cart?.cartItems?.filter(cItem => cItem.parent === 0).map((cartItem, cartIndex) => {
                                                     const childItems = cart.cartItems?.filter(cIt => cIt.parent === cartItem.product_id);
                                                     let totalItemPrice = (parseFloat(cartItem.sale_price + '') > 0) ? cartItem.sale_price : cartItem.price;
@@ -304,15 +566,15 @@ const UserCart = () => {
                                                         <td className="py-4">
                                                             <div className="flex items-start">
                                                                 <img className="w-[60px] h-[60px] mr-4 rounded-lg"
-                                                                     src={`${cartItem.image}`} alt={`${cartItem.name}`}/>
+                                                                    src={`${cartItem.image}`} alt={`${cartItem.name}`} />
                                                                 <div className="flex-1">
                                                                     <p className="font-medium text-sm zblack-color">{`${cartItem.name}`}</p>
                                                                     <p className="text-sm grey-price-color mt-1">{`${convertPrice(totalItemPrice)} đ`}</p>
                                                                     {(childItems && childItems?.length > 0) &&
                                                                         <div className="text-xs grey-price-color mt-1">
                                                                             <span>{`Đồ ăn thêm: `}</span>{childItems?.map(chItem => {
-                                                                            return (<span>{chItem.name + ', '}</span>)
-                                                                        })}</div>}
+                                                                                return (<span>{chItem.name + ', '}</span>)
+                                                                            })}</div>}
                                                                 </div>
                                                                 <span
                                                                     className="text-sm text-center w-8 zaui-link-text-color">{`x ${cartItem.quantity}`}</span>
@@ -321,15 +583,15 @@ const UserCart = () => {
                                                     </tr>)
                                                 })}
 
-                                                </tbody>
-                                            </table> :
-                                            <div className={"w-full items-center justify-center p-4"}>
-                                                <Text size={`xxxSmall`} className="text-center">Không có món ăn, thức uống
-                                                    trong giỏ hàng</Text>
-                                            </div>
-                                    }
+                                            </tbody>
+                                        </table> :
+                                        <div className={"w-full items-center justify-center p-4"}>
+                                            <Text size={`xxxSmall`} className="text-center">Không có món ăn, thức uống
+                                                trong giỏ hàng</Text>
+                                        </div>
+                                }
 
-                                </div> :
+                            </div> :
                                 <div
                                     className={"w-full bg-white items-center justify-center align-middle rounded-lg mb-4 p-4 shadow-btn-fixed"}>
                                     <div className={"w-full items-center justify-center p-4"}>
@@ -339,12 +601,11 @@ const UserCart = () => {
                                 </div>
                             }
                             <Text size={`xSmall`}
-                                  style={{float: 'right'}}
-
-                                  className={`zaui-link-text-color bg-[#088c4c] text-white rounded-3xl pt-1 pb-1 pl-3 pr-3  font-semibold`}
-                                  onClick={() => {
-                                      setOpenProductsSheet(true);
-                                  }}>Thêm +</Text></div>
+                                style={{ float: 'right' }}
+                                className={`zaui-link-text-color bg-[#088c4c] text-white rounded-3xl pt-1 pb-1 pl-3 pr-3  font-semibold`}
+                                onClick={() => {
+                                    setOpenProductsSheet(true);
+                                }}>Thêm +</Text></div>
 
                         <Box mt={14} className={`px-4 mt-14`}>
 
@@ -370,36 +631,9 @@ const UserCart = () => {
                                     <List.Item
                                         title={<Text className={'font-bold'}>{`Số tiền thanh toán`}</Text>}
                                         suffix={`${convertPrice(Number((cart?.totalCart || 0) + (deliveryFee || 0)))} đ`}
-                                        // subTitle={(distance && (distance / 1000).toFixed(2) + ' km')}
+                                    // subTitle={(distance && (distance / 1000).toFixed(2) + ' km')}
                                     />
                                 </List>
-
-
-                                {/*<div className={`flex w-full border-gray-300 border-b py-6`}>*/}
-                                {/*    <Text className={`flex-1`}>{`Thành tiền`}</Text>*/}
-                                {/*    <Text>{`${convertPrice(Number(cart?.totalCart || 0))} đ`}</Text>*/}
-                                {/*</div>*/}
-                                {/*<div className={`flex w-full border-gray-300 border-b py-6`}>*/}
-                                {/*    <Text className={`flex-1`}>{`Mã giảm giá`}</Text>*/}
-                                {/*    <Text>*/}
-                                {/*        {(selectedCoupon && selectedCoupon?.code) ? (parseInt(selectedCoupon?.discount_type || '0') !== 1 ? `${convertPrice(Number(selectedCoupon?.amount || 0))} đ` : `${convertPrice(Number(selectedCoupon?.amount || 0) * cart?.totalCart / 100)} đ`) : ''}*/}
-                                {/*    </Text>*/}
-                                {/*</div>*/}
-                                {/*<div className={`flex w-full border-gray-300 border-b py-6 justify-between`}>*/}
-                                {/*    <div>*/}
-                                {/*        <Text>{`Phí giao hàng`}</Text>*/}
-                                {/*        {distance && <Text className={'pt-1 text-gray-600'}*/}
-                                {/*                           size={'xxSmall'}>{`${(distance / 1000).toFixed(2)} km`}</Text>}*/}
-
-                                {/*    </div>*/}
-                                {/*    <Text>{`${convertPrice(Number(deliveryFee))} đ`}</Text>*/}
-                                {/*</div>*/}
-                                {/*<div className={`flex w-full  pt-6`}>*/}
-                                {/*    <Text size={'large'}*/}
-                                {/*          className={`flex-1 font-extrabold`}>{`Số tiền thanh toán`}</Text>*/}
-                                {/*    <Text size={'large'}*/}
-                                {/*          className={`font-extrabold`}>{`${convertPrice(Number((cart?.totalCart || 0) + (deliveryFee || 0)))} đ`}</Text>*/}
-                                {/*</div>*/}
                             </div>
                         </Box>
 
@@ -407,94 +641,94 @@ const UserCart = () => {
                             <div className={`w-full bg-white rounded-lg p-4`}>
                                 <Tabs id="contact-list"
 
-                                      activeKey={currenTab}
-                                      onChange={(activeKey) => {
-                                          setCurrentTab(activeKey)
-                                }}>
-                                    <Tabs.Tab key="giao_hang_tan_noi" label="Giao hàng tận nơi">
-                                        {/*<ArrowObject icon={<HiMap className="mr-2 h-5 w-5 inline-block"/>}*/}
-                                        {/*             title={`Vị trí cửa hàng`} padding={0} textSize={"large"}*/}
-                                        {/*             content={(branchVal > 0 && branchType == 1) ? branchs.find(bit => (bit.id === branchVal))?.name : ``}*/}
-                                        {/*             subcontent={(branchVal > 0 && branchType == 1) ? branchs.find(bit => (bit.id === branchVal))?.address : ``}*/}
-                                        {/*             contentTextColor={`text-sky-500`} onClick={() => {*/}
-                                        {/*    setBranchType(1);*/}
-                                        {/*    setOpenStoreSheet(true);*/}
-                                        {/*}} rightcontent={''} extraClassName={`w-full bg-white rounded-lg p-4`}>*/}
+                                    activeKey={currenTab}
+                                    onChange={(activeKey) => {
+                                        setCurrentTab(activeKey);
+                                        console.log("activeKey", activeKey);
+                                        setBranchType(activeKey === "tai_cua_hang" ? 1 : 0);
 
-                                        {/*</ArrowObject>*/}
-
-                                        {/*<ArrowObject icon={<HiLocationMarker className="mr-2 h-5 w-5 inline-block"/>}*/}
-                                        {/*             title={`Địa chỉ`} padding={0} textSize={"large"}*/}
-                                        {/*             content={(shippingAddress && shippingAddress?.id) ? shippingAddress.name + ' - ' + shippingAddress.phone : ``}*/}
-                                        {/*             subcontent={(shippingAddress && shippingAddress?.id) ? shippingAddress.address : ``}*/}
-                                        {/*             contentTextColor={`text-sky-500`} onClick={() => {*/}
-                                        {/*    navigate('/my-addresses/cart');*/}
-                                        {/*}} rightcontent={''}*/}
-                                        {/*             extraClassName={`w-full bg-white rounded-lg p-4`}></ArrowObject>*/}
-
-
+                                    }}>
+                                    <Tabs.Tab key="giao_hang_tan_noi" label="Giao tận nơi">
                                         <List noSpacing>
-                                            <List.Item
-                                                onClick={() => {
-                                                    setBranchType(1);
-                                                    setOpenStoreSheet(true);
-                                                }}
-                                                prefix={<HiMap className="h-5 w-5 "/>}
-                                                title={<Text bold className={'zaui-link-text-color'}>Vị trí cửa hàng</Text>}
-                                                suffix={<Icon icon="zi-chevron-right"/>}
-                                                subTitle={(branchVal > 0 && branchType == 1) ? branchs.find(bit => (bit.id === branchVal))?.name : `Vui lòng chọn cửa hàng`}
-                                            >{(branchVal > 0 && branchType == 1) ? branchs.find(bit => (bit.id === branchVal))?.address : ""}</List.Item>
-
-
+                                            <ChonCuaHang></ChonCuaHang>
                                             <List.Item
                                                 onClick={() => {
                                                     // navigate('/my-addresses/cart');
                                                     setOpenAddressSheet(true);
                                                 }}
-                                                prefix={<HiLocationMarker className="h-5 w-5 "/>}
+                                                prefix={<HiLocationMarker className="h-5 w-5 " />}
                                                 title={<Text bold className={'zaui-link-text-color'}>Địa chỉ</Text>}
-                                                suffix={<Icon icon="zi-chevron-right"/>}
+                                                suffix={<Icon icon="zi-chevron-right" />}
                                                 subTitle={(shippingAddress && shippingAddress?.id) ? shippingAddress.name + `  ${shippingAddress.phone ? `- ${shippingAddress.phone}` : ''}` : `Vui lòng chọn địa chỉ`}
                                             >{(shippingAddress && shippingAddress?.id) ? shippingAddress.address : ``}</List.Item>
 
-                                        </List>
-
-                                    </Tabs.Tab>
-                                    <Tabs.Tab key="tai_cua_hang" label="Lấy tại cửa hàng">
-                                        <List noSpacing>
-                                            <List.Item
-                                                onClick={() => {
-                                                    setBranchType(2);
-                                                    setOpenStoreSheet(true);
-                                                }}
-                                                prefix={<HiMap className="h-5 w-5 "/>}
-                                                title={<Text bold className={'zaui-link-text-color'}>Vị trí cửa hàng</Text>}
-                                                suffix={<Icon icon="zi-chevron-right"/>}
-                                                subTitle={(branchVal > 0 && branchType == 2) ? branchs.find(bit => (bit.id === branchVal))?.name : ``}
-                                            >{(branchVal > 0 && branchType == 2) ? branchs.find(bit => (bit.id === branchVal))?.address : ``}</List.Item>
-
-
-                                            <List.Item  >
+                                            <List.Item   >
                                                 <Picker
                                                     placeholder="Chọn thời gian"
                                                     mask
                                                     title="Thời gian nhận hàng"
                                                     maskClosable
-                                                    prefix={<HiOutlineClock className="mr-4 h-5 w-5"/>}
-                                                    suffix={ <Icon icon="zi-chevron-right"/>}
-                                                    inputClass="border-none w-full flex bg-transparent  text-base text-black font-medium text-md m-0 p-0 h-auto"
-                                                    formatPickedValueDisplay={(test) =>
-                                                        test && test?.hour && test?.minute && test?.date
+                                                    prefix={<HiOutlineClock className="mr-4 h-5 w-5" />}
+                                                    suffix={<Icon icon="zi-chevron-right" />}
+                                                    inputClass="border-none w-full flex bg-transparent  text-base text-black font-medium text-md m-0 p-0 h-auto picker-custom"
+                                                    formatPickedValueDisplay={(test) => {
+                                                        console.log('_____________', test)
+                                                        return test && test?.hour && test?.minute && test?.date
                                                             ? `${test?.hour?.displayName} : ${test?.minute?.displayName} - ${test?.date?.displayName}`
                                                             : `Chọn thời gian`
-                                                    }
+                                                    }}
+                                                    value={{ hour: buyHoura, minute: buyMinutea, date: buyDatea }}
                                                     data={[
                                                         {
                                                             options: genHourDataState,
                                                             name: "hour",
                                                         },
                                                         {
-                                                            options: genMinuteData(),
+                                                            options: genMmDataState,
+                                                            name: "minute",
+                                                            onChange: (value, name) => { console.log('đang đổi phút', value, name) }
+                                                        },
+                                                        {
+                                                            options: genDateData(),
+                                                            name: "date",
+                                                            onChange: (value, name) => { console.log('đang đổi ngày', value, name) }
+                                                        },
+                                                    ]}
+
+                                                    onChange={onChangeSelectDatea}
+
+                                                />
+                                            </List.Item>
+
+
+                                        </List>
+
+                                    </Tabs.Tab>
+                                    <Tabs.Tab key="tai_cua_hang" label="Lấy tại cửa hàng">
+                                        <List noSpacing>
+                                            <ChonCuaHang></ChonCuaHang>
+                                            <List.Item  >
+                                                <Picker
+                                                    placeholder="Chọn thời gian"
+                                                    mask
+                                                    title="Thời gian nhận hàng"
+                                                    maskClosable
+                                                    prefix={<HiOutlineClock className="mr-4 h-5 w-5" />}
+                                                    suffix={<Icon icon="zi-chevron-right" />}
+                                                    inputClass="border-none w-full flex bg-transparent  text-base text-black font-medium text-md m-0 p-0 h-auto picker-custom"
+                                                    formatPickedValueDisplay={(test) =>
+                                                        test && test?.hour && test?.minute && test?.date
+                                                            ? `${test?.hour?.displayName} : ${test?.minute?.displayName} - ${test?.date?.displayName}`
+                                                            : `Chọn thời gian`
+                                                    }
+                                                    value={{ hour: buyHour, minute: buyMinute, date: buyDate }}
+                                                    data={[
+                                                        {
+                                                            options: genHourDataState,
+                                                            name: "hour",
+                                                        },
+                                                        {
+                                                            options: genMmDataState,
                                                             name: "minute",
                                                         },
                                                         {
@@ -502,101 +736,12 @@ const UserCart = () => {
                                                             name: "date",
                                                         },
                                                     ]}
-                                                    onChange={(value) => {
-                                                        if (value?.date?.value != buyDate) {
-                                                            setBuyDate(value?.date?.value);
-                                                            if (value.date?.displayName == "Hôm nay") {
-                                                                setgenHourDataState(genHourData(1));
-                                                            } else {
-                                                                setgenHourDataState(genHourData(0));
-                                                            }
-                                                        }
-                                                        if (!value?.date || !value?.hour || !value?.minute) {
-                                                            console.log('erro');
-                                                        } else {
-                                                            setBuyHour(value.hour.value);
-                                                            setBuyMinute(value.minute.value);
-                                                            setBuyDate(value.date.value);
-                                                        }
-                                                    }}
+                                                    onChange={onChangeSelectDate}
                                                 />
                                             </List.Item>
 
                                         </List>
-                                        {/*<ArrowObject icon={<HiMap className="mr-2 h-5 w-5 "/>}*/}
-                                        {/*             title={`Vị trí cửa hàng`} padding={0} textSize={"large"}*/}
-                                        {/*             content={(branchVal > 0 && branchType == 2) ? branchs.find(bit => (bit.id === branchVal))?.name : ``}*/}
-                                        {/*             subcontent={(branchVal > 0 && branchType == 2) ? branchs.find(bit => (bit.id === branchVal))?.address : ``}*/}
-                                        {/*             contentTextColor={`text-sky-500`} onClick={() => {*/}
-                                        {/*    setBranchType(2);*/}
-                                        {/*    setOpenStoreSheet(true);*/}
-                                        {/*}} rightcontent={''}*/}
-                                        {/*             extraClassName={`w-full bg-white rounded-lg p-4`}></ArrowObject>*/}
 
-                                        {/*<div className="p-4 ">*/}
-                                        {/*    <Picker*/}
-                                        {/*        placeholder="Chọn thời gian"*/}
-                                        {/*        prefix={<HiOutlineClock className="mr-2 h-5 w-5 inline-block"/>}*/}
-                                        {/*        suffix={<HiOutlineArrowRight className="ml-2 h-4 w-4 "/>}*/}
-                                        {/*        mask*/}
-                                        {/*        maskClosable*/}
-                                        {/*        inputClass="border-none bg-transparent text-base text-black font-medium text-md m-0 p-0 h-auto"*/}
-                                        {/*        action={{*/}
-                                        {/*            text: "Đóng",*/}
-                                        {/*            close: true,*/}
-                                        {/*        }}*/}
-
-                                        {/*        formatPickedValueDisplay={(test) =>*/}
-                                        {/*            (test && test?.hour && test?.minute && test?.date)*/}
-                                        {/*                ? `${test?.hour?.displayName} : ${test?.minute?.displayName} - ${test?.date?.displayName}`*/}
-                                        {/*                : `Chọn thời gian`*/}
-                                        {/*        }*/}
-
-                                        {/*        data={[*/}
-                                        {/*            {*/}
-                                        {/*                options: genHourDataState,*/}
-                                        {/*                name: "hour",*/}
-                                        {/*            },*/}
-                                        {/*            {*/}
-                                        {/*                options: genMinuteData(),*/}
-                                        {/*                name: "minute",*/}
-                                        {/*            },*/}
-                                        {/*            {*/}
-                                        {/*                options: genDateData(),*/}
-                                        {/*                name: "date",*/}
-                                        {/*            },*/}
-                                        {/*        ]}*/}
-
-                                        {/*        onChange={(value) => {*/}
-                                        {/*            console.log('on change')*/}
-                                        {/*            if (value?.date?.value != buyDate) {*/}
-                                        {/*                setBuyDate(value?.date?.value);*/}
-                                        {/*                if (value.date?.displayName == "Hôm nay") {*/}
-
-                                        {/*                    setgenHourDataState(genHourData(1))*/}
-
-                                        {/*                } else {*/}
-                                        {/*                    setgenHourDataState(genHourData(0))*/}
-                                        {/*                }*/}
-                                        {/*            }*/}
-                                        {/*            if (!value?.date || !value?.hour || !value?.minute) {*/}
-                                        {/*                // setErrMsg(oldMsg => {*/}
-                                        {/*                //     return {*/}
-                                        {/*                //       ...oldMsg,*/}
-                                        {/*                //       errMsg: "Bạn cần chọn đủ thời gian nhận hàng"*/}
-                                        {/*                //     }*/}
-                                        {/*                //   })*/}
-                                        {/*                console.log('erro')*/}
-                                        {/*            } else {*/}
-                                        {/*                setBuyHour(value.hour.value);*/}
-                                        {/*                setBuyMinute(value.minute.value);*/}
-                                        {/*                setBuyDate(value.date.value);*/}
-
-                                        {/*            }*/}
-                                        {/*        }*/}
-                                        {/*        }*/}
-                                        {/*    />*/}
-                                        {/*</div>*/}
                                     </Tabs.Tab>
                                 </Tabs>
                             </div>
@@ -610,51 +755,52 @@ const UserCart = () => {
                                         onClick={() => {
                                             setOpenCouponSheet(true)
                                         }}
-                                        prefix={<Icon icon="zi-star"/>}
-                                        title={<Text  bold className={'text-[#088c4c]'}>Chọn mã khuyến mãi</Text>}
-                                        suffix={<Icon icon="zi-chevron-right"/>}
-                                        subTitle=  {(selectedCoupon && selectedCoupon?.code) ? (parseInt(selectedCoupon?.discount_type || '0') !== 1 ? `${convertPrice(Number(selectedCoupon?.amount || 0))} đ` : `${convertPrice(Number(selectedCoupon?.amount || 0) * cart?.totalCart / 100)} đ`) : ''}
+                                        prefix={<Icon icon="zi-star" />}
+                                        title={<Text bold className={'text-[#088c4c]'}>Chọn mã khuyến mãi</Text>}
+                                        suffix={<Icon icon="zi-chevron-right" />}
+                                        subTitle={(selectedCoupon && selectedCoupon?.code) ? (parseInt(selectedCoupon?.discount_type || '0') !== 1 ? `${convertPrice(Number(selectedCoupon?.amount || 0))} đ` : `${convertPrice(Number(selectedCoupon?.amount || 0) * cart?.totalCart / 100)} đ`) : ''}
 
                                     />
 
                                     <List.Item
 
-                                        prefix={<Icon icon="zi-note"/>}
+                                        prefix={<Icon icon="zi-note" />}
                                         title={<Input
                                             focused={false}
                                             size={"small"}
                                             className={'border-none w-full no-border-focus pb-3'}
-                                        placeholder="Nhập ghi chú..."
+                                            placeholder="Nhập ghi chú..."
+                                            onChange={(e) => (setNote(e.target.value))}
                                         />}
 
                                     />
                                 </List>
                             </div>
-                                {/*<ArrowObject title={`Mã giảm giá`} padding={0} textSize={"large"}*/}
-                                {/*             content={(selectedCoupon && selectedCoupon?.code) ? selectedCoupon.description : ``}*/}
-                                {/*             subcontent=*/}
-                                {/*                 {(selectedCoupon && selectedCoupon?.code) ? (parseInt(selectedCoupon?.discount_type || '0') !== 1 ? `${convertPrice(Number(selectedCoupon?.amount || 0))} đ` : `${convertPrice(Number(selectedCoupon?.amount || 0) * cart?.totalCart / 100)} đ`) : ''}*/}
-                                {/*             contentTextColor={`text-sky-500`} onClick={() => {*/}
-                                {/*    setOpenCouponSheet(true)*/}
-                                {/*}} rightcontent={''} extraClassName={`w-full bg-white rounded-lg p-4`}></ArrowObject>*/}
-                                {/*coupons && <Coupons coupons={coupons}/>*/}
+                            {/*<ArrowObject title={`Mã giảm giá`} padding={0} textSize={"large"}*/}
+                            {/*             content={(selectedCoupon && selectedCoupon?.code) ? selectedCoupon.description : ``}*/}
+                            {/*             subcontent=*/}
+                            {/*                 {(selectedCoupon && selectedCoupon?.code) ? (parseInt(selectedCoupon?.discount_type || '0') !== 1 ? `${convertPrice(Number(selectedCoupon?.amount || 0))} đ` : `${convertPrice(Number(selectedCoupon?.amount || 0) * cart?.totalCart / 100)} đ`) : ''}*/}
+                            {/*             contentTextColor={`text-sky-500`} onClick={() => {*/}
+                            {/*    setOpenCouponSheet(true)*/}
+                            {/*}} rightcontent={''} extraClassName={`w-full bg-white rounded-lg p-4`}></ArrowObject>*/}
+                            {/*coupons && <Coupons coupons={coupons}/>*/}
                         </Box>
 
 
                         <Box mt={4} className={`px-4 `}>
-                        <div className={`w-full bg-white rounded-lg p-4`}>
+                            <div className={`w-full bg-white rounded-lg p-4`}>
                                 <Text bold size={'xLarge'} className={`mb-2`}>{`Phương thức thanh toán`}</Text>
 
-                                <List noSpacing>
+                                {selectedPaymentMethod ? <List noSpacing>
                                     <List.Item
                                         onClick={() => {
                                             //setSelectedPaymentMe`thod(true)
                                             setOpenPaymentMethodSheet(true)
                                         }}
                                         prefix={<img className="w-9 h-9"
-                                                     src={getImageSource(selectedPaymentMethod?.code as string) }/>}
-                                        title={<Text  bold className={'text-[#088c4c]'}>{    (selectedPaymentMethod && selectedPaymentMethod?.id) ? selectedPaymentMethod?.title : ``}</Text>}
-                                        suffix={<Icon icon="zi-chevron-right"/>}
+                                            src={getImageSource(selectedPaymentMethod?.code as string)} />}
+                                        title={<Text bold className={'text-[#088c4c]'}>{(selectedPaymentMethod && selectedPaymentMethod?.id) ? selectedPaymentMethod?.title : ``}</Text>}
+                                        suffix={<Icon icon="zi-chevron-right" />}
                                         subTitle={
                                             <p
                                                 dangerouslySetInnerHTML={{
@@ -663,17 +809,9 @@ const UserCart = () => {
                                             />
                                         }
                                     />
-                                </List>
-                            </div>
+                                </List> : <></>}
 
-                            {/*<ArrowObject title={`Phương thức thanh toán`} padding={0} textSize={"large"}*/}
-                            {/*             content={(selectedPaymentMethod && selectedPaymentMethod?.id) ? selectedPaymentMethod.title : ``}*/}
-                            {/*             contentTextColor={`text-sky-500`} onClick={() => {*/}
-                            {/*    //setSelectedPaymentMe`thod(true)*/}
-                            {/*    setOpenPaymentMethodSheet(true)*/}
-                            {/*}} rightcontent={''}*/}
-                            {/*             subcontent={(selectedPaymentMethod?.notes) ? selectedPaymentMethod?.notes : ''}*/}
-                            {/*             extraClassName={`w-full bg-white rounded-lg p-4`}></ArrowObject>*/}
+                            </div>
                         </Box>
                         <Text className={'pl-5 pr-5 pt-10 text-gray-500'}>
                             Bằng việc tiến hành thanh toán, bạn đồng ý với điều kiện và điều khoản sử dụng Zalo Mini app
@@ -686,3 +824,19 @@ const UserCart = () => {
     </Container>);
 }
 export default UserCart;
+function genMinuteData(arg0: string, arg1: number): any {
+    throw new Error("Function not implemented.");
+}
+
+function generateDateListFromToday(arg0: number) {
+    throw new Error("Function not implemented.");
+}
+
+function setAuthDt(arg0: any) {
+    throw new Error("Function not implemented.");
+}
+
+function setUserOrders(cachedOrders: any) {
+    throw new Error("Function not implemented.");
+}
+

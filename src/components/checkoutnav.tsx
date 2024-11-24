@@ -5,24 +5,28 @@ import {
 	selectedCouponState,
 	selectedPaymentMethodState,
 	shippingAddressState,
+	shippingDateaState,
 	shippingDateState,
 	userOrdersState,
 } from '../states/cart'
 import { convertPrice } from '../utils'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
 	branchTypeState,
 	branchValState,
 	currenTabState,
 	headerState,
 	pageGlobalState,
+	noteState,
 } from '../state'
-import { Address, CartData, Coupon, Order, PaymentMethod, ShippingDate } from '../models'
+import { Address, CartData, Coupon, Order, PaymentMethod, ShippingDate, Branch } from '../models'
+import { branchsState } from '../states/home'
 import moment from 'moment'
 import { authState } from '../states/auth'
-import { resetCartCache, saveOrderToCache } from '../services/storage'
+import { resetCartCache, saveOrderToCache, loadUserFromCache } from '../services/storage'
 import { createMac } from '../services/zalo'
 import { Payment } from 'zmp-sdk'
+import { createOrder } from '../services/ApiClient'
 
 const CheckoutNav = () => {
 	const navigate = useNavigate()
@@ -31,18 +35,47 @@ const CheckoutNav = () => {
 	const { showTotalCart, showBottomBar } = useRecoilValue(headerState)
 	const authDt = useRecoilValue(authState)
 	const [cart, setCart] = useRecoilState<CartData>(cartState)
-
 	const [selectedPaymentMethod, setSelectedPaymentMethod] = useRecoilState<PaymentMethod>(
 		selectedPaymentMethodState,
 	)
 	const [selectedCoupon, setSelectedCoupon] = useRecoilState<Coupon>(selectedCouponState)
 	const [userOrders, setUserOrders] = useRecoilState<Order[]>(userOrdersState)
 	const [shippingDate, setShippingDate] = useRecoilState<ShippingDate>(shippingDateState)
+
+	const [shippingDatea, setShippingDatea] = useRecoilState<ShippingDate>(shippingDateaState)
+
 	const [shippingAddress, setShippingAddress] = useRecoilState<Address>(shippingAddressState)
 	const [branchType, setBranchType] = useRecoilState<number>(branchTypeState)
 	const [branchVal, setBranchVal] = useRecoilState<number>(branchValState)
+	const [cua_hang, setCua_hang] = useState()
+	const listBranchs = useRecoilValue<Branch[]>(branchsState)
 
 	const [currenTab, setCurrentTab] = useRecoilState<string>(currenTabState)
+	const [note, setNote] = useRecoilState<string>(noteState)
+	const check = () => {
+		const checkItem = cart?.cartItems?.length > 0
+		let checkBranch = false
+		switch (currenTab) {
+			case 'giao_hang_tan_noi':
+				checkBranch = !!(
+					shippingAddress &&
+					shippingAddress.id > 0 &&
+					branchVal &&
+					shippingDatea.hour !== 0
+				)
+				break
+			case 'tai_cua_hang':
+				console.log('alo', shippingDate)
+				checkBranch = !!(shippingDate.hour !== 0 && branchVal)
+				break
+			default:
+				checkBranch = false
+		}
+		const checkPayment = !!selectedPaymentMethod && selectedPaymentMethod?.id > 0
+
+		return !(checkItem && checkBranch && checkPayment)
+	}
+
 	/*
     product_id: number;
   name: string;
@@ -54,28 +87,12 @@ const CheckoutNav = () => {
   parent: number;
   user_note: string;
     */
-
+	useEffect(() => {
+		setCua_hang(listBranchs.filter((e) => e.id == branchVal))
+	}, [branchVal])
 	//const location = useLocation();
-
-	const check = () => {
-		const checkItem = cart?.cartItems?.length > 0
-		let checkBranch = false
-		switch (currenTab) {
-			case 'giao_hang_tan_noi':
-				checkBranch = !!(shippingAddress && shippingAddress.id > 0 && branchVal && branchType === 1)
-				break
-			case 'tai_cua_hang':
-				checkBranch = !!(shippingDate.date !== '' && branchVal && branchType === 2)
-				break
-			default:
-				checkBranch = false
-		}
-		const checkPayment = !!selectedPaymentMethod && selectedPaymentMethod?.id > 0
-
-		return !(checkItem && checkBranch && checkPayment)
-	}
-
-	return !!(cart && cart?.cartItems && cart?.cartItems?.length > 0 && showTotalCart) ? (
+	//console.log(location.pathname)
+	return cart && cart?.cartItems && cart?.cartItems?.length > 0 && showTotalCart ? (
 		<div
 			className={`w-full fixed ${
 				showBottomBar ? `bottom-[55px]` : `bottom-0`
@@ -89,9 +106,8 @@ const CheckoutNav = () => {
 						Number(cart?.totalCart || 0) + (cart?.deliveryFee || 0),
 					)} đ`}</Text>
 				</Box>
-
 				<Button
-					className="w-full text-white"
+					className="w-full "
 					variant={
 						((shippingAddress && shippingAddress.id > 0) || shippingDate) &&
 						branchVal &&
@@ -102,6 +118,8 @@ const CheckoutNav = () => {
 					}
 					size="large"
 					onClick={async () => {
+						//const cua_hang = listBranchs.filter((e) => e.id == branchVal);
+
 						if (
 							((shippingAddress && shippingAddress.id > 0) || shippingDate) &&
 							branchVal &&
@@ -109,16 +127,18 @@ const CheckoutNav = () => {
 							selectedPaymentMethod?.id > 0
 						) {
 							const lineItems = cart?.cartItems.map((cartItem, cartIndex) => {
-								const price = cartItem?.sale_price > 0 ? cartItem?.sale_price : cartItem?.price
+								const price =
+									Number(cartItem?.sale_price) > 0 ? cartItem?.sale_price : cartItem?.price
 								return {
 									id: cartItem?.product_id,
 									parent: cartItem?.parent,
 									name: cartItem?.name,
 									quantity: cartItem?.quantity,
-									subtotal: price * cartItem?.quantity,
+									subtotal: Number(price) * cartItem?.quantity,
 									price: price,
 									image: cartItem?.image,
 									user_note: cartItem?.user_note,
+									weight: cartItem?.weight,
 								}
 							})
 							let maxId = 0
@@ -128,33 +148,41 @@ const CheckoutNav = () => {
 										return (acc = acc > value.id ? acc : value.id)
 									}, 0) || 0
 							}
-
+							//lineItems.reduce((acc, curentItem) => acc + curentItem.weight *curentItem.quantity, 0)
 							const newOrder = {
 								id: maxId + 1,
 								parent_id: 0,
 								status: 'processing',
 								currency: 'VND',
 								version: '1.0',
+								total_item: Number(cart?.totalCart || 0),
 								prices_include_tax: true,
-								date_created: moment().format('h:mm DD/MM/YYYY'),
-								date_modified: moment().format('h:mm DD/MM/YYYY'),
+								date_created: moment().format('HH:mm DD/MM/YYYY'),
+								date_modified: moment().format('HH:mm DD/MM/YYYY'),
 								discount_total:
 									selectedCoupon && selectedCoupon?.code && selectedCoupon?.amount
 										? parseInt(selectedCoupon?.discount_type || '0') == 1
 											? (Number(selectedCoupon?.amount || 0) * cart?.totalCart) / 100
 											: Number(selectedCoupon?.amount || 0)
 										: 0,
-								shipping_total: 0,
-								total: parseFloat(cart?.totalCart + '' || '0'),
-								customer_id: authDt?.profile?.id || '',
+								discount_tax: '',
+								shipping_total: Number(cart?.deliveryFee || 0),
+								total: Number(cart?.totalCart || 0) + Number(cart?.deliveryFee || 0),
+								customer_id: authDt.profile?.id || '',
+								customer_name: authDt.profile?.name || '',
+								customer_phone: authDt.profile.phone || '',
 								shipping: shippingAddress,
-								payment_method: selectedPaymentMethod?.id,
+								payment_method: selectedPaymentMethod?.code,
 								payment_method_title: selectedPaymentMethod?.title,
 								created_via: 'zalo',
-								date_completed: moment().format('h:mm DD/MM/YYYY'),
+								date_completed: moment().format('HH:mm DD/MM/YYYY'),
 								branch_id: branchVal,
 								branch_type: branchType,
+								storeId: '645389baf8c7c0f33d1eeacd',
+								cua_hang: cua_hang,
+								shippingDate: branchType == 0 ? shippingDatea : shippingDate,
 								line_items: lineItems,
+								note: `Nem nướng Quế Quân\n${note}`,
 							}
 							saveOrderToCache(newOrder)
 							setUserOrders((old) => {
@@ -162,22 +190,6 @@ const CheckoutNav = () => {
 								orders.push(newOrder as Order)
 								return orders
 							})
-
-							// setErrMsg(oldMsg => {
-							//     return {
-							//         ...oldMsg,
-							//         errMsg: "Tạo đơn hàng thành công!"
-							//     }
-							// })
-							// resetCartCache();
-							// setCart({
-							//     cartItems: [],
-							//     totalCart: 0,
-							//     totalCheckout: 0,
-							//     isFetching: false
-							// })
-							// setBranchVal(0); setBranchType(0); setShippingAddress(null); setShippingDate(null); setSelectedCoupon(null); setSelectedPaymentMethod(null);
-							//tạo đơn hàng
 
 							const item = lineItems.map((i) => ({
 								id: i.id,
@@ -193,12 +205,12 @@ const CheckoutNav = () => {
 								orderId: newOrder.id,
 							}
 
-							const totalAmount = item.reduce((acc, curentItem) => acc + curentItem.amount, 0)
+							// const totalAmount = item.reduce((acc, curentItem) => acc + curentItem.weight *curentItem.quantity, 0)
 
 							let orderData = {
-								desc: `Thanh toan ${totalAmount}`,
+								desc: `Thanh toan ${newOrder.total}`,
 								item,
-								amount: totalAmount,
+								amount: newOrder.total, //newOrder.total,
 								extradata: JSON.stringify(extraData),
 								method: JSON.stringify(paymentMethod),
 							}
@@ -211,7 +223,8 @@ const CheckoutNav = () => {
 										...orderData,
 										success: async (data) => {
 											const { orderId } = data
-
+											const rs = await createOrder(orderId, newOrder)
+											console.log(orderId)
 											resolve(orderId)
 											resetCartCache()
 											setCart({
@@ -220,8 +233,7 @@ const CheckoutNav = () => {
 												totalCheckout: 0,
 												isFetching: false,
 											})
-											setBranchVal(0)
-											setBranchType(0)
+											setBranchVal(1125698)
 											setShippingAddress(null)
 											setShippingDate(null)
 											setSelectedCoupon(null)

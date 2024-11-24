@@ -92,6 +92,30 @@ export const loadUserFromCache = () =>
 		})
 	})
 
+export const loadPhoneFromCache = () =>
+	new Promise((resolve) => {
+		api.getStorage({
+			keys: ['phone'],
+			success: ({ phone }) => {
+				if (phone) {
+					resolve(phone)
+				}
+				resolve()
+			},
+			fail: (error) => {
+				console.log('Failed to load phone from cache. Details: ', error)
+				resolve()
+			},
+		})
+	})
+export const savePhoneToCache = async (phone) => {
+	await api.setStorage({
+		data: { phone },
+		fail: (error) => console.log('Failed to save phone to cache. Details: ', error),
+	})
+	return phone
+}
+
 export const saveUserToCache = async (user) => {
 	await api.setStorage({
 		data: { user },

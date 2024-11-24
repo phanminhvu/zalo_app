@@ -17,7 +17,7 @@ const PaymentMethods = () => {
             customTitle:  "Phương thức thanh toán",
             hasLeftIcon: true,
             type: "secondary",
-            showBottomBar: false
+            showBottomBar: true
         });
     }, []);
     const { Item } = List;

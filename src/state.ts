@@ -121,6 +121,10 @@ export const openStoresPickerState = atom<boolean>({
   key: "openStoresPicker",
   default: false,
 });
+export const openSheetChatState = atom<boolean>({
+  key: "openSheetChat",
+  default: false,
+});
 export const openTimePickerState = atom<boolean>({
   key: "openTimePicker",
   default: false,
@@ -149,18 +153,18 @@ export const isFromSettingState = atom<boolean>({
 
 export const branchValState = atom<number>({
   key: "branchVal",
-  default: 0,
+  default: 1125698,
 });
 
 
 export const branchLatState = atom<number>({
   key: "branchLat",
-  default: 0,
+  default: 10.810332,
 });
 
 export const branchLngState = atom<number>({
   key: "branchLng",
-  default: 0,
+  default: 106.729933,
 });
 
 
@@ -169,7 +173,7 @@ export const branchLngState = atom<number>({
 //1: Giao tan noi
 export const branchTypeState = atom<number>({
   key: "branchType",
-  default: 1,
+  default: 0,
 });
 export const initialProductInfoPickedState = {
   product: {
@@ -214,4 +218,8 @@ export const pageGlobalState = atom<PageGolobal>({
   default: {
     errMsg:""
   } as PageGolobal,
+});
+export const noteState = atom<string>({
+  key: "note",
+  default: '',
 });

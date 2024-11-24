@@ -3,7 +3,7 @@ import { Category, Coupon, PaymentMethod, Product, Province, District, Branch } 
 import WooWorker from '../services/WooWorker'
 import categories from '../mock/categories.json'
 import products from '../mock/products.json'
-import coupons from '../mock/coupons.json'
+// import coupons from "../mock/coupons.json";
 import provinces from '../mock/provinces.json'
 import districts from '../mock/districts.json'
 import branchs from '../mock/branchs.json'
@@ -20,7 +20,7 @@ export const homeCategoriesState = selector<Category[]>({
 export const couponsState = selector<Coupon[]>({
 	key: 'allcoupons',
 	get: async ({ get }) => {
-		return coupons
+		return [] //coupons;
 	},
 })
 

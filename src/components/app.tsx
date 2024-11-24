@@ -32,13 +32,44 @@ import UserEditAddress from '../pages/user/userEditAddress'
 import CouponsPicker from './coupon-picker'
 import PaymentsPicker from './payment-method-picker'
 import { ErrorBoundary } from 'react-error-boundary'
-import { follow } from '../services/zalo'
+import SheetChat from '../components/sheetlistchat'
+import OrderDetail from '../pages/ecommerce/order-detail'
+import { getAccessToken } from 'zmp-sdk/apis'
+import { getPhoneNumber } from 'zmp-sdk'
+
 const MyApp = () => {
-	useEffect(() => {
-		follow()
-	}, [])
+	// useEffect(() => {
+	//   follow();
+	// }, [])
 	//const navigate = useNavigate();
 	const [currentPath, setCurrentPath] = useState()
+
+	useEffect(() => {
+		console.log('Get access token')
+
+		Promise.all([getAccessToken(), getPhoneNumber()])
+			.then((values) => {
+				const accessToken = values?.[0]
+				const token = values?.[1]?.token
+
+				if (accessToken && token) {
+					fetch('https://quequan.vn:8081/customer/zalocustomer', {
+						method: 'POST',
+						body: JSON.stringify({ token, accessToken }),
+					})
+						.then((value) => {
+							console.log('post user info success', value)
+						})
+						.catch((err) => {
+							console.log(err)
+						})
+				}
+			})
+			.catch((error) => {
+				console.log(error)
+			})
+	}, [])
+
 	return (
 		<RecoilRoot>
 			<ErrorBoundary fallback={<div className={`p-4`}>Đã có lỗi xảy ra! Xin vui lòng tải lại</div>}>
@@ -66,6 +97,9 @@ const MyApp = () => {
 									<Route path="/payment-methods" element={<PaymentMethods />} />
 									<Route path="/waiting-payment" element={<WaitingPayment />} />
 									<Route path="/my-orders" element={<Orders />} />
+
+									<Route path="/my-orders/:id" element={<OrderDetail />} />
+
 									<Route path="/my-addresses/:from" element={<UserAddresses />} />
 									<Route path="/my-profile" element={<UserProfile />} />
 
@@ -83,11 +117,10 @@ const MyApp = () => {
 								<ProductsPicker />
 								<ProductPicker />
 								<AddressPicker />
-
 								<StoresPicker />
 								<CouponsPicker />
 								<PaymentsPicker />
-
+								<SheetChat />
 								<BottomNav />
 							</ZMPRouter>
 						</SnackbarProvider>

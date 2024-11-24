@@ -4,7 +4,7 @@ import { StoreLite } from "../../models";
 import { getConfig } from "../config-provider";
 import { DEFAULT_OA_ID } from "../../constants";
 import { openChat } from "zmp-sdk";
-import {Avatar} from "zmp-framework/react";
+// import {Avatar} from "zmp-framework/react";
 import {useNavigate} from "react-router-dom";
 
 const CardShop = ({ storeInfo }: { storeInfo: StoreLite }) => {
@@ -25,7 +25,7 @@ const CardShop = ({ storeInfo }: { storeInfo: StoreLite }) => {
     <div className={`flex flex-row justify-between bg-white `} >
       {storeInfo && (
         <div className="flex flex-row ">
-          <Avatar src={storeInfo.gravatar} size={24} className={`rounded-full`}></Avatar>
+          {/* <Avatar src={storeInfo.gravatar} size={24} className={`rounded-full`}></Avatar> */}
           <div className=" pl-4">
             <div className=" text-base font-medium pb-1">
               {storeInfo.store_name}
