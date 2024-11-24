@@ -1,23 +1,27 @@
 [
-  {
-    "code":1,
-    "name":"Quận 1",
-    "province_code": 1
-  },{
-  "code":2,
-  "name":"Quận 7",
-  "province_code": 1
-},{
-  "code":3,
-  "name":"Quận Gò Vấp",
-  "province_code": 1
-},{
-  "code":4,
-  "name":"Quận Tân Bình",
-  "province_code": 1
-},{
-  "code":5,
-  "name":"Thành phố Thủ Đức",
-  "province_code": 1
-}
+	{
+		"code": 1,
+		"name": "Quận 1",
+		"province_code": 1
+	},
+	{
+		"code": 2,
+		"name": "Quận 7",
+		"province_code": 1
+	},
+	{
+		"code": 3,
+		"name": "Quận Gò Vấp",
+		"province_code": 1
+	},
+	{
+		"code": 4,
+		"name": "Quận Tân Bình",
+		"province_code": 1
+	},
+	{
+		"code": 5,
+		"name": "Thành phố Thủ Đức",
+		"province_code": 1
+	}
 ]

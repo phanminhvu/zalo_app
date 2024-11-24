@@ -1,26 +1,26 @@
 [
-  {
-    "id": 1,
-    "name":"Nem Nướng",
-    "image":"https://product.hstatic.net/200000370513/product/1_71df8eadd3084cc2aa5df2f68386ba86_large.jpg",
-    "parent": 0
-  },
-  {
-    "id": 2,
-    "name":"Nem Sống & Mọc",
-    "image":"https://product.hstatic.net/200000370513/product/1_71df8eadd3084cc2aa5df2f68386ba86_large.jpg",
-    "parent": 0
-  },
-  {
-    "id": 3,
-    "name":"Ăn Kèm Nem Nướng",
-    "image":"https://product.hstatic.net/200000370513/product/ban_don_755940e5152246c29ff03b9455c683bd_31bbe61eb76243adafc1b2113bb16e66_large.jpg",
-    "parent": 0
-  },
-  {
-    "id": 4,
-    "name":"Sản phẩm khuyến mãi",
-    "image":"https://ctygram.com/wp-content/uploads/2024/10/icon_khuyen_mai.jpg",
-    "parent": 0
-  }
+	{
+		"id": 1,
+		"name": "Nem Nướng",
+		"image": "https://product.hstatic.net/200000370513/product/1_71df8eadd3084cc2aa5df2f68386ba86_large.jpg",
+		"parent": 0
+	},
+	{
+		"id": 2,
+		"name": "Nem Sống & Mọc",
+		"image": "https://product.hstatic.net/200000370513/product/1_71df8eadd3084cc2aa5df2f68386ba86_large.jpg",
+		"parent": 0
+	},
+	{
+		"id": 3,
+		"name": "Ăn Kèm Nem Nướng",
+		"image": "https://product.hstatic.net/200000370513/product/ban_don_755940e5152246c29ff03b9455c683bd_31bbe61eb76243adafc1b2113bb16e66_large.jpg",
+		"parent": 0
+	},
+	{
+		"id": 4,
+		"name": "Sản phẩm khuyến mãi",
+		"image": "https://ctygram.com/wp-content/uploads/2024/10/icon_khuyen_mai.jpg",
+		"parent": 0
+	}
 ]

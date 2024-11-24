@@ -1,22 +1,22 @@
-import {atom} from "recoil";
+import { atom } from 'recoil'
 
 export const selectedAttributeState = atom({
-    key: 'selectedAttribute',
-    default: [],
-});
+	key: 'selectedAttribute',
+	default: [],
+})
 export const selectedColorState = atom({
-    key: 'selectedColor',
-    default: 0,
-});
+	key: 'selectedColor',
+	default: 0,
+})
 export const selectVariationState = atom({
-    key: 'selectVariation',
-    default: null,
-});
+	key: 'selectVariation',
+	default: null,
+})
 export const productVariationsState = atom({
-    key: 'productVariations',
-    default: null,
-});
+	key: 'productVariations',
+	default: null,
+})
 export const detailProductState = atom({
-    key: 'detailProduct',
-    default: null,
-});
+	key: 'detailProduct',
+	default: null,
+})

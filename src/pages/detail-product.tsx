@@ -148,7 +148,6 @@
 //           });
 //           changeStatusBarColor();
 
-
 //   }, []);*/
 //   // @ts-ignore
 //     return product ? (

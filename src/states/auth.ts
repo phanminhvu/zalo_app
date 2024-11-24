@@ -1,11 +1,11 @@
-import {atom} from "recoil";
-import {AuthData} from "../models";
+import { atom } from 'recoil'
+import { AuthData } from '../models'
 
 export const initialAuthState = {
-    profile: {},
-    token:""
-};
+	profile: {},
+	token: '',
+}
 export const authState = atom<AuthData>({
-    key: 'authData',
-    default: initialAuthState,
-});
+	key: 'authData',
+	default: initialAuthState,
+})

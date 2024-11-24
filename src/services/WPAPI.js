@@ -4,10 +4,10 @@
  * @format
  */
 
-import WPAPI from "wpapi";
-import {REST_API_URL} from "../utils/constants";
+import WPAPI from 'wpapi'
+import { REST_API_URL } from '../utils/constants'
 const wpAPI = new WPAPI({
-  endpoint: `${REST_API_URL}`,
-});
+	endpoint: `${REST_API_URL}`,
+})
 
-export default wpAPI;
+export default wpAPI

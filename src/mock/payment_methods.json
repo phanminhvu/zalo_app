@@ -1,17 +1,18 @@
 [
-    {
-        "id": 1,
-        "title":"Thanh toán khi nhận hàng",
-        "order": 0,
-        "enabled": true,
-        "code":"COD",
-        "notes":"Thanh toán khi nhận hàng"
-    },{
-        "id": 2,
-        "title":"Chuyển khoản qua ngân hàng",
-        "order": 1,
-        "enabled": true,
-        "notes":"<p>- Chủ tài khoản: Nguyễn Thị Hồng Liên</p><p>- Số tài khoản: 19032489174014</p><p>- Nội dung chuyển khoản, ghi 1 trong 2:</p><p> ⛳ Mã số đơn hàng hoặc</p><p>⛳ Điện thoại đặt hàng</p><p>- Quý khách gửi bill chuyển tiền cho Quán qua zalo 0911957905 hoặc Facebook Mesenger hoặc thông báo qua điện thoại.</p><p>Xin cảm ơn. ",
-    "code":"BANK"
-    }
+	{
+		"id": 1,
+		"title": "Thanh toán khi nhận hàng",
+		"order": 0,
+		"enabled": true,
+		"code": "COD",
+		"notes": "Thanh toán khi nhận hàng"
+	},
+	{
+		"id": 2,
+		"title": "Chuyển khoản qua ngân hàng",
+		"order": 1,
+		"enabled": true,
+		"notes": "<p>- Chủ tài khoản: Nguyễn Thị Hồng Liên</p><p>- Số tài khoản: 19032489174014</p><p>- Nội dung chuyển khoản, ghi 1 trong 2:</p><p> ⛳ Mã số đơn hàng hoặc</p><p>⛳ Điện thoại đặt hàng</p><p>- Quý khách gửi bill chuyển tiền cho Quán qua zalo 0911957905 hoặc Facebook Mesenger hoặc thông báo qua điện thoại.</p><p>Xin cảm ơn. ",
+		"code": "BANK"
+	}
 ]

@@ -1,10 +1,10 @@
 [
-  {
-    "id":1,
-    "name": "Phạm Văn Mộng",
-    "phone": "0338070786",
-    "address":"xóm 4, Đông Sơn, Thuỷ Nguyên, Hải Phòng",
-    "notes": "",
-    "default": true
-  }
+	{
+		"id": 1,
+		"name": "Phạm Văn Mộng",
+		"phone": "0338070786",
+		"address": "xóm 4, Đông Sơn, Thuỷ Nguyên, Hải Phòng",
+		"notes": "",
+		"default": true
+	}
 ]

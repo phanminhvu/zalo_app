@@ -1,4 +1,3 @@
-const convertPrice = (price: string | number | Number) =>
-  Math.round(Number(price)).toLocaleString();
+const convertPrice = (price: string | number | Number) => Math.round(Number(price)).toLocaleString()
 
-export default convertPrice;
+export default convertPrice
