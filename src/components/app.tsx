@@ -36,6 +36,8 @@ import SheetChat from '../components/sheetlistchat'
 import OrderDetail from '../pages/ecommerce/order-detail'
 import { getAccessToken } from 'zmp-sdk/apis'
 import { getPhoneNumber } from 'zmp-sdk'
+import UserReferral from '../pages/user/userReferral'
+import ActiveReferral from '../pages/user/activeReferral'
 
 const MyApp = () => {
 	// useEffect(() => {
@@ -72,7 +74,11 @@ const MyApp = () => {
 
 	return (
 		<RecoilRoot>
-			<ErrorBoundary fallback={<div className={`p-4`}>Đã có lỗi xảy ra! Xin vui lòng tải lại</div>}>
+			<ErrorBoundary
+				fallback={<div className={`p-4`}>Đã có lỗi xảy ra! Xin vui lòng tải lại</div>}
+				onError={(error) => {
+					console.log(JSON.stringify(error.message))
+				}}>
 				<ConfigProvider
 					cssVariables={{
 						'--zmp-primary-color': getConfig((c) => c.template.primaryColor),
@@ -112,6 +118,9 @@ const MyApp = () => {
 									<Route path='/user-info' element={<UserInfo />} />
 
 									<Route path='/detail-new/:newId' element={<NewDetail />} />
+
+									<Route path='/user-referral' element={<UserReferral />} />
+									<Route path='/active-referral/:code' element={<ActiveReferral />} />
 								</AnimationRoutes>
 								<CheckoutNav />
 								<ProductsPicker />

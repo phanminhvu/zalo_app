@@ -101,6 +101,16 @@ const UserProfile = () => {
 							navigate('/my-orders')
 						}}
 					/>
+					<Item
+						title='Mã giới thiệu'
+						prefix={<HiOutlineUser size={20} />}
+						className={'text-sm m-0'}
+						suffix={<Icon icon='zi-chevron-right' />}
+						onClick={() => {
+							setIsMapping(true)
+							navigate('/user-referral')
+						}}
+					/>
 				</List>
 			</Box>
 			<Box m={4} p={0} className={'rounded-lg bg-white'}>
