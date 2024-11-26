@@ -1,11 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { loadAddresses } from '../services/storage'
-import {
-	isMappingState,
-	pageGlobalState,
-	userAddressesState,
-	userEditingAddressState,
-} from '../state'
+import { isMappingState, pageGlobalState, userAddressesState, userEditingAddressState } from '../state'
 import { Button, Icon, List, Sheet, Text, useNavigate } from 'zmp-ui'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { Address, AuthData, Branch } from '../models'
@@ -23,8 +18,7 @@ const AddressesPicker: React.FunctionComponent = () => {
 	const [isMapping, setIsMapping] = useRecoilState<boolean>(isMappingState)
 	const [openSheet, setOpenSheet] = useRecoilState<boolean>(openAddressPickerState)
 	const setErrMsg = useSetRecoilState(pageGlobalState)
-	const [userEditingAddress, setUserEditingAddress] =
-		useRecoilState<Address>(userEditingAddressState)
+	const [userEditingAddress, setUserEditingAddress] = useRecoilState<Address>(userEditingAddressState)
 	const setHeader = useSetHeader()
 	const [shippingAddress, setShippingAddress] = useRecoilState<Address>(shippingAddressState)
 
@@ -60,22 +54,18 @@ const AddressesPicker: React.FunctionComponent = () => {
 				onClose={() => setOpenSheet(false)}
 				ref={sheet}
 				autoHeight>
-				<div className="p-0 bg-white overflow-y-auto max-h-full" style={{ marginBottom: '0px' }}>
+				<div className='p-0 bg-white overflow-y-auto max-h-full' style={{ marginBottom: '0px' }}>
 					{
-						<List className="  py-4">
+						<List className='  py-4'>
 							{userAddresses.map((address, index) => {
 								return (
 									<Item
 										key={`address${index}`}
 										className={`mb-4 p-4 bg-white`}
 										title={'Địa chỉ'}
-										prefix={<HiOutlineLocationMarker className="mr-2 mt-6 h-5 w-5 inline-block" />}
+										prefix={<HiOutlineLocationMarker className='mr-2 mt-6 h-5 w-5 inline-block' />}
 										subTitle={address.address}
-										children={
-											<Text className={'zaui-list-item-subtitle'}>
-												{address.name + ' ' + address.phone}
-											</Text>
-										}
+										children={<Text className={'zaui-list-item-subtitle'}>{address.name + ' ' + address.phone}</Text>}
 										onClick={() => {
 											setShippingAddress(address)
 											setOpenSheet(false)
@@ -83,9 +73,7 @@ const AddressesPicker: React.FunctionComponent = () => {
 										suffix={
 											<Button
 												variant={`tertiary`}
-												className={
-													'p-0 min-w-0 h-8 w-8 leading-0 rounded-full zui-container-background-color mt-5'
-												}
+												className={'p-0 min-w-0 h-8 w-8 leading-0 rounded-full zui-container-background-color mt-5'}
 												onClick={(e) => {
 													e.stopPropagation()
 													setOpenSheet(false)
@@ -93,7 +81,7 @@ const AddressesPicker: React.FunctionComponent = () => {
 													setUserEditingAddress(address)
 													navigate('/edit-address/${from}')
 												}}>
-												<Icon icon="zi-edit-text" size={16} />
+												<Icon icon='zi-edit-text' size={16} />
 											</Button>
 										}
 									/>
@@ -117,7 +105,7 @@ const AddressesPicker: React.FunctionComponent = () => {
 							setOpenSheet(false)
 							navigate(`/edit-address/${from}`)
 						}}>
-						<Icon icon="zi-plus-circle" size={23} /> {`Thêm địa chỉ`}
+						<Icon icon='zi-plus-circle' size={23} /> {`Thêm địa chỉ`}
 					</Button>
 				</div>
 			</Sheet>

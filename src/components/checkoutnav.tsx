@@ -11,14 +11,7 @@ import {
 } from '../states/cart'
 import { convertPrice } from '../utils'
 import React, { useEffect, useState } from 'react'
-import {
-	branchTypeState,
-	branchValState,
-	currenTabState,
-	headerState,
-	pageGlobalState,
-	noteState,
-} from '../state'
+import { branchTypeState, branchValState, currenTabState, headerState, pageGlobalState, noteState } from '../state'
 import { Address, CartData, Coupon, Order, PaymentMethod, ShippingDate, Branch } from '../models'
 import { branchsState } from '../states/home'
 import moment from 'moment'
@@ -35,9 +28,7 @@ const CheckoutNav = () => {
 	const { showTotalCart, showBottomBar } = useRecoilValue(headerState)
 	const authDt = useRecoilValue(authState)
 	const [cart, setCart] = useRecoilState<CartData>(cartState)
-	const [selectedPaymentMethod, setSelectedPaymentMethod] = useRecoilState<PaymentMethod>(
-		selectedPaymentMethodState,
-	)
+	const [selectedPaymentMethod, setSelectedPaymentMethod] = useRecoilState<PaymentMethod>(selectedPaymentMethodState)
 	const [selectedCoupon, setSelectedCoupon] = useRecoilState<Coupon>(selectedCouponState)
 	const [userOrders, setUserOrders] = useRecoilState<Order[]>(userOrdersState)
 	const [shippingDate, setShippingDate] = useRecoilState<ShippingDate>(shippingDateState)
@@ -57,12 +48,7 @@ const CheckoutNav = () => {
 		let checkBranch = false
 		switch (currenTab) {
 			case 'giao_hang_tan_noi':
-				checkBranch = !!(
-					shippingAddress &&
-					shippingAddress.id > 0 &&
-					branchVal &&
-					shippingDatea.hour !== 0
-				)
+				checkBranch = !!(shippingAddress && shippingAddress.id > 0 && branchVal && shippingDatea.hour !== 0)
 				break
 			case 'tai_cua_hang':
 				console.log('alo', shippingDate)
@@ -93,21 +79,18 @@ const CheckoutNav = () => {
 	//const location = useLocation();
 	//console.log(location.pathname)
 	return cart && cart?.cartItems && cart?.cartItems?.length > 0 && showTotalCart ? (
-		<div
-			className={`w-full fixed ${
-				showBottomBar ? `bottom-[55px]` : `bottom-0`
-			} left-0 shadow-btn-fixed`}>
-			<div className="flex bg-white p-4 items-start justify-between">
-				<Box className="w-1/2">
-					<Text size="xxxSmall" className={'w-full'}>
+		<div className={`w-full fixed ${showBottomBar ? `bottom-[55px]` : `bottom-0`} left-0 shadow-btn-fixed`}>
+			<div className='flex bg-white p-4 items-start justify-between'>
+				<Box className='w-1/2'>
+					<Text size='xxxSmall' className={'w-full'}>
 						{cart.cartItems.length} Món ăn
 					</Text>
-					<Text size="xLarge" className={`font-semibold`}>{`${convertPrice(
+					<Text size='xLarge' className={`font-semibold`}>{`${convertPrice(
 						Number(cart?.totalCart || 0) + (cart?.deliveryFee || 0),
 					)} đ`}</Text>
 				</Box>
 				<Button
-					className="w-full "
+					className='w-full '
 					variant={
 						((shippingAddress && shippingAddress.id > 0) || shippingDate) &&
 						branchVal &&
@@ -116,7 +99,7 @@ const CheckoutNav = () => {
 							? `primary`
 							: `secondary`
 					}
-					size="large"
+					size='large'
 					onClick={async () => {
 						//const cua_hang = listBranchs.filter((e) => e.id == branchVal);
 
@@ -127,8 +110,7 @@ const CheckoutNav = () => {
 							selectedPaymentMethod?.id > 0
 						) {
 							const lineItems = cart?.cartItems.map((cartItem, cartIndex) => {
-								const price =
-									Number(cartItem?.sale_price) > 0 ? cartItem?.sale_price : cartItem?.price
+								const price = Number(cartItem?.sale_price) > 0 ? cartItem?.sale_price : cartItem?.price
 								return {
 									id: cartItem?.product_id,
 									parent: cartItem?.parent,

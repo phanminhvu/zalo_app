@@ -43,15 +43,7 @@ export const listProductOptions: Options[] = [
 ]
 
 export const listCategories = ['Tất cả sản phẩm', ' Quần áo', 'Dụng cụ thể thao', 'Giày dép']
-export const listAddress = [
-	'TP Hồ Chí Minh',
-	'Đồng Nai',
-	'Qui Nhơn',
-	'Bình Dương',
-	'Khánh Hoà',
-	'Hà Nội',
-	'Hội An',
-]
+export const listAddress = ['TP Hồ Chí Minh', 'Đồng Nai', 'Qui Nhơn', 'Bình Dương', 'Khánh Hoà', 'Hà Nội', 'Hội An']
 export const listNameProducts = [
 	'Dell Computer Monitor',
 	'Coach Tabby 26 for sale',

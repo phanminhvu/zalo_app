@@ -8,12 +8,7 @@ import cx from '../utils/cx'
 import { convertPrice } from '../utils'
 import { Box, Button, Icon, Input, Radio, Sheet, Text, Checkbox } from 'zmp-ui'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import {
-	openProductPickerState,
-	pageGlobalState,
-	productInfoPickedState,
-	storeState,
-} from '../state'
+import { openProductPickerState, pageGlobalState, productInfoPickedState, storeState } from '../state'
 import { useAddProductToCart, useResetProductPicked } from '../hooks'
 import { useNavigate } from 'react-router-dom'
 import { Toast } from 'flowbite-react'
@@ -45,9 +40,7 @@ const ProductPicker = () => {
 	}
 	useEffect(() => {
 		if (currentItem && product && currentItem?.product_id == product.id) {
-			const nRelatedItems = cart?.cartItems?.filter(
-				(crItem) => crItem.parent === currentItem?.product_id,
-			)
+			const nRelatedItems = cart?.cartItems?.filter((crItem) => crItem.parent === currentItem?.product_id)
 			setRelateItems(nRelatedItems)
 			setQuantity(currentItem?.quantity)
 		} else {
@@ -57,14 +50,14 @@ const ProductPicker = () => {
 	const noteComponent = useMemo(
 		() => (
 			<>
-				<Text className="text-sm text-black">Ghi chú</Text>
-				<div className="mb-[2rem]">
+				<Text className='text-sm text-black'>Ghi chú</Text>
+				<div className='mb-[2rem]'>
 					<Input
-						type="text"
+						type='text'
 						size={'small'}
-						placeholder="Nhập thông tin ghi chú..."
+						placeholder='Nhập thông tin ghi chú...'
 						clearable
-						name="note"
+						name='note'
 						value={note}
 						onChange={(e) => {
 							setNote(e.target.value)
@@ -83,7 +76,7 @@ const ProductPicker = () => {
 				button = (
 					<Button
 						style={{ backgroundColor: '#f0f0f0', color: '#000' }}
-						size="medium"
+						size='medium'
 						onClick={async () => {
 							await setCart((oldCart) => {
 								let nCart = { ...oldCart }
@@ -114,7 +107,7 @@ const ProductPicker = () => {
 					<Button
 						disabled={quantity == 0}
 						variant={'primary'}
-						size="medium"
+						size='medium'
 						onClick={() => {
 							if (quantity > 0) {
 								addProductToCart({
@@ -151,7 +144,7 @@ const ProductPicker = () => {
 				<Button
 					disabled={quantity == 0}
 					variant={'primary'}
-					size="medium"
+					size='medium'
 					onClick={() => {
 						if (quantity > 0) {
 							addProductToCart({
@@ -202,11 +195,11 @@ const ProductPicker = () => {
 					}}
 					ref={sheet}
 					autoHeight
-					title="">
-					<div className="overflow-y-auto overflow-x-hidden pb-32 px-5 ">
-						<div className="w-full  items-center justify-between overflow-hidden">
-							<div className="items-center">
-								<div className="flex-none">
+					title=''>
+					<div className='overflow-y-auto overflow-x-hidden pb-32 px-5 '>
+						<div className='w-full  items-center justify-between overflow-hidden'>
+							<div className='items-center'>
+								<div className='flex-none'>
 									<div className={`"w-full relative"`}>
 										<img
 											src={product?.image ? product?.image : ''}
@@ -215,29 +208,23 @@ const ProductPicker = () => {
 										/>
 									</div>
 								</div>
-								<div className=" py-[2rem] pr-0">
-									<div className="text-base text-black break-words font-bold font-lato">
-										{product.name}
-									</div>
-									<div className="items-center ">
+								<div className=' py-[2rem] pr-0'>
+									<div className='text-base text-black break-words font-bold font-lato'>{product.name}</div>
+									<div className='items-center '>
 										{product.on_sale && product.sale_price ? (
-											<del className="mr-2">
-												<p className="text-xs text-slate-400 font-lato">
-													{convertPrice(product.price || 0)}đ
-												</p>
+											<del className='mr-2'>
+												<p className='text-xs text-slate-400 font-lato'>{convertPrice(product.price || 0)}đ</p>
 											</del>
 										) : (
 											''
 										)}
-										<p className="text-sm font-lato text-black ">
+										<p className='text-sm font-lato text-black '>
 											{convertPrice(
-												product.on_sale == 1 && product.sale_price > 0
-													? product.sale_price
-													: product.price,
+												product.on_sale == 1 && product.sale_price > 0 ? product.sale_price : product.price,
 											)}
 											đ
 										</p>
-										<p className="text-sm font-lato text-black ">{product.description}</p>
+										<p className='text-sm font-lato text-black '>{product.description}</p>
 									</div>
 								</div>
 							</div>
@@ -246,8 +233,7 @@ const ProductPicker = () => {
 						{product?.related_products && product?.related_products?.length > 0 && (
 							<Box>
 								<Text bold size={'large'} className={`mb-2`}>{`Đồ Ăn Thêm - Mua Kèm Giá Tốt`}</Text>
-								{products?.filter((rlItem) => product?.related_products?.includes(rlItem.id))
-									?.length > 0 &&
+								{products?.filter((rlItem) => product?.related_products?.includes(rlItem.id))?.length > 0 &&
 									products
 										?.filter((rlItem) => product?.related_products?.includes(rlItem.id))
 										?.map((rrItem, rindex) => {
@@ -269,9 +255,7 @@ const ProductPicker = () => {
 																	parent: product.id,
 																}
 																if (e.target.checked) {
-																	return others && others?.length > 0
-																		? [...others, editingItem]
-																		: [editingItem]
+																	return others && others?.length > 0 ? [...others, editingItem] : [editingItem]
 																} else {
 																	return others
 																}
@@ -286,21 +270,21 @@ const ProductPicker = () => {
 							</Box>
 						)}
 
-						<div className="flex title-type-picker absolute left-0 bottom-0 h-24 w-full border-t border-gray-400  py-0 items-center">
-							<Box mx={4} flex className="flex-1">
+						<div className='flex title-type-picker absolute left-0 bottom-0 h-24 w-full border-t border-gray-400  py-0 items-center'>
+							<Box mx={4} flex className='flex-1'>
 								<Button
-									variant="tertiary"
-									size="medium"
-									icon={<Icon icon="zi-minus-circle-solid" className="text-[#088c4c]" size={27} />}
+									variant='tertiary'
+									size='medium'
+									icon={<Icon icon='zi-minus-circle-solid' className='text-[#088c4c]' size={27} />}
 									onClick={() => {
 										if (quantity > 0) setQuantity((q) => q - 1)
 									}}
 								/>
-								<Text className="mx-7 mt-1 font-bold qtytext">{quantity}</Text>
+								<Text className='mx-7 mt-1 font-bold qtytext'>{quantity}</Text>
 								<Button
-									variant="tertiary"
-									size="medium"
-									icon={<Icon icon="zi-plus-circle-solid" className="text-[#088c4c]" size={27} />}
+									variant='tertiary'
+									size='medium'
+									icon={<Icon icon='zi-plus-circle-solid' className='text-[#088c4c]' size={27} />}
 									onClick={() => setQuantity((q) => q + 1)}
 								/>
 							</Box>

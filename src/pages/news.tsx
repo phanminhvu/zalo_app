@@ -23,18 +23,18 @@ const NewsPage: React.FunctionComponent = () => {
 	}, [])
 	return (
 		<Container className={'bg-white px-4 '}>
-			<div className="w-full border-b border-gray-200 overflow-auto">
+			<div className='w-full border-b border-gray-200 overflow-auto'>
 				{news && news?.length > 0 && (
-					<nav className="flex space-x-2 overscroll-x-auto " aria-label="Tabs" role="tablist">
+					<nav className='flex space-x-2 overscroll-x-auto ' aria-label='Tabs' role='tablist'>
 						<button
 							key={`cat_0`}
-							type="button"
+							type='button'
 							className={`font-semibold  py-4 px-1 inline-flex items-center gap-2 border-b-[3px] border-transparent text-sm whitespace-nowrap  ${
 								activeNewItem === 0 ? 'text-primary  border-b border-primary' : ' '
 							}`}
-							data-hs-tab="#tabs-with-underline-1"
-							aria-controls="tabs-with-underline-1"
-							role="tab"
+							data-hs-tab='#tabs-with-underline-1'
+							aria-controls='tabs-with-underline-1'
+							role='tab'
 							onClick={() => {
 								setActiveNewItem(0)
 							}}>{`Tất cả`}</button>
@@ -42,15 +42,13 @@ const NewsPage: React.FunctionComponent = () => {
 							return (
 								<button
 									key={`cat_${cIndex + 1}`}
-									type="button"
+									type='button'
 									className={`font-semibold ${
-										activeNewItem && activeNewItem === newItem.id
-											? 'text-primary  border-b border-primary'
-											: ''
+										activeNewItem && activeNewItem === newItem.id ? 'text-primary  border-b border-primary' : ''
 									}  py-4 px-1 inline-flex items-center gap-2 border-b-[3px] border-transparent text-sm whitespace-nowrap`}
-									data-hs-tab="#tabs-with-underline-1"
-									aria-controls="tabs-with-underline-1"
-									role="tab"
+									data-hs-tab='#tabs-with-underline-1'
+									aria-controls='tabs-with-underline-1'
+									role='tab'
 									onClick={() => {
 										setActiveNewItem(newItem.id)
 									}}>
@@ -63,7 +61,7 @@ const NewsPage: React.FunctionComponent = () => {
 			</div>
 			{news?.length < 1 && <EmptyBox title={`Chưa có bài viết nào`} content={``} />}
 			{news && news?.length > 0 && (
-				<section className="w-fit mt-10 mb-5 pb-8 overflow-y-scroll">
+				<section className='w-fit mt-10 mb-5 pb-8 overflow-y-scroll'>
 					{activeNewItem == 0 &&
 						news &&
 						news.length > 0 &&

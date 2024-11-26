@@ -19,8 +19,8 @@
     "start": "zmp start",
     "deploy": "NODE_TLS_REJECT_UNAUTHORIZED=0 RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED=false zmp deploy",
     "build:css": "postcss src/css/tailwind.css -o src/css/styles.css",
-    "prettier-check": "prettier --check **/*.{ts,tsx,js,json,md}",
-    "prettier-write": "prettier --write src/**/*.{ts,tsx,js,json,md}"
+    "prettier-check": "prettier --check src",
+    "prettier-write": "prettier --write src"
   },
   "dependencies": {
     "@types/react": "^18.0.26",

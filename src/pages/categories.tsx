@@ -52,33 +52,29 @@ const CategoriesPage = () => {
 			poptions = allProducts.filter((p) => p.category_id === activeCategory.id)
 		}
 		if (poptions && poptions?.length > 0 && searchPattern) {
-			poptions = poptions.filter((pr) =>
-				removeVietnameseTones(pr.name).toLowerCase().match(searchPattern),
-			)
+			poptions = poptions.filter((pr) => removeVietnameseTones(pr.name).toLowerCase().match(searchPattern))
 		}
 		setProducts(poptions)
 	}, [activeCategory, searchString])
 
 	return (
 		<Container className={'bg-white px-4 mb-20'}>
-			<div className="w-full border-b border-gray-200 overflow-auto">
+			<div className='w-full border-b border-gray-200 overflow-auto'>
 				{categories && (
-					<nav className="flex space-x-2 overscroll-x-auto " aria-label="Tabs" role="tablist">
+					<nav className='flex space-x-2 overscroll-x-auto ' aria-label='Tabs' role='tablist'>
 						{categories
 							.filter((cat) => cat.parent === 0)
 							.map((category: Category, cIndex: number) => {
 								return (
 									<button
 										key={`cat_${cIndex}`}
-										type="button"
+										type='button'
 										className={`font-semibold ${
-											activeCategory && activeCategory.id === category.id
-												? 'text-primary  border-b border-primary'
-												: ''
+											activeCategory && activeCategory.id === category.id ? 'text-primary  border-b border-primary' : ''
 										}  py-4 px-1 inline-flex items-center gap-2 border-b-[3px] border-transparent text-sm whitespace-nowrap text-gray-500 `}
-										data-hs-tab="#tabs-with-underline-1"
-										aria-controls="tabs-with-underline-1"
-										role="tab"
+										data-hs-tab='#tabs-with-underline-1'
+										aria-controls='tabs-with-underline-1'
+										role='tab'
 										onClick={() => {
 											setActiveCategory(category)
 											/*setProducts(old => {
@@ -97,10 +93,10 @@ const CategoriesPage = () => {
 			</div>
 			<div className={'flex rounded-md border border-slate-200 mt-4'}>
 				<Input
-					label=""
-					helperText=""
-					placeholder="Tìm kiếm"
-					className="border-0 m-0"
+					label=''
+					helperText=''
+					placeholder='Tìm kiếm'
+					className='border-0 m-0'
 					size={'medium'}
 					value={searchString}
 					onChange={onSearchChange}
@@ -108,16 +104,14 @@ const CategoriesPage = () => {
 			</div>
 			{/*{((products?.length < 1 )) && <EmptyBox title={`Chưa có sản phẩm nào`} content={``}/>}*/}
 			{products?.length === 0 && (
-				<div className="flex mt-4 w-full justify-center">
+				<div className='flex mt-4 w-full justify-center'>
 					<Text>Không tìm thấy kết quả. Vui lòng thử lại</Text>
 				</div>
 			)}
-			<section className="w-fit mx-auto grid grid-cols-2 gap-3 mt-5">
+			<section className='w-fit mx-auto grid grid-cols-2 gap-3 mt-5'>
 				{products &&
 					products.length > 0 &&
-					products.map((product) => (
-						<CardProductVertical product={product} key={product.id} grid />
-					))}
+					products.map((product) => <CardProductVertical product={product} key={product.id} grid />)}
 			</section>
 		</Container>
 	)

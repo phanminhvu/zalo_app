@@ -31,52 +31,52 @@ const SheetChat = () => {
 			onClose={() => setOpenSheetchat(false)}
 			ref={sheet}
 			autoHeight
-			title="Cần hỗ trợ">
-			<div className="w-full mt-3 bg-blue-100 ">
+			title='Cần hỗ trợ'>
+			<div className='w-full mt-3 bg-blue-100 '>
 				<Text className={'text-center pl-4 pr-4 pt-3 pb-3'}>Chăm Sóc Khách Hàng</Text>
 			</div>
-			<div className="overflow-y-auto max-h-full">
+			<div className='overflow-y-auto max-h-full'>
 				<List>
 					{/*zi-check-circle*/}
 					<Item
-						key="0"
-						title="CSKH - Thảo Điền"
+						key='0'
+						title='CSKH - Thảo Điền'
 						onClick={() => {
 							openChatScreen('6465140566074194111')
 							setOpenSheetchat(false)
 						}}
 					/>
 					<Item
-						key="1"
-						title="CSKH - Quận 7"
+						key='1'
+						title='CSKH - Quận 7'
 						onClick={() => {
 							setOpenSheetchat(false)
 						}}
 					/>
 					<Item
-						key="2"
-						title="CSKH - Tân Bình"
+						key='2'
+						title='CSKH - Tân Bình'
 						onClick={() => {
 							setOpenSheetchat(false)
 						}}
 					/>
 					<Item
-						key="3"
-						title="CSKH - Thủ Đức"
+						key='3'
+						title='CSKH - Thủ Đức'
 						onClick={() => {
 							setOpenSheetchat(false)
 						}}
 					/>
 					<Item
-						key="4"
-						title="CSKH - Quận 1"
+						key='4'
+						title='CSKH - Quận 1'
 						onClick={() => {
 							setOpenSheetchat(false)
 						}}
 					/>
 					<Item
-						key="5"
-						title="CSKH - Gò Vấp"
+						key='5'
+						title='CSKH - Gò Vấp'
 						onClick={() => {
 							setOpenSheetchat(false)
 						}}

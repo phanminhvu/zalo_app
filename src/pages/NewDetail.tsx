@@ -27,12 +27,12 @@ const NewDetail: React.FunctionComponent = () => {
 	}, [newDetail])
 	return newDetail ? (
 		<Container>
-			<div className=" relative  px-4 py-4 bg-white w-full">
-				<div className="mt-4">
+			<div className=' relative  px-4 py-4 bg-white w-full'>
+				<div className='mt-4'>
 					<img src={newDetail?.image} />
 				</div>
-				<div className="mt-4 font-bold ">{newDetail?.title}</div>
-				<div className="mt-4 leading-6">{newDetail?.content}</div>
+				<div className='mt-4 font-bold '>{newDetail?.title}</div>
+				<div className='mt-4 leading-6'>{newDetail?.content}</div>
 			</div>
 		</Container>
 	) : (

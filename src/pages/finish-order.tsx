@@ -43,12 +43,8 @@ const FinishOrder = () => {
 	const [currentDistrict, setCurrentDistrict] = useState(locationVN[0].districts[0])
 	const [currentWard, setCurrentWard] = useState(locationVN[0].districts[0].wards[0])
 
-	const [selectedDistrictId, setSelectedDistrictId] = useState<string | null>(
-		locationVN[0].districts[0].id,
-	)
-	const [selectedWardId, setSelectedWardId] = useState<string | null>(
-		locationVN[0].districts[0].wards[0].id,
-	)
+	const [selectedDistrictId, setSelectedDistrictId] = useState<string | null>(locationVN[0].districts[0].id)
+	const [selectedWardId, setSelectedWardId] = useState<string | null>(locationVN[0].districts[0].wards[0].id)
 
 	const handlePayMoney = async (e: SyntheticEvent) => {
 		e.preventDefault()
@@ -85,9 +81,7 @@ const FinishOrder = () => {
 				value = selectedDistrictId
 
 				handleOnSelect = (districtId) => {
-					const district = currentCity.districts.find(
-						(currentDistrict) => currentDistrict.id === districtId,
-					)
+					const district = currentCity.districts.find((currentDistrict) => currentDistrict.id === districtId)
 					if (district) {
 						const firstWard = district.wards[0]
 						setCurrentDistrict(district)
@@ -119,14 +113,9 @@ const FinishOrder = () => {
 	return (
 		<Page>
 			{cart && (
-				<div className=" mb-[80px]">
-					<Box m={0} p={4} className=" bg-white">
-						<CardStore
-							store={storeInfo}
-							hasRightSide={false}
-							hasBorderBottom={false}
-							type="order"
-						/>
+				<div className=' mb-[80px]'>
+					<Box m={0} p={4} className=' bg-white'>
+						<CardStore store={storeInfo} hasRightSide={false} hasBorderBottom={false} type='order' />
 					</Box>
 					<Box mx={3} mb={2}>
 						{cart.listOrder.map((product) => {
@@ -144,12 +133,12 @@ const FinishOrder = () => {
 							)
 						})}
 					</Box>
-					<Box m={4} flex flexDirection="row" justifyContent="space-between">
-						<span className=" text-base font-medium">Đơn hàng</span>
-						<span className=" text-base font-medium text-primary">{convertPrice(totalPrice)}đ</span>
+					<Box m={4} flex flexDirection='row' justifyContent='space-between'>
+						<span className=' text-base font-medium'>Đơn hàng</span>
+						<span className=' text-base font-medium text-primary'>{convertPrice(totalPrice)}đ</span>
 					</Box>
-					<Box m={0} px={4} className=" bg-white">
-						<Text size="large" bold className=" border-b py-3 mb-0">
+					<Box m={0} px={4} className=' bg-white'>
+						<Text size='large' bold className=' border-b py-3 mb-0'>
 							Địa chỉ giao hàng
 						</Text>
 
@@ -158,13 +147,10 @@ const FinishOrder = () => {
 
 							return (
 								<div key={item.name} className={cx('py-3', item.name !== 'ward' && 'border-b')}>
-									<Text
-										size="large"
-										bold
-										className="after:content-['_*'] after:text-primary after:align-middle">
+									<Text size='large' bold className="after:content-['_*'] after:text-primary after:align-middle">
 										{item.label}
 									</Text>
-									<Box className="relative" m={0}>
+									<Box className='relative' m={0}>
 										{item.type === 'select' ? (
 											<Select
 												// key={value}
@@ -180,15 +166,15 @@ const FinishOrder = () => {
 												))}
 											</Select>
 										) : (
-											<Input placeholder="Nhập số nhà, tên đường" clearable />
+											<Input placeholder='Nhập số nhà, tên đường' clearable />
 										)}
 									</Box>
 
 									<ButtonFixed zIndex={99}>
 										<Button
-											htmlType="submit"
+											htmlType='submit'
 											fullWidth
-											className=" bg-primary text-white rounded-lg h-12"
+											className=' bg-primary text-white rounded-lg h-12'
 											onClick={handlePayMoney}>
 											Đặt hàng
 										</Button>
@@ -198,15 +184,13 @@ const FinishOrder = () => {
 						})}
 					</Box>
 					{shippingFee > 0 && (
-						<Box m={4} flex flexDirection="row" justifyContent="space-between">
-							<span className=" text-base font-medium">Phí ship</span>
-							<span className=" text-base font-medium text-primary">
-								{convertPrice(shippingFee)}đ
-							</span>
+						<Box m={4} flex flexDirection='row' justifyContent='space-between'>
+							<span className=' text-base font-medium'>Phí ship</span>
+							<span className=' text-base font-medium text-primary'>{convertPrice(shippingFee)}đ</span>
 						</Box>
 					)}
 
-					<Text className="p-4 text-center">
+					<Text className='p-4 text-center'>
 						{`Đặt hàng đồng nghĩa với việc bạn đồng ý quan tâm 
               ${storeInfo.nameStore} 
               để nhận tin tức mới`}

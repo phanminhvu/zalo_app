@@ -24,19 +24,16 @@ const ProductsPicker = () => {
 					afterClose={() => {}}
 					ref={sheet}
 					autoHeight
-					title="">
+					title=''>
 					{products && (
 						<Box
 							m={0}
 							px={4}
 							py={4}
-							className="bg-white leading-none  items-top justify-start mt-4"
+							className='bg-white leading-none  items-top justify-start mt-4'
 							style={{ overflow: 'scroll' }}>
-							<section className="w-fit mx-auto grid grid-cols-2 gap-3 mb-5">
-								{products &&
-									products.map((product) => (
-										<CardProductVertical product={product} key={product.id} grid />
-									))}
+							<section className='w-fit mx-auto grid grid-cols-2 gap-3 mb-5'>
+								{products && products.map((product) => <CardProductVertical product={product} key={product.id} grid />)}
 							</section>
 						</Box>
 					)}

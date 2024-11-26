@@ -10,27 +10,12 @@ import {
 	homeProductsState,
 	provincesState,
 } from '../states/home'
-import {
-	AuthData,
-	Branch,
-	CartData,
-	Category,
-	Coupon,
-	District,
-	Order,
-	Product,
-	Province,
-} from '../models'
+import { AuthData, Branch, CartData, Category, Coupon, District, Order, Product, Province } from '../models'
 import { useNavigate } from 'react-router-dom'
 import useSetHeader from '../hooks/useSetHeader'
 import { authState } from '../states/auth'
 
-import {
-	loadCartFromCache,
-	loadOrderFromCache,
-	loadUserFromCache,
-	saveUserToCache,
-} from '../services/storage'
+import { loadCartFromCache, loadOrderFromCache, loadUserFromCache, saveUserToCache } from '../services/storage'
 import { authorizeV2, getSettingV2 } from '../services/zalo'
 import ProductCarouselVertical from '../components/carousel/ProductCarouselVertical'
 import CardProductVertical from '../components/custom-card/product-vertical'
@@ -151,15 +136,15 @@ const HomeMain: React.FunctionComponent = () => {
 	}, [])
 	return (
 		<Container className={''} onScroll={handleScroll}>
-			<div className="p-0 pb-[80px] zui-container-background-color" style={{ marginBottom: '0px' }}>
+			<div className='p-0 pb-[80px] zui-container-background-color' style={{ marginBottom: '0px' }}>
 				<div className={' relative px-4 pb-3 bg-white leading-none  items-top justify-start'}>
 					<div>
 						<Input.Search
-							label=""
-							helperText=""
+							label=''
+							helperText=''
 							loading={false}
-							placeholder="Tìm nhanh món ăn, thức uống..."
-							className="text-sm"
+							placeholder='Tìm nhanh món ăn, thức uống...'
+							className='text-sm'
 							onInputTriggerClick={() => {
 								navigate(`/search`)
 							}}
@@ -167,40 +152,34 @@ const HomeMain: React.FunctionComponent = () => {
 							readOnly
 						/>
 					</div>
-					<div className="mt-4">
+					<div className='mt-4'>
 						<img
 							style={{ width: '100%', height: '190px', objectFit: 'cover', borderRadius: '8px' }}
-							role="presentation"
+							role='presentation'
 							onClick={() => {}}
 							src={'https://quequan.vn:8081/images/products/Anh bia.jpg'}
 							alt={''}
 						/>
 					</div>
-					<div className="mt-6">
-						{categories && (
-							<CategoriesCarousel categories={categories?.filter((cat) => cat.parent === 0)} />
-						)}
+					<div className='mt-6'>
+						{categories && <CategoriesCarousel categories={categories?.filter((cat) => cat.parent === 0)} />}
 					</div>
 				</div>
 
 				{featuredProducts && (
-					<Box
-						m={0}
-						px={4}
-						py={4}
-						className="bg-white leading-none  items-top justify-start mt-2 productcarousefull">
+					<Box m={0} px={4} py={4} className='bg-white leading-none  items-top justify-start mt-2 productcarousefull'>
 						<Text bold size={'large'} className={`mb-2`}>{`Đang có ưu đãi`}</Text>
 						<ProductCarouselVertical products={featuredProducts} />
 					</Box>
 				)}
-				<Box m={0} px={4} py={5} className="bg-white leading-none  items-top justify-start mt-4">
-					<div id="oaWidget" />
+				<Box m={0} px={4} py={5} className='bg-white leading-none  items-top justify-start mt-4'>
+					<div id='oaWidget' />
 				</Box>
 
 				{products && (
-					<Box m={0} px={4} py={4} className="bg-white leading-none  items-top justify-start mt-2">
+					<Box m={0} px={4} py={4} className='bg-white leading-none  items-top justify-start mt-2'>
 						<Text bold size={'large'} className={`mb-2`}>{`Danh sách sản phẩm`}</Text>
-						<section className="w-fit mx-auto grid grid-cols-2 gap-3 mb-5">
+						<section className='w-fit mx-auto grid grid-cols-2 gap-3 mb-5'>
 							{products &&
 								products.map((product) => (
 									<CardProductVertical product={product} key={product.id} canAdd={true} grid />

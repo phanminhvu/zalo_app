@@ -14,12 +14,7 @@ const ImageRatio = ({ src, alt, className, ratio, ...props }: ImageWithRatioProp
 	const pt: string = `${(1 / ratio) * 100}%`
 	return (
 		<div className={cx('w-full relative', className)} style={{ paddingTop: pt }}>
-			<img
-				src={src}
-				alt={alt}
-				{...props}
-				className="w-full absolute top-0 left-0 h-full object-cover"
-			/>
+			<img src={src} alt={alt} {...props} className='w-full absolute top-0 left-0 h-full object-cover' />
 		</div>
 	)
 }

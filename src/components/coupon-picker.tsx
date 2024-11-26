@@ -42,7 +42,7 @@ const CouponsPicker = () => {
 							/>
 						</div>
 					}>
-					<div className="overflow-y-auto max-h-full">
+					<div className='overflow-y-auto max-h-full'>
 						{coupons?.filter((c) => c.status === 1)?.length > 0 && (
 							<List>
 								{/*zi-check-circle*/}
@@ -63,9 +63,7 @@ const CouponsPicker = () => {
 													/>
 												}
 												subTitle={`HSD: ${
-													coupon.date_expires
-														? moment(coupon.date_expires).format('DD/MM/YYYY')
-														: 'Không giới hạn'
+													coupon.date_expires ? moment(coupon.date_expires).format('DD/MM/YYYY') : 'Không giới hạn'
 												}`}
 												onClick={() => {
 													setSelectedCoupon(coupon)

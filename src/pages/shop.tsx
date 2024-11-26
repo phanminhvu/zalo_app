@@ -35,12 +35,12 @@ const StorePage = () => {
 	}, [storeId, page])
 	return store ? (
 		<Container>
-			<div className=" relative bg-white w-full" style={{ paddingBottom: '80px' }}>
-				<Box m={0} p={4} className="border-b">
+			<div className=' relative bg-white w-full' style={{ paddingBottom: '80px' }}>
+				<Box m={0} p={4} className='border-b'>
 					<CardShop storeInfo={store} />
 				</Box>
 				<InfiniteScroll
-					className="w-fit mx-auto grid grid-cols-2 gap-3 mt-10 mb-5"
+					className='w-fit mx-auto grid grid-cols-2 gap-3 mt-10 mb-5'
 					dataLength={products ? products.length : 0}
 					hasMore={hasNext}
 					loader={<h4>Loading...</h4>}>

@@ -40,13 +40,7 @@ const HomePage: React.FunctionComponent = () => {
 	}, [])
 
 	const searchBar = useMemo(
-		() => (
-			<Input.Search
-				placeholder="Tìm kiếm sản phẩm"
-				onSearch={handleInputSearch}
-				className="cus-input-search"
-			/>
-		),
+		() => <Input.Search placeholder='Tìm kiếm sản phẩm' onSearch={handleInputSearch} className='cus-input-search' />,
 		[],
 	)
 

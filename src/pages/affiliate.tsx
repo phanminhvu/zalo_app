@@ -71,8 +71,8 @@ const AffiliatePage = () => {
 	}, [])
 	return (
 		<Container className={'bg-white'}>
-			<Tabs id="affilate-list" scrollable className={'bg-white'}>
-				<Tabs.Tab key="tab1" label="Liên kết">
+			<Tabs id='affilate-list' scrollable className={'bg-white'}>
+				<Tabs.Tab key='tab1' label='Liên kết'>
 					{affDashboardUrl && (
 						<Box p={4}>
 							<Text size={'small'} bold>{`ID cộng tác viên của bạn: ${affDashboardUrl.id}`}</Text>
@@ -81,7 +81,7 @@ const AffiliatePage = () => {
 						</Box>
 					)}
 				</Tabs.Tab>
-				<Tabs.Tab key="tab2" label="Thống kê">
+				<Tabs.Tab key='tab2' label='Thống kê'>
 					{affDashboardStats && (
 						<Box p={4}>
 							<Text
@@ -92,14 +92,8 @@ const AffiliatePage = () => {
 								size={'small'}
 								bold
 								className={`pt-2`}>{`Giới thiệu đã thanh toán: ${affDashboardStats.paid}`}</Text>
-							<Text
-								size={'small'}
-								bold
-								className={`pt-2`}>{`Lượt truy cập: ${affDashboardStats.visits}`}</Text>
-							<Text
-								size={'small'}
-								bold
-								className={`pt-2`}>{`Tỉ lệ chuyển đổi: ${affDashboardStats.rate}`}</Text>
+							<Text size={'small'} bold className={`pt-2`}>{`Lượt truy cập: ${affDashboardStats.visits}`}</Text>
+							<Text size={'small'} bold className={`pt-2`}>{`Tỉ lệ chuyển đổi: ${affDashboardStats.rate}`}</Text>
 							<Text
 								size={'small'}
 								bold
@@ -108,14 +102,11 @@ const AffiliatePage = () => {
 								size={'small'}
 								bold
 								className={`pt-2`}>{`Thu nhập đã thanh toán: ${affDashboardStats.paidearnings}`}</Text>
-							<Text
-								size={'small'}
-								bold
-								className={`pt-2`}>{`Tỉ lệ hoa hồng: ${affDashboardStats.affiliatewp}`}</Text>
+							<Text size={'small'} bold className={`pt-2`}>{`Tỉ lệ hoa hồng: ${affDashboardStats.affiliatewp}`}</Text>
 						</Box>
 					)}
 				</Tabs.Tab>
-				<Tabs.Tab key="tab3" label="Các giới thiệu">
+				<Tabs.Tab key='tab3' label='Các giới thiệu'>
 					{affDashboardReferrals && (
 						<Box p={4}>
 							<Table striped>
@@ -126,17 +117,17 @@ const AffiliatePage = () => {
 									<Table.HeadCell>Trạng thái</Table.HeadCell>
 									<Table.HeadCell>Ngày</Table.HeadCell>
 								</Table.Head>
-								<Table.Body className="divide-y">
+								<Table.Body className='divide-y'>
 									{affDashboardReferrals.map((referal, rIndex) => {
 										return (
-											<Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-												<Table.Cell className="font-medium text-gray-900 dark:text-white">
+											<Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
+												<Table.Cell className='font-medium text-gray-900 dark:text-white'>
 													{referal.referral_id}
 												</Table.Cell>
-												<Table.Cell className="">{referal.amount}</Table.Cell>
-												<Table.Cell className="">{referal.description}</Table.Cell>
-												<Table.Cell className="">{referal.status}</Table.Cell>
-												<Table.Cell className="">{referal.date}</Table.Cell>
+												<Table.Cell className=''>{referal.amount}</Table.Cell>
+												<Table.Cell className=''>{referal.description}</Table.Cell>
+												<Table.Cell className=''>{referal.status}</Table.Cell>
+												<Table.Cell className=''>{referal.date}</Table.Cell>
 											</Table.Row>
 										)
 									})}
@@ -145,7 +136,7 @@ const AffiliatePage = () => {
 						</Box>
 					)}
 				</Tabs.Tab>
-				<Tabs.Tab key="tab4" label="Thanh toán">
+				<Tabs.Tab key='tab4' label='Thanh toán'>
 					{affDashboardPayouts && (
 						<Box p={4}>
 							<Table striped>
@@ -155,14 +146,14 @@ const AffiliatePage = () => {
 									<Table.HeadCell>Phương pháp quảng bá</Table.HeadCell>
 									<Table.HeadCell>Trạng thái</Table.HeadCell>
 								</Table.Head>
-								<Table.Body className="divide-y">
+								<Table.Body className='divide-y'>
 									{affDashboardPayouts.map((payout, rIndex) => {
 										return (
-											<Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-												<Table.Cell className="">{payout.date}</Table.Cell>
-												<Table.Cell className="">{payout.amount}</Table.Cell>
-												<Table.Cell className="">{payout.payout_method}</Table.Cell>
-												<Table.Cell className="">{payout.status}</Table.Cell>
+											<Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
+												<Table.Cell className=''>{payout.date}</Table.Cell>
+												<Table.Cell className=''>{payout.amount}</Table.Cell>
+												<Table.Cell className=''>{payout.payout_method}</Table.Cell>
+												<Table.Cell className=''>{payout.status}</Table.Cell>
 											</Table.Row>
 										)
 									})}
@@ -171,7 +162,7 @@ const AffiliatePage = () => {
 						</Box>
 					)}
 				</Tabs.Tab>
-				<Tabs.Tab key="tab5" label="Truy cập">
+				<Tabs.Tab key='tab5' label='Truy cập'>
 					{affDashboardVisits && (
 						<Box p={4}>
 							<Table striped>
@@ -181,14 +172,14 @@ const AffiliatePage = () => {
 									<Table.HeadCell>Đã chuyển đổi</Table.HeadCell>
 									<Table.HeadCell>Ngày</Table.HeadCell>
 								</Table.Head>
-								<Table.Body className="divide-y">
+								<Table.Body className='divide-y'>
 									{affDashboardVisits.map((visit, rIndex) => {
 										return (
-											<Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-												<Table.Cell className="">{visit.url}</Table.Cell>
-												<Table.Cell className="">{visit.referrer}</Table.Cell>
-												<Table.Cell className="">{visit.converted}</Table.Cell>
-												<Table.Cell className="">{visit.date}</Table.Cell>
+											<Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
+												<Table.Cell className=''>{visit.url}</Table.Cell>
+												<Table.Cell className=''>{visit.referrer}</Table.Cell>
+												<Table.Cell className=''>{visit.converted}</Table.Cell>
+												<Table.Cell className=''>{visit.date}</Table.Cell>
 											</Table.Row>
 										)
 									})}
@@ -197,20 +188,20 @@ const AffiliatePage = () => {
 						</Box>
 					)}
 				</Tabs.Tab>
-				<Tabs.Tab key="tab6" label="Cài đặt">
+				<Tabs.Tab key='tab6' label='Cài đặt'>
 					<Box mt={1} className={'bg-white p-4'}>
 						<Input
-							type="text"
+							type='text'
 							size={'small'}
-							placeholder="Email thanh toán của bạn"
+							placeholder='Email thanh toán của bạn'
 							onChange={(e) => {
 								setPaymentEmail(e.target.value)
 							}}
 							value={paymentEmail}
-							className="mt-2 border-slate-200"
+							className='mt-2 border-slate-200'
 						/>
 						<Checkbox
-							label="Bật thông báo Giới thiệu mới"
+							label='Bật thông báo Giới thiệu mới'
 							checked={referralNotifications}
 							onChange={() => {
 								setReferralNotifications(!referralNotifications)
@@ -231,15 +222,15 @@ const AffiliatePage = () => {
 									setLoading(false)
 								})
 							}}>
-							{loading && <Spinner size="sm" />}
-							<span className="pl-3">Lưu</span>
+							{loading && <Spinner size='sm' />}
+							<span className='pl-3'>Lưu</span>
 						</Button>
 					</Button.Group>
 				</Tabs.Tab>
 			</Tabs>
 			{dataLoading && (
 				<Box className={'text-center w-full'}>
-					<Spinner size="lg" />
+					<Spinner size='lg' />
 				</Box>
 			)}
 		</Container>

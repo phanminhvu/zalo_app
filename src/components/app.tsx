@@ -90,28 +90,28 @@ const MyApp = () => {
 							<ZMPRouter>
 								<Header />
 								<AnimationRoutes>
-									<Route path="/" element={<HomeMain />} />
-									<Route path="/cart" element={<UserCart />} />
-									<Route path="/order-summaries" element={<OrderSummaries />} />
-									<Route path="/shipping-methods" element={<ShippingMethods />} />
-									<Route path="/payment-methods" element={<PaymentMethods />} />
-									<Route path="/waiting-payment" element={<WaitingPayment />} />
-									<Route path="/my-orders" element={<Orders />} />
+									<Route path='/' element={<HomeMain />} />
+									<Route path='/cart' element={<UserCart />} />
+									<Route path='/order-summaries' element={<OrderSummaries />} />
+									<Route path='/shipping-methods' element={<ShippingMethods />} />
+									<Route path='/payment-methods' element={<PaymentMethods />} />
+									<Route path='/waiting-payment' element={<WaitingPayment />} />
+									<Route path='/my-orders' element={<Orders />} />
 
-									<Route path="/my-orders/:id" element={<OrderDetail />} />
+									<Route path='/my-orders/:id' element={<OrderDetail />} />
 
-									<Route path="/my-addresses/:from" element={<UserAddresses />} />
-									<Route path="/my-profile" element={<UserProfile />} />
+									<Route path='/my-addresses/:from' element={<UserAddresses />} />
+									<Route path='/my-profile' element={<UserProfile />} />
 
-									<Route path="/news-page" element={<NewsPage />} />
-									<Route path="/categories" element={<CategoriesPage />} />
-									<Route path="/category-detail/:catId" element={<CategoriesPage />} />
-									<Route path="/edit-address/:from" element={<UserEditAddress />} />
-									<Route path="/search" element={<SearchPage />} />
-									<Route path="/select-coupon" element={<CouponsPage />} />
-									<Route path="/user-info" element={<UserInfo />} />
+									<Route path='/news-page' element={<NewsPage />} />
+									<Route path='/categories' element={<CategoriesPage />} />
+									<Route path='/category-detail/:catId' element={<CategoriesPage />} />
+									<Route path='/edit-address/:from' element={<UserEditAddress />} />
+									<Route path='/search' element={<SearchPage />} />
+									<Route path='/select-coupon' element={<CouponsPage />} />
+									<Route path='/user-info' element={<UserInfo />} />
 
-									<Route path="/detail-new/:newId" element={<NewDetail />} />
+									<Route path='/detail-new/:newId' element={<NewDetail />} />
 								</AnimationRoutes>
 								<CheckoutNav />
 								<ProductsPicker />

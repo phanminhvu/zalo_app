@@ -1,13 +1,5 @@
 import { atom, selector } from 'recoil'
-import {
-	Address,
-	CartData,
-	Coupon,
-	Order,
-	PaymentMethod,
-	ShippingDate,
-	ShippingMethod,
-} from '../models'
+import { Address, CartData, Coupon, Order, PaymentMethod, ShippingDate, ShippingMethod } from '../models'
 /**
  * {
   cartItems: [],

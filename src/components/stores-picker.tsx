@@ -39,13 +39,13 @@ const StoresPicker = () => {
 					onClose={() => setOpenSheet(false)}
 					ref={sheet}
 					autoHeight
-					title="Vị trí cửa hàng">
-					<div className="w-full mt-3 bg-blue-100 ">
+					title='Vị trí cửa hàng'>
+					<div className='w-full mt-3 bg-blue-100 '>
 						<Text className={'text-center pl-4 pr-4 pt-3 pb-3'}>
 							Vui lòng chọn vị trí cửa hàng phù hợp cho đơn hàng của bạn
 						</Text>
 					</div>
-					<div className="overflow-y-auto max-h-full">
+					<div className='overflow-y-auto max-h-full'>
 						<List>
 							{/*zi-check-circle*/}
 							{branchs &&
@@ -60,9 +60,7 @@ const StoresPicker = () => {
 											setOpenSheet(false)
 										}}
 										subTitle={branch.address}
-										prefix={
-											<Radio size={'small'} className={'mt-3'} checked={branchVal === branch.id} />
-										}
+										prefix={<Radio size={'small'} className={'mt-3'} checked={branchVal === branch.id} />}
 									/>
 								))}
 						</List>

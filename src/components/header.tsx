@@ -92,8 +92,8 @@ const Header = () => {
 
 				textColor,
 			)}>
-			<div className="flex flex-col w-full px-4">
-				<div className="flex items-center justify-between w-full">
+			<div className='flex flex-col w-full px-4'>
+				<div className='flex items-center justify-between w-full'>
 					{showAvatar && (
 						<Box flex py={0}>
 							<Avatar size={36} src={authDt?.profile?.avatar} />
@@ -110,7 +110,7 @@ const Header = () => {
 							{hasLeftIcon &&
 								(editAddress ? (
 									<Icon
-										icon="zi-home"
+										icon='zi-home'
 										style={{ marginBottom: '4px' }}
 										onClick={() => {
 											setIsMapping(false)
@@ -122,7 +122,7 @@ const Header = () => {
 									/>
 								) : (
 									<Icon
-										icon="zi-chevron-left"
+										icon='zi-chevron-left'
 										style={{ marginBottom: '4px' }}
 										onClick={
 											onLeftClick
@@ -149,7 +149,7 @@ const Header = () => {
 										size={25}
 									/>
 								))}
-							<span className="ml-4">{customTitle ? customTitle : title}</span>
+							<span className='ml-4'>{customTitle ? customTitle : title}</span>
 						</Text>
 					)}
 				</div>
@@ -158,10 +158,10 @@ const Header = () => {
 					<Box py={0} className={'w-full'}>
 						<div className={'rounded-lg border mt-3 border-slate-200'}>
 							<Input.Search
-								label=""
-								helperText=""
-								placeholder="Tìm kiếm"
-								className="w-full border-0 m-0"
+								label=''
+								helperText=''
+								placeholder='Tìm kiếm'
+								className='w-full border-0 m-0'
 								size={'medium'}
 								onChange={onSearchChange}
 							/>
@@ -175,7 +175,7 @@ const Header = () => {
 						onClick={() => {
 							navigate(`/cart`)
 						}}>
-						<HiShoppingCart className="mr-2 h-5 w-5" />
+						<HiShoppingCart className='mr-2 h-5 w-5' />
 					</div>
 				)}
 			</div>

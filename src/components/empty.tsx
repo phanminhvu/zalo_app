@@ -12,10 +12,8 @@ const EmptyBox = ({ title, content }) => {
 				{content}
 			</Text>
 			<Button.Group className={`flex w-full  bottom-0 mt-4`}>
-				<Button
-					className={`flex-1 border-l-0 border-b-0 rounded-none bg-pink-900`}
-					onClick={() => {}}>
-					<HiOutlineHome className="mr-2 h-5 w-5" />
+				<Button className={`flex-1 border-l-0 border-b-0 rounded-none bg-pink-900`} onClick={() => {}}>
+					<HiOutlineHome className='mr-2 h-5 w-5' />
 					<p>Trang chủ</p>
 				</Button>
 			</Button.Group>

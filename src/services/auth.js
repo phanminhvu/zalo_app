@@ -39,12 +39,7 @@ export const getDistricts = async (cityId) => {
 }
 export const getWards = async (cityId, districtId) => {
 	try {
-		const response = await request.get(
-			`ctygram/ghn-aff/address/${cityId}/${districtId}`,
-			null,
-			null,
-			false,
-		)
+		const response = await request.get(`ctygram/ghn-aff/address/${cityId}/${districtId}`, null, null, false)
 		return response
 	} catch (error) {
 		console.log('Error getDistricts: ', error)

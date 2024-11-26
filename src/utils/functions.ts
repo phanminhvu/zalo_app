@@ -72,9 +72,6 @@ export function removeVietnameseTones(str) {
 	str = str.trim()
 	// Remove punctuations
 	// Bỏ dấu câu, kí tự đặc biệt
-	str = str.replace(
-		/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g,
-		' ',
-	)
+	str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, ' ')
 	return str
 }

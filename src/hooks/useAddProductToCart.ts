@@ -22,9 +22,7 @@ const useAddProductToCart = () => {
 					if (cart.cartItems && cart.cartItems?.length > 0) {
 						/*bo het san pham mua them*/
 						if (productCart?.parent == 0) {
-							cart.cartItems = cart.cartItems.filter(
-								(item) => item.parent !== productCart.product_id,
-							)
+							cart.cartItems = cart.cartItems.filter((item) => item.parent !== productCart.product_id)
 							const orderIndex = cart.cartItems.findIndex(
 								(prod: CartProduct) => prod.product_id === productCart.product_id,
 							)

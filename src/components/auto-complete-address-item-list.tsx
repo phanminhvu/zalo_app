@@ -13,8 +13,7 @@ const AddressSearchItemList = () => {
 	const navigate = useNavigate()
 	const [searchString, setSearchString] = useState<string>('')
 
-	const [userEditingAddress, setUserEditingAddress] =
-		useRecoilState<Address>(userEditingAddressState)
+	const [userEditingAddress, setUserEditingAddress] = useRecoilState<Address>(userEditingAddressState)
 	const [addressAuto, setAddressAuto] = useRecoilState<boolean>(addressAutoState)
 	const [searchList, setSearchList] = useState([])
 	const [loading, setLoading] = useState(false)
@@ -39,10 +38,10 @@ const AddressSearchItemList = () => {
 		<div className={' relative'}>
 			<div className={'rounded-lg border border-slate-200 mx-4 '}>
 				<Input.Search
-					label=""
-					helperText=""
-					placeholder="Tìm địa chỉ..."
-					className="w-full  border-0 m-0"
+					label=''
+					helperText=''
+					placeholder='Tìm địa chỉ...'
+					className='w-full  border-0 m-0'
 					size={'medium'}
 					onChange={(event) => setSearchString(event.target.value)}
 				/>

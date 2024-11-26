@@ -38,20 +38,20 @@ const CategoryDetail: React.FunctionComponent = () => {
 	const [authDt, setAuthDt] = useRecoilState<AuthData>(authState)
 	return (
 		<Page style={{ paddingBottom: `64px` }}>
-			<section className="w-fit mx-auto grid  grid-cols-2 justify-items-center justify-center gap-y-5 gap-x-5 mt-10 mb-5">
+			<section className='w-fit mx-auto grid  grid-cols-2 justify-items-center justify-center gap-y-5 gap-x-5 mt-10 mb-5'>
 				{products &&
 					products.length > 0 &&
 					products.map((product) => <CardProductVertical product={product} key={product.id} />)}
 			</section>
 			{showLoadMore && (
-				<div className="flex items-center justify-center text-center w-full px-4 py-4">
+				<div className='flex items-center justify-center text-center w-full px-4 py-4'>
 					<Button
 						onClick={() => {
 							setPage((old) => old + 1)
 						}}
-						color="gray">
-						{loading && <Spinner size="sm" />}
-						<span className="pl-3">{loading ? 'Đang tải' : 'Nhiều hơn'}</span>
+						color='gray'>
+						{loading && <Spinner size='sm' />}
+						<span className='pl-3'>{loading ? 'Đang tải' : 'Nhiều hơn'}</span>
 					</Button>
 				</div>
 			)}

@@ -19,7 +19,7 @@ const Tabs = ({ children }) => {
 
 	return (
 		<div className={'flex gap-2 '}>
-			<div className=" justify-center bg-slate-100 h-screen  p-2 w-1/4">
+			<div className=' justify-center bg-slate-100 h-screen  p-2 w-1/4'>
 				{children.map((item, i) => {
 					return (
 						<Tab key={`tab-${i}`} currentTab={i} activeTab={activeTab} setActiveTab={setActiveTab}>
@@ -28,7 +28,7 @@ const Tabs = ({ children }) => {
 					)
 				})}
 			</div>
-			<div className="p-4 bg-white flex-1">
+			<div className='p-4 bg-white flex-1'>
 				{children.map((item, i) => {
 					return (
 						<div key={`tabcontent-${i}`} className={` ${i === activeTab ? 'visible' : 'hidden'}`}>

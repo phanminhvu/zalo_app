@@ -1,68 +1,69 @@
-import React, { useEffect, useState } from "react";
-import useSetHeader from "../../hooks/useSetHeader";
-import { useRecoilValue } from "recoil";
-import { authState } from "../../states/auth";
-import { Box, Header, Page, Spinner, Text, useNavigate } from "zmp-ui";
-import Container from "../../components/layout/Container";
-import EmptyBox from "../../components/empty";
-import { Order } from "../../models";
-import { convertPrice } from "../../utils";
-import { getOrders } from "../../services/order";
+import React, { useEffect, useState } from 'react'
+import useSetHeader from '../../hooks/useSetHeader'
+import { useRecoilValue } from 'recoil'
+import { authState } from '../../states/auth'
+import { Box, Header, Page, Spinner, Text, useNavigate } from 'zmp-ui'
+import Container from '../../components/layout/Container'
+import EmptyBox from '../../components/empty'
+import { Order } from '../../models'
+import { convertPrice } from '../../utils'
+import { getOrders } from '../../services/order'
 
 const Orders = () => {
-    const setHeader = useSetHeader();
-    const navigate = useNavigate()
-    const authDt = useRecoilValue(authState);
-    const [page, setPage] = useState(1);
-    const [showLoadMore, setShowLoadMore] = useState(true);
-    const [userOrders, setUserOrders] = useState<Order[]>(
-        []
-    );
-    const [activeOrderStatus, setActiveOrderStatus] = useState('processing');
-    const [loading, setLoading] = useState(true)
+	const setHeader = useSetHeader()
+	const navigate = useNavigate()
+	const authDt = useRecoilValue(authState)
+	const [page, setPage] = useState(1)
+	const [showLoadMore, setShowLoadMore] = useState(true)
+	const [userOrders, setUserOrders] = useState<Order[]>([])
+	const [activeOrderStatus, setActiveOrderStatus] = useState('processing')
+	const [loading, setLoading] = useState(true)
 
+	useEffect(() => {
+		setHeader({
+			customTitle: 'Đơn hàng',
+			hasLeftIcon: true,
+			type: 'secondary',
+			showBottomBar: true,
+		})
+	}, [])
 
-    useEffect(() => {
-        setHeader({
-            customTitle: "Đơn hàng",
-            hasLeftIcon: true,
-            type: "secondary",
-            showBottomBar: true
-        });
-    }, []);
+	useEffect(() => {
+		loadOrders()
+	}, [page])
 
-    useEffect(() => {
-        loadOrders()
-    }, [page])
+	const loadOrders = async () => {
+		setLoading(true)
+		const orders = await getOrders()
+		console.log(orders)
+		// filter order
+		const filterOrder = orders?.map((o) => o.order)?.filter((uOrder) => uOrder?.status === activeOrderStatus) ?? []
 
-    const loadOrders = async () => {
-        setLoading(true)
-        const orders = await getOrders()
-        console.log(orders)
-        // filter order
-        const filterOrder = orders?.map(o => o.order)?.filter(uOrder => (uOrder?.status === activeOrderStatus)) ?? []
+		setUserOrders(filterOrder)
+		setLoading(false)
+	}
 
-        setUserOrders(filterOrder)
-        setLoading(false)
-    }
+	const onClickOrder = (order: Order) => {
+		const orderId = order.id?.split('_')?.[1]
+		if (orderId) {
+			navigate(`/my-orders/${orderId}`, { state: { order } })
+		}
+	}
 
-    const onClickOrder = (order: Order) => {
-        const orderId = order.id?.split('_')?.[1]
-        if (orderId) {
-            navigate(`/my-orders/${orderId}`, { state: { order } })
-        }
-    }
+	if (loading) {
+		return (
+			<Page className='flex justify-center pt-50'>
+				<Spinner visible />
+			</Page>
+		)
+	}
 
-    if (loading) {
-        return <Page className="flex justify-center pt-50">
-            <Spinner visible />
-        </Page>
-    }
-
-    return <Page className="bg-gray-200">
-        {(Array.isArray(userOrders) && userOrders.length > 0) && <div className=" pb-32">
-            {/* Navigation top tab */}
-            {/* <div className="w-full border-b border-gray-200 overflow-auto" >
+	return (
+		<Page className='bg-gray-200'>
+			{Array.isArray(userOrders) && userOrders.length > 0 && (
+				<div className=' pb-32'>
+					{/* Navigation top tab */}
+					{/* <div className="w-full border-b border-gray-200 overflow-auto" >
                 <nav className="flex space-x-2 overscroll-x-auto " aria-label="Tabs" role="tablist">
                     {statusArray.map(({ key, label }) => {
                         return <button key={`cat_${status}`} type="button"
@@ -75,30 +76,37 @@ const Orders = () => {
                 </nav>
             </div> */}
 
-            {Array.isArray(userOrders) && userOrders?.map((order, index) => {
-                const orderId = order.id?.split('_')?.[1] ?? '#'
-                const firstItem = order?.line_items?.[0]
+					{Array.isArray(userOrders) &&
+						userOrders?.map((order, index) => {
+							const orderId = order.id?.split('_')?.[1] ?? '#'
+							const firstItem = order?.line_items?.[0]
 
-                return <Box p={4} className="rounded-lg bg-white overflow-hidden mt-3 ml-3 mr-3" key={`order-${order.id}`} onClick={() => onClickOrder(order)}>
-
-                    <div className="flex">
-                        <img className="h-16 w-16 mr-4" src={`${firstItem?.image}`} alt={`${firstItem.name}`} />
-                        <div className="flex mt-1">
-                            <div className={`flex-1`}>
-                                <Text size="xxSmall" className="flex-1 text-start">{`${order.date_created}`}</Text>
-                                <Text size="small" className="flex-1 text-start font-medium">{`Mã đơn hàng: ${orderId}`}</Text>
-                                <Text size="xxSmall" className="flex-1 text-start">{`${order.line_items.length} sản phẩm`}</Text>
-                            </div>
-                        </div>
-                        <Text size="normal" className="flex-1 text-end font-semibold">
-                            {convertPrice(order.total)} đ
-                        </Text>
-                    </div>
-                    {/*<div className="flex">
+							return (
+								<Box
+									p={4}
+									className='rounded-lg bg-white overflow-hidden mt-3 ml-3 mr-3'
+									key={`order-${order.id}`}
+									onClick={() => onClickOrder(order)}>
+									<div className='flex'>
+										<img className='h-16 w-16 mr-4' src={`${firstItem?.image}`} alt={`${firstItem.name}`} />
+										<div className='flex mt-1'>
+											<div className={`flex-1`}>
+												<Text size='xxSmall' className='flex-1 text-start'>{`${order.date_created}`}</Text>
+												<Text size='small' className='flex-1 text-start font-medium'>{`Mã đơn hàng: ${orderId}`}</Text>
+												<Text
+													size='xxSmall'
+													className='flex-1 text-start'>{`${order.line_items.length} sản phẩm`}</Text>
+											</div>
+										</div>
+										<Text size='normal' className='flex-1 text-end font-semibold'>
+											{convertPrice(order.total)} đ
+										</Text>
+									</div>
+									{/*<div className="flex">
                     <Text size="small" className="font-bold flex-1">{order.store.shop_name}</Text>
                     <Text size="xxSmall" className="text-primary">{statusArray?.find(sI => (sI.key === order.status))?.label }</Text>
                 </div>*/}
-                    {/* {order.line_items.filter(it => (it.parent == 0)).map((litem, litemIndex) => {
+									{/* {order.line_items.filter(it => (it.parent == 0)).map((litem, litemIndex) => {
                         const childItems = order.line_items?.filter(cIt => cIt.parent === litem.id);
                         let totalItemPrice = litem.price; let totalSubItemPrice = litem.subtotal;
                         if (childItems && childItems?.length > 0) {
@@ -128,7 +136,7 @@ const Orders = () => {
                             </div>
                         )
                     })} */}
-                    {/* <div className="flex mt-1">
+									{/* <div className="flex mt-1">
                         <Text size="xxSmall" className="flex-1 text-start">{`${order.line_items.length} sản phẩm`}</Text>
                         <Text size="xxSmall" className="flex-1 text-start">{`${order.date_created}`}</Text>
                         <Text size="small" className="flex-1 text-end font-semibold">
@@ -136,12 +144,12 @@ const Orders = () => {
                             {convertPrice(order.total)} đ
                         </Text>
                     </div> */}
-                </Box>
-
-            })}
-
-        </div>}
-        {/* {showLoadMore && <div className="flex items-center justify-center text-center w-full px-4 py-4">
+								</Box>
+							)
+						})}
+				</div>
+			)}
+			{/* {showLoadMore && <div className="flex items-center justify-center text-center w-full px-4 py-4">
 		    <Button onClick={()=>{
                 setPage(old => old+1)
             }} color="gray">
@@ -149,7 +157,10 @@ const Orders = () => {
 		    </Button>
 	    </div>} */}
 
-        {userOrders.length === 0 && <Text className="text-base text-center font-regular mt-5 text-gray-600">{'Chưa có đơn hàng!'}</Text>}
-    </Page>
+			{userOrders.length === 0 && (
+				<Text className='text-base text-center font-regular mt-5 text-gray-600'>{'Chưa có đơn hàng!'}</Text>
+			)}
+		</Page>
+	)
 }
-export default Orders;
+export default Orders

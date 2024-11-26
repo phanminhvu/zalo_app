@@ -52,14 +52,10 @@ const SearchPage: React.FunctionComponent = () => {
 		let poptions
 		if (searchString.length) {
 			const searchPattern = new RegExp(
-				searchString
-					.map((term: string) => `(?=.*${removeVietnameseTones(term.toLowerCase())})`)
-					.join(''),
+				searchString.map((term: string) => `(?=.*${removeVietnameseTones(term.toLowerCase())})`).join(''),
 				'i',
 			)
-			poptions = allProducts.filter((pr) =>
-				removeVietnameseTones(pr.name).toLowerCase().match(searchPattern),
-			)
+			poptions = allProducts.filter((pr) => removeVietnameseTones(pr.name).toLowerCase().match(searchPattern))
 			setProducts(poptions)
 		} else {
 			setProducts(allProducts)
@@ -76,9 +72,7 @@ const SearchPage: React.FunctionComponent = () => {
 					? products.map((product, index) => (
 							<Item
 								title={
-									<Text
-										style={{ width: `calc(50vw)`, whiteSpace: 'wrap' }}
-										className={' relative break-words'}>
+									<Text style={{ width: `calc(50vw)`, whiteSpace: 'wrap' }} className={' relative break-words'}>
 										{product.name}
 									</Text>
 								}
@@ -87,24 +81,22 @@ const SearchPage: React.FunctionComponent = () => {
 										src={product.image ?? noImage}
 										alt={product.name}
 										style={{ width: '95px', maxWidth: '95px', height: '95px' }}
-										className="aspect-auto relative rounded-lg"
+										className='aspect-auto relative rounded-lg'
 									/>
 								}
 								subTitle={
 									(parseFloat(product.sale_price) > 0 || parseFloat(product.price) > 0) && (
-										<div className="flex items-center">
+										<div className='flex items-center'>
 											{product.on_sale == 1 && product.sale_price > 0 && (
-												<del className="mr-2">
-													<p className="text-xs text-gray-600 cursor-auto font-lato ">
+												<del className='mr-2'>
+													<p className='text-xs text-gray-600 cursor-auto font-lato '>
 														{convertPrice(product.price || 0)}đ
 													</p>
 												</del>
 											)}
-											<p className="text-xs text-[#088c4c] cursor-auto font-lato font-[570 ] ">
+											<p className='text-xs text-[#088c4c] cursor-auto font-lato font-[570 ] '>
 												{convertPrice(
-													product.on_sale == 1 && product.sale_price > 0
-														? product.sale_price
-														: product.price,
+													product.on_sale == 1 && product.sale_price > 0 ? product.sale_price : product.price,
 												)}
 												đ
 											</p>
@@ -138,7 +130,7 @@ const SearchPage: React.FunctionComponent = () => {
 			{/*</section>*/}
 
 			{products.length === 0 && (
-				<div className="flex w-full justify-center">
+				<div className='flex w-full justify-center'>
 					<Text>Không tìm thấy kết quả. Vui lòng thử lại</Text>
 				</div>
 			)}

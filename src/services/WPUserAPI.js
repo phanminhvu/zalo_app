@@ -33,14 +33,7 @@ const WPUserAPI = {
 		return await request.get(_url, null, null, false)
 	},
 
-	register: async ({
-		username,
-		email,
-		firstName,
-		lastName,
-		isChecked = false,
-		password = undefined,
-	}) => {
+	register: async ({ username, email, firstName, lastName, isChecked = false, password = undefined }) => {
 		try {
 			const niceName = firstName + ' ' + lastName
 
