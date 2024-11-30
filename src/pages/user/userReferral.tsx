@@ -9,7 +9,24 @@ const UserReferral = () => {
 	const setHeader = useSetHeader()
 	const navigate = useNavigate()
 	const authDt = useRecoilValue(authState)
-	const [code, setCode] = useState('ABCXYZ')
+	const [code, setCode] = useState('')
+
+	useEffect(() => {
+		getRefferalCode()
+	}, [])
+
+	const getRefferalCode = async () => {
+		console.log(authDt.profile.id)
+		fetch(`https://quequan.vn:8081/customer/zalo-referral-code?userid=${authDt.profile.id}`)
+			.then((response) => {
+				return response.json()
+			})
+			.then((result) => {
+				console.log(result)
+				if (result.code) setCode(result.code)
+			})
+			.catch((error) => console.log(JSON.stringify(error)))
+	}
 
 	useEffect(() => {
 		setHeader({

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import useSetHeader from '../../hooks/useSetHeader'
 import { useRecoilValue } from 'recoil'
 import { authState } from '../../states/auth'
 import { Button, Page, useNavigate } from 'zmp-ui'
-import { openShareSheet } from 'zmp-sdk'
-import { useLocation, useParams } from 'react-router-dom'
+import { showToast } from 'zmp-sdk'
+import { useParams } from 'react-router-dom'
 
 const ActiveReferral = () => {
 	const setHeader = useSetHeader()
@@ -20,11 +20,29 @@ const ActiveReferral = () => {
 			hasLeftIcon: true,
 			type: 'secondary',
 			showBottomBar: true,
-      onLeftClick: () => navigate('/home')
+			onLeftClick: () => navigate('/home'),
 		})
 	}, [])
 
-	const activeReferralCode = () => {}
+	const activeReferralCode = async () => {
+		fetch('https://quequan.vn:8081/customer/active-zalo-referral-code', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ id: authDt.profile.id, code }),
+		})
+			.then((response) => {
+				return response.json()
+			})
+			.then((result) => {
+				if (result.message) showToast({ message: result.message })
+			})
+			.catch((error) => {
+				console.log('JSON.stringify(error)', JSON.stringify(error))
+				showToast({ message: 'Đã có lỗi xảy ra!' })
+			})
+	}
 
 	return (
 		<Page className='bg-gray-200'>

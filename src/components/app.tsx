@@ -58,6 +58,9 @@ const MyApp = () => {
 					fetch('https://quequan.vn:8081/customer/zalocustomer', {
 						method: 'POST',
 						body: JSON.stringify({ token, accessToken }),
+						headers: {
+							'Content-Type': 'application/json',
+						},
 					})
 						.then((value) => {
 							console.log('post user info success', value)
