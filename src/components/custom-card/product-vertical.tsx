@@ -25,7 +25,7 @@ const CardProductVertical = ({ product, canAdd, padding = 0, grid = false }: Car
 	const pathImg = product?.image ? product?.image : noImage
 	return (
 		<div
-			className={`${grid ? '' : 'mr-3'} bg-white rounded-lg duration-500  `}
+			className={`${grid ? '' : 'mr-3'} bg-white rounded-lg duration-500  ${!product.status ? 'opacity-50': ''}`}
 			onClick={() => {
 				//navigate(`/detail-product/${product.id}`);
 				setProductInfoPicked((info) => {
@@ -44,6 +44,7 @@ const CardProductVertical = ({ product, canAdd, padding = 0, grid = false }: Car
 			<div className='flex px-3 py-2'>
 				{/*} <span className="text-gray-400 mr-3 uppercase text-xs">Brand</span>*/}
 				<div className={'flex-1'}>
+					{!product.status ? <span className='text-xs font-medium'>{'Hết hàng tạm thời'}</span> : null}
 					<p className='text-sm text-black font-lato'>{product.name}</p>
 					{(parseFloat(product.sale_price) > 0 || parseFloat(product.price) > 0) && (
 						<div className='flex items-center'>
@@ -58,7 +59,7 @@ const CardProductVertical = ({ product, canAdd, padding = 0, grid = false }: Car
 						</div>
 					)}
 				</div>
-				{canAdd && (
+				{canAdd && product.status && (
 					<div className='mr px-0 py-0 min-w-0 w-[20px] h-[20px]'>
 						<Icon icon='zi-plus-circle-solid' className='text-[#088c4c]' size={27} />
 					</div>

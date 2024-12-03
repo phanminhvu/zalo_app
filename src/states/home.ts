@@ -31,7 +31,8 @@ export const homeProductsState = selector<Product[]>({
  const 	alo = await 	getProducts()
 		//const productsJson = await WooWorker.getAllProducts(10,1);
 		//return productsJson;
-		return alo
+		return products
+		// return alo
 	},
 })
 export const homeFeaturedProductsState = selector<Product[]>({

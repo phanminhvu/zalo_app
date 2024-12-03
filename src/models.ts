@@ -79,6 +79,7 @@ export type Product = {
 	description: string
 	related_products: number[]
 	weight: number
+	status: boolean
 }
 export type Payment = {
 	paypal?: string[]
