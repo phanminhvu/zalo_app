@@ -7,6 +7,7 @@ import products from '../mock/products.json'
 import provinces from '../mock/provinces.json'
 import districts from '../mock/districts.json'
 import branchs from '../mock/branchs.json'
+import {getProducts} from "../services/ApiClient";
 
 export const homeCategoriesState = selector<Category[]>({
 	key: 'homeCategories',
@@ -27,9 +28,10 @@ export const couponsState = selector<Coupon[]>({
 export const homeProductsState = selector<Product[]>({
 	key: 'homeProducts',
 	get: async ({ get }) => {
+ const 	alo = await 	getProducts()
 		//const productsJson = await WooWorker.getAllProducts(10,1);
 		//return productsJson;
-		return products
+		return alo
 	},
 })
 export const homeFeaturedProductsState = selector<Product[]>({

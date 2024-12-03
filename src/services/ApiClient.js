@@ -2,6 +2,26 @@
 import { loadUserFromCache } from './storage'
 
 const ULR_API = 'https://quequan.vn:8081/customer'
+// const ULR_API = 'https://localhost:8081/customer'
+
+export const getProducts = async (orderId, order) => {
+	try {
+		const response = await fetch(`${ULR_API}/zaloproducts`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+		if (!response.ok) {
+			throw new Error('Thất bại!')
+		}
+		const data = await response.json()
+		console.log(data)
+		return data
+	} catch (e) {
+		console.error(e)
+	}
+}
 
 export const createOrder = async (orderId, order) => {
 	try {
