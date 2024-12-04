@@ -25,7 +25,7 @@ const CardProductVertical = ({ product, canAdd, padding = 0, grid = false }: Car
 	const pathImg = product?.image ? product?.image : noImage
 	return (
 		<div
-			className={`${grid ? '' : 'mr-3'} bg-white rounded-lg duration-500  ${!product.status ? 'opacity-50': ''}`}
+			className={`${grid ? '' : 'mr-3'} bg-white rounded-lg duration-500  ${!product.status ? 'opacity-50 pointer-events-none': ''}`}
 			onClick={() => {
 				//navigate(`/detail-product/${product.id}`);
 				setProductInfoPicked((info) => {

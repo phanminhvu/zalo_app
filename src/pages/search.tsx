@@ -71,6 +71,7 @@ const SearchPage: React.FunctionComponent = () => {
 				{products && products.length > 0
 					? products.map((product, index) => (
 							<Item
+								className={`${!product.status ? 'opacity-50 pointer-events-none' : ''}`}
 								title={
 									<Text style={{ width: `calc(50vw)`, whiteSpace: 'wrap' }} className={' relative break-words'}>
 										{product.name}
