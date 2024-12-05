@@ -11,10 +11,9 @@ import {
 	provincesState,
 } from '../states/home'
 import { AuthData, Branch, CartData, Category, Coupon, District, Order, Product, Province } from '../models'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import useSetHeader from '../hooks/useSetHeader'
 import { authState } from '../states/auth'
-
 import { loadUserFromCache } from '../services/storage'
 import ProductCarouselVertical from '../components/carousel/ProductCarouselVertical'
 import CardProductVertical from '../components/custom-card/product-vertical'
@@ -24,6 +23,8 @@ import { showOAWidget } from 'zmp-sdk/apis'
 import { cartState, userOrdersState } from '../states/cart'
 
 const HomeMain: React.FunctionComponent = () => {
+	const [searchParams, setSearchParams] = useSearchParams()
+
 	const categories = useRecoilValue<Category[]>(homeCategoriesState)
 	const products = useRecoilValue<Product[]>(homeProductsState)
 	const featuredProducts = useRecoilValue<Product[]>(homeFeaturedProductsState)
@@ -53,6 +54,22 @@ const HomeMain: React.FunctionComponent = () => {
 				console.log(status)
 			},
 		})
+	}, [])
+
+	useEffect(() => {
+		const t1 = setTimeout(() => {
+			const action = searchParams.get('action')
+			if (action === 'active-referral') {
+				const code = searchParams.get('code')
+				if (code) {
+					navigate(`/active-referral/${code}`)
+				}
+			}
+		}, 500);
+
+		return () => {
+			clearTimeout(t1)
+		}
 	}, [])
 
 	// /*"NODE_TLS_REJECT_UNAUTHORIZED=0 RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED=false zmp start"*/

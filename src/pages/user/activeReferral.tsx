@@ -20,7 +20,7 @@ const ActiveReferral = () => {
 			hasLeftIcon: true,
 			type: 'secondary',
 			showBottomBar: true,
-			onLeftClick: () => navigate('/home'),
+			onLeftClick: () => navigate('/'),
 		})
 	}, [])
 

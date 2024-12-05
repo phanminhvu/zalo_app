@@ -3,7 +3,7 @@ import { loadUserFromCache } from './storage'
 
 const ULR_API = 'https://quequan.vn:8081/customer'
 
-export const getOrders = async () => {
+export const getOrders = async (status) => {
 	// https://quequan.vn:8081/customer/listorder?userid=6465140566074194111
 	try {
 		const userInfo = await loadUserFromCache()
@@ -12,7 +12,7 @@ export const getOrders = async () => {
 			throw new Error('Thất bại!')
 		}
 
-		const response = await fetch(`${ULR_API}/listorder?userid=${userId}`, {
+		const response = await fetch(`${ULR_API}/listorder?userid=${userId}&status=${status}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',

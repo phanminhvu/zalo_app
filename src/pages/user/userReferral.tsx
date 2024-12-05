@@ -39,7 +39,7 @@ const UserReferral = () => {
 
 	const onShareLink = () => {
 		// https://zalo.me/s/3330579448132307150/active-referral/ABCXYZ
-		const link = `https://zalo.me/s/3330579448132307150/active-referral/${code}`
+		const link = `https://zalo.me/s/3330579448132307150/?action=active-referral&code=${code}`
 		console.log(link)
 		openShareSheet({
 			type: 'link',
