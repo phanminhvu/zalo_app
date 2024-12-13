@@ -380,3 +380,13 @@ export type AllData = {
 	branchs: Branch[]
 	coupons: Coupon[]
 }
+
+export type HistoryPoint = {
+	_id: string
+	idOrder: string
+	name: string
+	time: string
+	customerId: string
+	value: number
+	__v: number
+}

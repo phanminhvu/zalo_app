@@ -38,6 +38,7 @@ import { getAccessToken } from 'zmp-sdk/apis'
 import { getPhoneNumber } from 'zmp-sdk'
 import UserReferral from '../pages/user/userReferral'
 import ActiveReferral from '../pages/user/activeReferral'
+import HistoryPoints from '../pages/user/historyPoints'
 
 const MyApp = () => {
 	// useEffect(() => {
@@ -124,6 +125,7 @@ const MyApp = () => {
 
 									<Route path='/user-referral' element={<UserReferral />} />
 									<Route path='/active-referral/:code' element={<ActiveReferral />} />
+									<Route path='/history-points' element={<HistoryPoints />} />
 								</AnimationRoutes>
 								<CheckoutNav />
 								<ProductsPicker />

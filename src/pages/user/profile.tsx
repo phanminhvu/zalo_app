@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Icon, List, useNavigate } from 'zmp-ui'
+import { Box, Icon, List, Text, useNavigate } from 'zmp-ui'
 import Container from '../../components/layout/Container'
 import { HiOutlineFlag, HiOutlineShoppingCart, HiOutlineUser } from 'react-icons/hi'
 import { useRecoilState, useRecoilValue } from 'recoil'
@@ -43,6 +43,7 @@ const UserProfile = () => {
 	const navigate = useNavigate()
 	const authDt = useRecoilValue(authState)
 	const setHeader = useSetHeader()
+	const [point, setPoint] = useState(0)
 	const [phoneNumber, setPhoneNumber] = useState<string | null>(null)
 	const [isMapping, setIsMapping] = useRecoilState<boolean>(isFromSettingState)
 	useEffect(() => {
@@ -67,10 +68,41 @@ const UserProfile = () => {
 		//             getPhoneNumberUser();
 		//         }
 	}, [])
+
+	useEffect(() => {
+		const userId = authDt?.profile?.id
+		if (userId) {
+			fetch(`https://quequan.vn:8081/customer/zalo-customer-point?userid=${userId}`)
+				.then((response) => {
+					return response.json()
+				})
+				.then((result) => {
+					console.log(result)
+					if (result?.point) setPoint(result?.point)
+				})
+				.catch((error) => console.log(JSON.stringify(error)))
+		}
+	}, [authDt?.profile?.id])
+
 	return (
 		<Container className={'  zui-container-background-color'}>
 			<Box m={4} p={0} className={'rounded-lg bg-white'}>
 				<List>
+					<Item
+						title='Điểm tích luỹ'
+						prefix={<HiOutlineUser size={20} />}
+						className={'text-sm m-0'}
+						suffix={
+							<div className='flex flex-row gap-2'>
+								<Text className='text-base text-green-500 font-semibold'>{point ?? '...'}</Text>
+								<Icon icon='zi-chevron-right' />
+							</div>
+						}
+						onClick={() => {
+							setIsMapping(true)
+							navigate('/history-points')
+						}}
+					/>
 					<Item
 						title='Thông tin tài khoản'
 						prefix={<HiOutlineUser size={20} />}
