@@ -51,7 +51,7 @@ const HistoryPoints = () => {
 					<Spinner visible />
 				</div>
 			) : (
-				<div>
+				<div className='mb-20'>
 					{Array.isArray(data) &&
 						data?.map((point, index) => {
 							return (
