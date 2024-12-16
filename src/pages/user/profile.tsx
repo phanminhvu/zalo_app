@@ -10,6 +10,7 @@ import { getPhoneNumberUser } from '../../services/zalo'
 import { isFromSettingState, isMappingState } from '../../state'
 import { createShortcut } from 'zmp-sdk/apis'
 import { openWebview } from 'zmp-sdk/apis'
+import { convertPrice } from '../../utils'
 const openUrlInWebview = async () => {
 	try {
 		await openWebview({
@@ -93,8 +94,8 @@ const UserProfile = () => {
 						prefix={<HiOutlineUser size={20} />}
 						className={'text-sm m-0'}
 						suffix={
-							<div className='flex flex-row gap-2'>
-								<Text className='text-base text-green-500 font-semibold'>{point ?? '...'}</Text>
+							<div className='flex flex-row gap-2 items-center'>
+								<Text className='text-base text-green-500 font-semibold'>{convertPrice(point ?? 0)}</Text>
 								<Icon icon='zi-chevron-right' />
 							</div>
 						}

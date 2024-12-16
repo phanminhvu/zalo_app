@@ -12,6 +12,7 @@ const HistoryPoints = () => {
 	const authDt = useRecoilValue(authState)
 	const [data, setData] = useState<HistoryPoint[]>([])
 	const [isLoading, setIsLoading] = useState(false)
+	const [point, setPoint] = useState(0)
 
 	useEffect(() => {
 		getData()
@@ -33,6 +34,16 @@ const HistoryPoints = () => {
 				console.log(JSON.stringify(error))
 				setIsLoading(false)
 			})
+
+		fetch(`https://quequan.vn:8081/customer/zalo-customer-point?userid=${authDt?.profile?.id}`)
+			.then((response) => {
+				return response.json()
+			})
+			.then((result) => {
+				console.log(result)
+				if (result?.point) setPoint(result?.point)
+			})
+			.catch((error) => console.log(JSON.stringify(error)))
 	}
 
 	useEffect(() => {
@@ -52,6 +63,12 @@ const HistoryPoints = () => {
 				</div>
 			) : (
 				<div className='mb-20'>
+					{point > 0 ? (
+						<div className='my-4 mx-3 bg-green-500 p-4 flex flex-row justify-between items-center rounded-xl'>
+							<Text className='text-white font-medium'>{`Điểm tích luỹ`}</Text>
+							<Text className='text-xl text-white font-semibold'>{`${convertPrice(point)}`}</Text>
+						</div>
+					) : null}
 					{Array.isArray(data) &&
 						data?.map((point, index) => {
 							return (
@@ -60,9 +77,9 @@ const HistoryPoints = () => {
 										{/* <img className='h-16 w-16 mr-4' src={`${firstItem?.image}`} alt={`${firstItem.name}`} /> */}
 										<div className='flex flex-1 flex-col'>
 											<div className='flex justify-between flex-1 mb-2'>
-												<Text
-													size='large'
-													className='flex-1 content-end font-semibold text-blue-500'>{`${point.name}`}</Text>
+												<Text size='large' className='flex-1 content-end font-semibold text-blue-500'>{`${
+													point.name
+												} - ${point?.idOrder?.split('_')?.[1]}`}</Text>
 											</div>
 											<div className='flex justify-between flex-1 mb-1'>
 												<Text size='xxSmall' className='flex-1 content-end text-gray-400'>{`Thời gian giao dịch`}</Text>
