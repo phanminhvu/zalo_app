@@ -5,6 +5,7 @@ import { authState } from '../../states/auth'
 import { Box, Page, Spinner, Text, useNavigate } from 'zmp-ui'
 import { HistoryPoint } from '../../models'
 import { convertPrice } from '../../utils'
+import { showToast } from 'zmp-sdk'
 
 const HistoryPoints = () => {
 	const setHeader = useSetHeader()
@@ -43,7 +44,10 @@ const HistoryPoints = () => {
 				console.log(result)
 				if (result?.point) setPoint(result?.point)
 			})
-			.catch((error) => console.log(JSON.stringify(error)))
+			.catch((error) => {
+				console.log(JSON.stringify(error))
+				showToast({ message: error?.message })
+			})
 	}
 
 	useEffect(() => {
@@ -55,6 +59,26 @@ const HistoryPoints = () => {
 		})
 	}, [])
 
+	const showOrder = (order: HistoryPoint) => {
+		const id = order?.idOrder
+
+		fetch(`https://quequan.vn:8081/customer/order-detail?orderId=${id}`)
+			.then((response) => {
+				return response.json()
+			})
+			.then((result) => {
+				console.log(result)
+				if (result?.order?.order) navigate(`/my-orders/${id}`, { state: { order: result?.order?.order } })
+				else {
+					showToast({ message: result?.message })
+				}
+			})
+			.catch((error) => {
+				console.log(JSON.stringify(error))
+				showToast({ message: JSON.stringify(error) })
+			})
+	}
+
 	return (
 		<Page className='bg-gray-200'>
 			{isLoading ? (
@@ -64,7 +88,7 @@ const HistoryPoints = () => {
 			) : (
 				<div className='mb-20'>
 					{point > 0 ? (
-						<div className='my-4 mx-3 bg-green-500 p-4 flex flex-row justify-between items-center rounded-xl'>
+						<div className='my-4 mx-3 bg-green-500 px-4 py-3 flex flex-row justify-between items-center rounded-xl'>
 							<Text className='text-white font-medium'>{`Điểm tích luỹ`}</Text>
 							<Text className='text-xl text-white font-semibold'>{`${convertPrice(point)}`}</Text>
 						</div>
@@ -72,14 +96,24 @@ const HistoryPoints = () => {
 					{Array.isArray(data) &&
 						data?.map((point, index) => {
 							return (
-								<Box p={4} className='rounded-lg bg-white overflow-hidden mt-3 ml-3 mr-3' key={`order-${point._id}`}>
+								<Box
+									p={4}
+									className='rounded-lg bg-white overflow-hidden mt-3 ml-3 mr-3'
+									key={`order-${point._id}`}
+									onClick={() => showOrder(point)}>
 									<div className='flex'>
 										{/* <img className='h-16 w-16 mr-4' src={`${firstItem?.image}`} alt={`${firstItem.name}`} /> */}
 										<div className='flex flex-1 flex-col'>
 											<div className='flex justify-between flex-1 mb-2'>
-												<Text size='large' className='flex-1 content-end font-semibold text-blue-500'>{`${
-													point.name
-												} - ${point?.idOrder?.split('_')?.[1]}`}</Text>
+												<Text
+													size='large'
+													className='flex-1 flex-row flex items-center content-end font-semibold text-blue-500'>
+													{`${point.name}`}
+													<Text size='small' className='ml-2 font-medium'>
+														{' '}
+														- {point?.idOrder?.split('_')?.[1]}
+													</Text>
+												</Text>
 											</div>
 											<div className='flex justify-between flex-1 mb-1'>
 												<Text size='xxSmall' className='flex-1 content-end text-gray-400'>{`Thời gian giao dịch`}</Text>

@@ -113,7 +113,7 @@ const OrderDetail = () => {
 							fail: (err) => {},
 						})
 					}}>
-					{'Hỗ trợ/ khiếu nại về đơn hàng'}
+					{'Hỗ trợ/khiếu nại về đơn hàng'}
 				</Button>
 			</Box>
 			{!order && <EmptyBox title={`#`} content={`Vui lòng thử lại`} />}
