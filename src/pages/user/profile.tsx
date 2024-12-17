@@ -96,7 +96,7 @@ const UserProfile = () => {
                  className={'rounded-lg'} style={{backgroundColor: '#088c4c'}}>
                 <div className="text-center p-4">
                     <Text size={"large"} className={' text-white font-semibold'}>
-                        Hoa hồng có thể nhận
+                        Điểm tích lũy
                     </Text>
                     <Text style={{ fontSize: '30px' }} className={'text-white mt-2 mb-4 font-semibold'}>0đ</Text>
                 </div>
