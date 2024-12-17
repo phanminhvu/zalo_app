@@ -28,11 +28,11 @@ export const couponsState = selector<Coupon[]>({
 export const homeProductsState = selector<Product[]>({
 	key: 'homeProducts',
 	get: async ({ get }) => {
- const 	alo = await 	getProducts()
+ const 	alo = await getProducts()
 		//const productsJson = await WooWorker.getAllProducts(10,1);
 		//return productsJson;
-		return products
-		// return alo
+		// return products
+		return alo
 	},
 })
 export const homeFeaturedProductsState = selector<Product[]>({
