@@ -98,7 +98,7 @@ const UserProfile = () => {
                     <Text size={"large"} className={' text-white font-semibold'}>
                         Điểm tích lũy
                     </Text>
-                    <Text style={{ fontSize: '30px' }} className={'text-white mt-2 mb-4 font-semibold'}>0đ</Text>
+                    <Text style={{ fontSize: '30px' }} className={'text-white mt-2 font-semibold'}>0đ</Text>
                 </div>
             </Box>
             <Box m={4} p={0} className={'rounded-lg bg-white'}>
