@@ -60,6 +60,7 @@ import {
 } from '../../services/storage'
 import { authorizeV2, getPhoneNumberUser, getSettingV2 } from '../../services/zalo'
 import { authState } from '../../states/auth'
+import { getSetting } from 'zmp-sdk'
 
 const UserCart = () => {
 	const navigate = useNavigate()
@@ -163,6 +164,14 @@ const UserCart = () => {
 				setShippingAddress(userAddresses.filter((data) => data.default)[0])
 			}
 		}
+
+		getSetting().then((value) => {
+			console.log(value)
+			if (!value.authSetting?.['scope.userPhonenumber']) {
+				// authorizeV2()
+				setPopupVisible(true)
+			}
+		})
 	}, [])
 
 	const vietmapApi = new VietmapApi({ apiKey: VIET_MAP_KEY })

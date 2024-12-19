@@ -1,16 +1,17 @@
 import React, {useEffect, useState} from 'react'
-import {Box, Icon, List, Text, useNavigate} from 'zmp-ui'
+import {Box, Button, Icon, List, Modal, Text, useNavigate} from 'zmp-ui'
 import Container from '../../components/layout/Container'
 import {HiOutlineFlag, HiOutlineShoppingCart, HiOutlineUser} from 'react-icons/hi'
 import {useRecoilState, useRecoilValue} from 'recoil'
 import {authState} from '../../states/auth'
 import useSetHeader from '../../hooks/useSetHeader'
 import {showOAWidget} from 'zmp-sdk/apis'
-import {getPhoneNumberUser} from '../../services/zalo'
+import {authorizeV2, getPhoneNumberUser} from '../../services/zalo'
 import {isFromSettingState, isMappingState} from '../../state'
 import {createShortcut} from 'zmp-sdk/apis'
 import {openWebview} from 'zmp-sdk/apis'
 import {convertPrice} from '../../utils'
+import { getSetting } from 'zmp-sdk'
 
 const openUrlInWebview = async () => {
     try {
@@ -48,6 +49,8 @@ const UserProfile = () => {
     const [point, setPoint] = useState(0)
     const [phoneNumber, setPhoneNumber] = useState<string | null>(null)
     const [isMapping, setIsMapping] = useRecoilState<boolean>(isFromSettingState)
+    const [popupVisible, setPopupVisible] = useState(false)
+
     useEffect(() => {
         setHeader({
             customTitle: 'Trang cá nhân',
@@ -69,6 +72,14 @@ const UserProfile = () => {
         //         }else{
         //             getPhoneNumberUser();
         //         }
+
+        getSetting().then((value) => {
+			console.log(value)
+			if (!value.authSetting?.['scope.userPhonenumber']) {
+				// authorizeV2()
+				setPopupVisible(true)
+			}
+		})
     }, [])
 
     useEffect(() => {
@@ -86,8 +97,35 @@ const UserProfile = () => {
         }
     }, [authDt?.profile?.id])
 
+    const getPhoneNumber = async () => {
+        await authorizeV2()
+        const setting = await getSetting()
+        if (setting.authSetting['scope.userPhonenumber']) {
+            getPhoneNumberUser()
+        }
+    }
+
     return (
         <Container className={'  zui-container-background-color'}>
+            <Modal
+				visible={popupVisible}
+				title='Yêu cầu cấp quyền'
+				onClose={() => {
+					setPopupVisible(false)
+				}}
+				verticalActions
+				description='Cho phép chúng tôi truy cập số điện thoại để tăng cường trải nghiệm và thuận tiện cho công việc đặt hàng và giao hàng!'>
+				<Box p={6}>
+					<Button
+						onClick={() => {
+							setPopupVisible(false)
+							getPhoneNumber()
+						}}
+						fullWidth>
+						Xác nhận
+					</Button>
+				</Box>
+			</Modal>
             <Box m={4} p={0}
                  onClick={() => {
                      setIsMapping(true)

@@ -50,15 +50,14 @@ const MyApp = () => {
 	useEffect(() => {
 		console.log('Get access token')
 
-		Promise.all([getAccessToken(), getPhoneNumber()])
+		Promise.all([getAccessToken()])
 			.then((values) => {
 				const accessToken = values?.[0]
-				const token = values?.[1]?.token
 
-				if (accessToken && token) {
+				if (accessToken) {
 					fetch('https://quequan.vn:8081/customer/zalocustomer', {
 						method: 'POST',
-						body: JSON.stringify({ token, accessToken }),
+						body: JSON.stringify({ accessToken }),
 						headers: {
 							'Content-Type': 'application/json',
 						},
