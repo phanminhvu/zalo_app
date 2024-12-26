@@ -160,7 +160,7 @@ const UserCart = () => {
 	useEffect(() => {
 		// setBranchType(0);
 		if (!shippingAddress || Object.keys(shippingAddress).length === 0) {
-			if (userAddresses.filter((data) => data.default).length > 0) {
+			if (userAddresses?.filter((data) => data.default).length > 0) {
 				setShippingAddress(userAddresses.filter((data) => data.default)[0])
 			}
 		}

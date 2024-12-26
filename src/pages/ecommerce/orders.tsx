@@ -20,7 +20,7 @@ const Orders = () => {
 
 	useEffect(() => {
 		setHeader({
-			customTitle: 'Đơn hàng',
+			customTitle: 'Lịch sử đơn hàng',
 			hasLeftIcon: true,
 			type: 'secondary',
 			showBottomBar: true,
@@ -106,7 +106,7 @@ const Orders = () => {
 												<Text size='small' className='flex-1 text-start font-medium'>{`Mã đơn hàng: ${orderId}`}</Text>
 												<Text
 													size='xxSmall'
-													className='flex-1 text-start mt-1'>{`${order.line_items.length} sản phẩm`}</Text>
+													className='flex-1 text-start mt-1'>{`${order?.line_items?.length} sản phẩm`}</Text>
 											</div>
 										</div>
 										{/*<div className="flex">
@@ -155,7 +155,7 @@ const Orders = () => {
 								)
 							})}
 
-						{userOrders.length === 0 && (
+						{userOrders?.length === 0 && (
 							<Text className='text-base text-center font-regular mt-12 text-gray-600'>{'Chưa có đơn hàng!'}</Text>
 						)}
 					</div>

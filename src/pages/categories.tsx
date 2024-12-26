@@ -49,10 +49,10 @@ const CategoriesPage = () => {
 			)
 		}
 		if (activeCategory) {
-			poptions = allProducts.filter((p) => p.category_id === activeCategory.id)
+			poptions = allProducts?.filter((p) => p.category_id === activeCategory.id)
 		}
 		if (poptions && poptions?.length > 0 && searchPattern) {
-			poptions = poptions.filter((pr) => removeVietnameseTones(pr.name).toLowerCase().match(searchPattern))
+			poptions = poptions?.filter((pr) => removeVietnameseTones(pr.name).toLowerCase().match(searchPattern))
 		}
 		setProducts(poptions)
 	}, [activeCategory, searchString])
