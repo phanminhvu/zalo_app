@@ -40,7 +40,8 @@ export const homeFeaturedProductsState = selector<Product[]>({
 	get: async ({ get }) => {
 		//const productsJson = await WooWorker.getAllProducts(10,1,true);
 		//return productsJson;
-		return products.filter((p) => p.on_sale === 1)
+		const 	products = await getProducts()
+		return products?.filter((p) => p.on_sale === 1)
 	},
 })
 

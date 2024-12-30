@@ -357,7 +357,32 @@ const UserCart = () => {
 			return 45000
 		} else if (distance <= 11) {
 			return 50000
-		} else return 55000
+		} else if (distance <= 12) {
+			return 55000
+		} else if (distance <= 13) {
+			return 60000
+		} else if (distance <= 14) {
+			return 65000
+		}
+		else if (distance <= 15) {
+			return 70000
+		}
+		else if (distance <= 16) {
+			return 75000
+		}
+		else if (distance <= 17) {
+			return 80000
+		}
+		else if (distance <= 18) {
+			return 85000
+		}
+		else if (distance <= 19) {
+			return 90000
+		}
+		else if (distance <= 20) {
+			return 95000
+		}
+		else return 100000
 		// if (distance === 0) {
 		//     return 0
 		// }else if (distance <= 3) {
@@ -617,7 +642,7 @@ const UserCart = () => {
 										<List.Item
 											title={<Text className={'font-bold'}>{`Số tiền thanh toán`}</Text>}
 											suffix={`${convertPrice(Number((cart?.totalCart || 0) + (deliveryFee || 0)))} đ`}
-											// subTitle={(distance && (distance / 1000).toFixed(2) + ' km')}
+										// subTitle={(distance && (distance / 1000).toFixed(2) + ' km')}
 										/>
 									</List>
 								</div>

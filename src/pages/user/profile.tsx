@@ -199,6 +199,7 @@ const UserProfile = () => {
                     />
                 </List>
             </Box>
+            
             <Box m={4} p={0} className={'rounded-lg bg-white'}>
                 <List>
                     <Item

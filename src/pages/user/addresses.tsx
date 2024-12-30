@@ -33,6 +33,7 @@ const UserAddresses: React.FunctionComponent = () => {
 			//await saveAddress(uaddresses[0])
 			const cachedUserAddresses = await loadAddresses()
 			setUserAddresses(cachedUserAddresses)
+			console.log(cachedUserAddresses)
 		}
 		gAddresses()
 	}, [])

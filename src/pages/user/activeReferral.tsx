@@ -1,16 +1,18 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import useSetHeader from '../../hooks/useSetHeader'
 import { useRecoilValue } from 'recoil'
 import { authState } from '../../states/auth'
-import { Button, Page, useNavigate } from 'zmp-ui'
-import { showToast } from 'zmp-sdk'
+import { Box, Button, Modal, Page, useNavigate } from 'zmp-ui'
+import { getSetting, showToast } from 'zmp-sdk'
 import { useParams } from 'react-router-dom'
+import { authorizeV2, getPhoneNumberUser } from '../../services/zalo'
 
 const ActiveReferral = () => {
 	const setHeader = useSetHeader()
 	const navigate = useNavigate()
 	const authDt = useRecoilValue(authState)
 	let { code } = useParams()
+	const [popupVisible, setPopupVisible] = useState(false)
 
 	console.log(code)
 
@@ -21,6 +23,14 @@ const ActiveReferral = () => {
 			type: 'secondary',
 			showBottomBar: true,
 			onLeftClick: () => navigate('/'),
+		})
+
+		getSetting().then((value) => {
+			console.log(value)
+			if (!value.authSetting?.['scope.userPhonenumber']) {
+				// authorizeV2()
+				setPopupVisible(true)
+			}
 		})
 	}, [])
 
@@ -43,9 +53,36 @@ const ActiveReferral = () => {
 				showToast({ message: 'Đã có lỗi xảy ra!' })
 			})
 	}
+	// https://zalo.me/s/3330579448132307150/?action=active-referral&code=84967538033
+	const getPhoneNumber = async () => {
+		await authorizeV2()
+		const setting = await getSetting()
+		if (setting.authSetting['scope.userPhonenumber']) {
+			getPhoneNumberUser()
+		}
+	}
 
 	return (
 		<Page className='bg-gray-200'>
+			<Modal
+				visible={popupVisible}
+				title='Yêu cầu cấp quyền'
+				onClose={() => {
+					setPopupVisible(false)
+				}}
+				verticalActions
+				description='Cho phép chúng tôi truy cập số điện thoại để tăng cường trải nghiệm và thuận tiện cho công việc đặt hàng và giao hàng!'>
+				<Box p={6}>
+					<Button
+						onClick={() => {
+							setPopupVisible(false)
+							getPhoneNumber()
+						}}
+						fullWidth>
+						Xác nhận
+					</Button>
+				</Box>
+			</Modal>
 			<div className='bg-white flex flex-col m-4 p-3 gap-5 rounded-lg'>
 				<span className='text-base font-semibold text-blue-600'>{'Thông tin người giới thiệu'}</span>
 				<div className='flex flex-col bg-gray-100 p-3 rounded-lg gap-2'>
