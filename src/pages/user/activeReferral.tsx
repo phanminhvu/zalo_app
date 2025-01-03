@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import useSetHeader from '../../hooks/useSetHeader'
-import { useRecoilValue } from 'recoil'
-import { authState } from '../../states/auth'
 import { Box, Button, Modal, Page, useNavigate } from 'zmp-ui'
-import { getSetting, showToast, getUserID } from 'zmp-sdk'
+import { getSetting, showToast, getUserID, getAccessToken } from 'zmp-sdk'
 import { useParams } from 'react-router-dom'
 import { authorizeV2, getPhoneNumberUser } from '../../services/zalo'
+import { sleep } from '../../dummy/utils'
 
 const ActiveReferral = () => {
 	const setHeader = useSetHeader()
 	const navigate = useNavigate()
-	const authDt = useRecoilValue(authState)
 	let { code } = useParams()
 	const [popupVisible, setPopupVisible] = useState(false)
 
@@ -34,7 +32,27 @@ const ActiveReferral = () => {
 		})
 	}, [])
 
+	const createZaloCustomer = async () => {
+		showToast({ message: 'Đang kích hoạt tài khoản...' })
+		const accessToken = await getAccessToken()
+		fetch('https://quequan.vn:8081/customer/zalocustomer', {
+			method: 'POST',
+			body: JSON.stringify({ accessToken }),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then((value) => {
+				console.log('post user info success', value)
+				activeReferralCode()
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+	}
+
 	const activeReferralCode = async () => {
+		await sleep(200)
 		const id = await getUserID()
 		fetch('https://quequan.vn:8081/customer/active-zalo-referral-code', {
 			method: 'POST',
@@ -93,7 +111,7 @@ const ActiveReferral = () => {
 					</div>
 				</div>
 				<div className='flex flex-col gap-2'>
-					<Button size='medium' onClick={activeReferralCode}>
+					<Button size='medium' onClick={createZaloCustomer}>
 						{'Kích hoạt tài khoản'}
 					</Button>
 					<Button size='medium' variant='secondary' onClick={() => navigate('/')}>

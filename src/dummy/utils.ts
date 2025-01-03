@@ -56,3 +56,5 @@ export const createDummyStore = (): Store => {
 	}
 	return dummyStore
 }
+
+export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
