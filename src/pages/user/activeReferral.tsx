@@ -3,7 +3,7 @@ import useSetHeader from '../../hooks/useSetHeader'
 import { useRecoilValue } from 'recoil'
 import { authState } from '../../states/auth'
 import { Box, Button, Modal, Page, useNavigate } from 'zmp-ui'
-import { getSetting, showToast } from 'zmp-sdk'
+import { getSetting, showToast, getUserID } from 'zmp-sdk'
 import { useParams } from 'react-router-dom'
 import { authorizeV2, getPhoneNumberUser } from '../../services/zalo'
 
@@ -35,12 +35,13 @@ const ActiveReferral = () => {
 	}, [])
 
 	const activeReferralCode = async () => {
+		const id = await getUserID()
 		fetch('https://quequan.vn:8081/customer/active-zalo-referral-code', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ id: authDt.profile.id, code }),
+			body: JSON.stringify({ id, code }),
 		})
 			.then((response) => {
 				return response.json()
