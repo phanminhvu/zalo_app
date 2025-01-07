@@ -8,23 +8,25 @@ export const statusArray = [
 		label: 'Đang xử lý',
 	},
 	{
-		key: 'completed',
-		label: 'Hoàn thành',
-	},
-	{
-		key: 'shipping',
-		label: 'Đang giao hàng',
-	},
-	{
-		key: 'closed',
-		label: 'Đã huỷ',
-	},
-	{
 		key: 'confirmed',
 		label: 'Đã xác nhận',
 	},
 	{
-		key: 'looking_for_driver',
-		label: 'Đang tìm tài xế ',
+		key: 'completed',
+		label: 'Hoàn thành',
 	},
+	// {
+	// 	key: 'looking_for_driver',
+	// 	label: 'Đang tìm tài xế ',
+	// },
+	// {
+	// 	key: 'shipping',
+	// 	label: 'Đang giao hàng',
+	// },
+	{
+		key: 'closed',
+		label: 'Đã huỷ',
+	},
+	
+
 ]
