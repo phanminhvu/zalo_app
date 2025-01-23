@@ -27,6 +27,8 @@ const CheckoutNav = () => {
 
 	const { showTotalCart, showBottomBar } = useRecoilValue(headerState)
 	const authDt = useRecoilValue(authState)
+
+	console.log(authDt)
 	const [cart, setCart] = useRecoilState<CartData>(cartState)
 	const [selectedPaymentMethod, setSelectedPaymentMethod] = useRecoilState<PaymentMethod>(selectedPaymentMethodState)
 	const [selectedCoupon, setSelectedCoupon] = useRecoilState<Coupon>(selectedCouponState)

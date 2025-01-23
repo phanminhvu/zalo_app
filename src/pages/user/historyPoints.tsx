@@ -41,7 +41,7 @@ const HistoryPoints = () => {
 				return response.json()
 			})
 			.then((result) => {
-				console.log(result)
+				console.log(result, 'alosss')
 				if (result?.point) setPoint(result?.point)
 			})
 			.catch((error) => {

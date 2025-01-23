@@ -90,7 +90,7 @@ const UserProfile = () => {
                     return response.json()
                 })
                 .then((result) => {
-                    console.log(result)
+                    console.log(result, )
                     if (result?.point) setPoint(result?.point)
                 })
                 .catch((error) => console.log(JSON.stringify(error)))
@@ -136,7 +136,7 @@ const UserProfile = () => {
                     <Text size={"large"} className={' text-white font-semibold'}>
                         Điểm tích lũy
                     </Text>
-                    <Text style={{ fontSize: '30px' }} className={'text-white mt-2 font-semibold'}>0đ</Text>
+                    <Text style={{ fontSize: '30px' }} className={'text-white mt-2 font-semibold'}>{point} đ</Text>
                 </div>
             </Box>
             <Box m={4} p={0} className={'rounded-lg bg-white'}>
