@@ -26,7 +26,7 @@ const OrderDetail = () => {
 		})
 	}, [])
 
-	console.log(order)
+	console.log(order, 'alo')
 
 	return (
 		<Page className='bg-gray-200 overflow-auto pb-20'>

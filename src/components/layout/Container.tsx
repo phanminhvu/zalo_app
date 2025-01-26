@@ -9,7 +9,7 @@ const Container = ({ children, ...other }) => {
 	const setErrMsg = useSetRecoilState(pageGlobalState)
 
 	return (
-		<Page {...other}>
+		<Page {...other} style={{ height: '100vh', overflow: 'auto' }}>
 			{children}
 			{errMsg && (
 				<Toast color={'red'} className={'mx-auto fixed z-[99999999] top-[64px] right-7 bg-pink-400'}>

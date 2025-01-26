@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from 'react'
-import {Box, Button, Icon, List, Modal, Text, useNavigate} from 'zmp-ui'
+import React, { useEffect, useState } from 'react'
+import { Box, Button, Icon, List, Modal, Text, useNavigate } from 'zmp-ui'
 import Container from '../../components/layout/Container'
-import {HiOutlineFlag, HiOutlineShoppingCart, HiOutlineUser} from 'react-icons/hi'
-import {useRecoilState, useRecoilValue} from 'recoil'
-import {authState} from '../../states/auth'
+import { HiOutlineFlag, HiOutlineShoppingCart, HiOutlineUser } from 'react-icons/hi'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { authState } from '../../states/auth'
 import useSetHeader from '../../hooks/useSetHeader'
-import {showOAWidget} from 'zmp-sdk/apis'
-import {authorizeV2, getPhoneNumberUser} from '../../services/zalo'
-import {isFromSettingState, isMappingState} from '../../state'
-import {createShortcut} from 'zmp-sdk/apis'
-import {openWebview} from 'zmp-sdk/apis'
-import {convertPrice} from '../../utils'
+import { showOAWidget } from 'zmp-sdk/apis'
+import { authorizeV2, getPhoneNumberUser } from '../../services/zalo'
+import { isFromSettingState, isMappingState } from '../../state'
+import { createShortcut } from 'zmp-sdk/apis'
+import { openWebview } from 'zmp-sdk/apis'
+import { convertPrice } from '../../utils'
 import { getSetting } from 'zmp-sdk'
 
 const openUrlInWebview = async () => {
@@ -41,7 +41,7 @@ const createMiniAppShortcut = async () => {
     }
 }
 
-const {Item} = List
+const { Item } = List
 const UserProfile = () => {
     const navigate = useNavigate()
     const authDt = useRecoilValue(authState)
@@ -74,12 +74,12 @@ const UserProfile = () => {
         //         }
 
         getSetting().then((value) => {
-			console.log(value)
-			if (!value.authSetting?.['scope.userPhonenumber']) {
-				// authorizeV2()
-				setPopupVisible(true)
-			}
-		})
+            console.log(value)
+            if (!value.authSetting?.['scope.userPhonenumber']) {
+                // authorizeV2()
+                setPopupVisible(true)
+            }
+        })
     }, [])
 
     useEffect(() => {
@@ -90,7 +90,7 @@ const UserProfile = () => {
                     return response.json()
                 })
                 .then((result) => {
-                    console.log(result, )
+                    console.log(result,)
                     if (result?.point) setPoint(result?.point)
                 })
                 .catch((error) => console.log(JSON.stringify(error)))
@@ -106,154 +106,158 @@ const UserProfile = () => {
     }
 
     return (
-        <Container className={'  zui-container-background-color'}>
+        <Container className={'zui-container-background-color'}>
             <Modal
-				visible={popupVisible}
-				title='Yêu cầu cấp quyền'
-				onClose={() => {
-					setPopupVisible(false)
-				}}
-				verticalActions
-				description='Cho phép chúng tôi truy cập số điện thoại để tăng cường trải nghiệm và thuận tiện cho công việc đặt hàng và giao hàng!'>
-				<Box p={6}>
-					<Button
-						onClick={() => {
-							setPopupVisible(false)
-							getPhoneNumber()
-						}}
-						fullWidth>
-						Xác nhận
-					</Button>
-				</Box>
-			</Modal>
-            <Box m={4} p={0}
-                 onClick={() => {
-                     setIsMapping(true)
-                     navigate('/history-points')
-                 }}
-                 className={'rounded-lg'} style={{backgroundColor: '#088c4c'}}>
-                <div className="text-center p-4">
-                    <Text size={"large"} className={' text-white font-semibold'}>
-                        Điểm tích lũy
-                    </Text>
-                    <Text style={{ fontSize: '30px' }} className={'text-white mt-2 font-semibold'}>{point} đ</Text>
-                </div>
-            </Box>
-            <Box m={4} p={0} className={'rounded-lg bg-white'}>
-                <List>
-                    {/*<Item*/}
-                    {/*    title='Điểm tích luỹ'*/}
-                    {/*    prefix={<HiOutlineUser size={20}/>}*/}
-                    {/*    className={'text-sm m-0'}*/}
-                    {/*    suffix={*/}
-                    {/*        <div className='flex flex-row gap-2 items-center'>*/}
-                    {/*            <Text*/}
-                    {/*                className='text-base text-green-500 font-semibold'>{convertPrice(point ?? 0)}</Text>*/}
-                    {/*            <Icon icon='zi-chevron-right'/>*/}
-                    {/*        </div>*/}
-                    {/*    }*/}
-                    {/*    onClick={() => {*/}
-                    {/*        setIsMapping(true)*/}
-                    {/*        navigate('/history-points')*/}
-                    {/*    }}*/}
-                    {/*/>*/}
-                    <Item
-                        title='Thông tin tài khoản'
-                        prefix={<HiOutlineUser size={20}/>}
-                        className={'text-sm m-0'}
-                        suffix={<Icon icon='zi-chevron-right'/>}
+                visible={popupVisible}
+                title='Yêu cầu cấp quyền'
+                onClose={() => {
+                    setPopupVisible(false)
+                }}
+                verticalActions
+                description='Cho phép chúng tôi truy cập số điện thoại để tăng cường trải nghiệm và thuận tiện cho công việc đặt hàng và giao hàng!'>
+                <Box p={6}>
+                    <Button
                         onClick={() => {
-                            setIsMapping(true)
-                            navigate('/user-info')
+                            setPopupVisible(false)
+                            getPhoneNumber()
                         }}
-                    />
-                    <Item
-                        title='Địa chỉ đã lưu'
-                        prefix={<HiOutlineFlag size={20}/>}
-                        suffix={<Icon icon='zi-chevron-right'/>}
-                        className={'text-sm m-0'}
-                        onClick={() => {
-                            setIsMapping(true)
-                            navigate('/my-addresses/profile')
-                        }}
-                    />
-                    <Item
-                        title='Lịch sử đơn hàng'
-                        prefix={<HiOutlineShoppingCart size={20}/>}
-                        suffix={<Icon icon='zi-chevron-right'/>}
-                        className={'text-sm m-0'}
-                        onClick={() => {
-                            setIsMapping(true)
-                            navigate('/my-orders')
-                        }}
-                    />
-                    <Item
-                        title='Mã giới thiệu'
-                        prefix={<HiOutlineUser size={20}/>}
-                        className={'text-sm m-0'}
-                        suffix={<Icon icon='zi-chevron-right'/>}
-                        onClick={() => {
-                            setIsMapping(true)
-                            navigate('/user-referral')
-                        }}
-                    />
-                </List>
-            </Box>
-            
-            <Box m={4} p={0} className={'rounded-lg bg-white'}>
-                <List>
-                    <Item
-                        title='Chính sách riêng tư'
-                        className={'text-sm m-0'}
-                        suffix={<Icon icon='zi-chevron-right'/>}
-                        onClick={() => {
-                            setIsMapping(true)
-                            navigate('/detail-new/3')
-                        }}
-                    />
-                    <Item
-                        title='Điều khoản dịch vụ'
-                        suffix={<Icon icon='zi-chevron-right'/>}
-                        className={'text-sm m-0'}
-                        onClick={() => {
-                            setIsMapping(true)
-                            navigate('/detail-new/4')
-                        }}
-                    />
-                    <Item
-                        title='Hướng dẫn sử dụng'
-                        suffix={<Icon icon='zi-chevron-right'/>}
-                        className={'text-sm m-0'}
-                        onClick={() => {
-                            setIsMapping(true)
-                            navigate('/detail-new/1')
-                        }}
-                    />
-                    <Item
-                        title='Thêm Quế Quân vào màn hình chính'
-                        suffix={<Icon icon='zi-share-external-1'/>}
-                        className={'text-sm m-0'}
-                        onClick={() => {
-                            createMiniAppShortcut()
-                        }}
-                    />
-                </List>
-            </Box>
-            <Box m={4} p={0} className='rounded-lg bg-white'>
-                <div id='oaWidget'/>
-            </Box>
-            <Box m={4} p={0} className='rounded-lg bg-white'>
-                <List>
-                    <Item
-                        title='Liên hệ với nhà phát triển ứng dụng'
-                        suffix={<Icon icon='zi-chat'/>}
-                        className={'text-sm m-0'}
-                        onClick={() => {
-                            openUrlInWebview()
-                        }}
-                    />
-                </List>
-            </Box>
+                        fullWidth>
+                        Xác nhận
+                    </Button>
+                </Box>
+            </Modal>
+            <div className='p-0 pb-[80px] zui-container-background-color'>
+                <Box m={4} p={0}
+
+                    onClick={() => {
+                        setIsMapping(true)
+                        navigate('/history-points')
+                    }}
+                    className={'rounded-lg'} style={{ backgroundColor: '#088c4c' }}>
+                    <div className="text-center p-4">
+                        <Text size={"large"} className={' text-white font-semibold'}>
+                            Điểm tích lũy
+                        </Text>
+                        <Text style={{ fontSize: '30px' }} className={'text-white mt-2 font-semibold'}>{point} đ</Text>
+                    </div>
+                </Box>
+                <Box m={4} p={0} className={'rounded-lg bg-white'}>
+                    <List>
+                        {/*<Item*/}
+                        {/*    title='Điểm tích luỹ'*/}
+                        {/*    prefix={<HiOutlineUser size={20}/>}*/}
+                        {/*    className={'text-sm m-0'}*/}
+                        {/*    suffix={*/}
+                        {/*        <div className='flex flex-row gap-2 items-center'>*/}
+                        {/*            <Text*/}
+                        {/*                className='text-base text-green-500 font-semibold'>{convertPrice(point ?? 0)}</Text>*/}
+                        {/*            <Icon icon='zi-chevron-right'/>*/}
+                        {/*        </div>*/}
+                        {/*    }*/}
+                        {/*    onClick={() => {*/}
+                        {/*        setIsMapping(true)*/}
+                        {/*        navigate('/history-points')*/}
+                        {/*    }}*/}
+                        {/*/>*/}
+                        <Item
+                            title='Thông tin tài khoản'
+                            prefix={<HiOutlineUser size={20} />}
+                            className={'text-sm m-0'}
+                            suffix={<Icon icon='zi-chevron-right' />}
+                            onClick={() => {
+                                setIsMapping(true)
+                                navigate('/user-info')
+                            }}
+                        />
+                        <Item
+                            title='Địa chỉ đã lưu'
+                            prefix={<HiOutlineFlag size={20} />}
+                            suffix={<Icon icon='zi-chevron-right' />}
+                            className={'text-sm m-0'}
+                            onClick={() => {
+                                setIsMapping(true)
+                                navigate('/my-addresses/profile')
+                            }}
+                        />
+                        <Item
+                            title='Lịch sử đơn hàng'
+                            prefix={<HiOutlineShoppingCart size={20} />}
+                            suffix={<Icon icon='zi-chevron-right' />}
+                            className={'text-sm m-0'}
+                            onClick={() => {
+                                setIsMapping(true)
+                                navigate('/my-orders')
+                            }}
+                        />
+                        <Item
+                            title='Mã giới thiệu'
+                            prefix={<HiOutlineUser size={20} />}
+                            className={'text-sm m-0'}
+                            suffix={<Icon icon='zi-chevron-right' />}
+                            onClick={() => {
+                                setIsMapping(true)
+                                navigate('/user-referral')
+                            }}
+                        />
+                    </List>
+                </Box>
+
+                <Box m={4} p={0} className={'rounded-lg bg-white'}>
+                    <List>
+                        <Item
+                            title='Chính sách riêng tư'
+                            className={'text-sm m-0'}
+                            suffix={<Icon icon='zi-chevron-right' />}
+                            onClick={() => {
+                                setIsMapping(true)
+                                navigate('/detail-new/3')
+                            }}
+                        />
+                        <Item
+                            title='Điều khoản dịch vụ'
+                            suffix={<Icon icon='zi-chevron-right' />}
+                            className={'text-sm m-0'}
+                            onClick={() => {
+                                setIsMapping(true)
+                                navigate('/detail-new/4')
+                            }}
+                        />
+                        <Item
+                            title='Hướng dẫn sử dụng'
+                            suffix={<Icon icon='zi-chevron-right' />}
+                            className={'text-sm m-0'}
+                            onClick={() => {
+                                setIsMapping(true)
+                                navigate('/detail-new/1')
+                            }}
+                        />
+                        <Item
+                            title='Thêm Quế Quân vào màn hình chính'
+                            suffix={<Icon icon='zi-share-external-1' />}
+                            className={'text-sm m-0'}
+                            onClick={() => {
+                                createMiniAppShortcut()
+                            }}
+                        />
+                    </List>
+                </Box>
+                <Box m={4} p={0} className='rounded-lg bg-white'>
+                    <div id='oaWidget' />
+                </Box>
+                <Box m={4} p={0} className='rounded-lg bg-white'>
+                    <List>
+                        <Item
+                            title='Liên hệ với nhà phát triển ứng dụng'
+                            suffix={<Icon icon='zi-chat' />}
+                            className={'text-sm m-0'}
+                            onClick={() => {
+                                openUrlInWebview()
+                            }}
+                        />
+                    </List>
+                </Box>
+            </div>
+
         </Container>
     )
 }

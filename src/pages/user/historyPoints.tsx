@@ -20,14 +20,12 @@ const HistoryPoints = () => {
 	}, [])
 
 	const getData = async () => {
-		console.log(authDt.profile.id)
 		setIsLoading(true)
 		fetch(`https://quequan.vn:8081/customer/get-history-points?userid=${authDt.profile.id}`)
 			.then((response) => {
 				return response.json()
 			})
 			.then((result) => {
-				console.log(result)
 				if (result.data) setData(result.data)
 				setIsLoading(false)
 			})
@@ -41,7 +39,6 @@ const HistoryPoints = () => {
 				return response.json()
 			})
 			.then((result) => {
-				console.log(result, 'alosss')
 				if (result?.point) setPoint(result?.point)
 			})
 			.catch((error) => {
@@ -59,8 +56,10 @@ const HistoryPoints = () => {
 		})
 	}, [])
 
-	const showOrder = (order: HistoryPoint) => {
-		const id = order?.idOrder
+	const showOrder = (order: any) => {
+		console.log(order, 'order')
+		const id = order?.idOrder?.orderId
+		console.log(id, 'alooo')
 
 		fetch(`https://quequan.vn:8081/customer/order-detail?orderId=${id}`)
 			.then((response) => {
@@ -74,9 +73,23 @@ const HistoryPoints = () => {
 				}
 			})
 			.catch((error) => {
-				console.log(JSON.stringify(error))
 				showToast({ message: JSON.stringify(error) })
 			})
+	}
+
+	const getLabel = (value: string) => {
+		switch (value) {
+			case "buy":
+				return "Mua hàng"
+			case "useScore":
+				return "Dùng điểm"
+			case "referral":
+				return "Liên kết"
+			case "refund":
+				return "Hoàn điểm"
+			default:
+				return
+		}
 	}
 
 	return (
@@ -95,7 +108,6 @@ const HistoryPoints = () => {
 					) : null}
 					{Array.isArray(data) &&
 						data?.map((point, index) => {
-							console.log(point)
 							const date = new Date(point.time);
 							const formattedDate = date.toLocaleString('en-US', {
 								year: 'numeric',
@@ -119,7 +131,7 @@ const HistoryPoints = () => {
 												<Text
 													size='large'
 													className='flex-1 flex-row flex items-center content-end font-semibold text-blue-500'>
-													{`${point.actions === "buy" ? "mua hàng" : "liên kết"}`}
+													{getLabel(point?.actions)}
 													<Text size='small' className='ml-2 font-medium'>
 														-
 														{point?.idOrder?.orderId?.split('_')?.[1]}
@@ -134,12 +146,12 @@ const HistoryPoints = () => {
 											</div>
 											<div className='flex justify-between flex-1'>
 												<Text size='xxSmall' className='flex-1 content-end text-blue-500'>
-													{point.value > 0 ? `Tích điểm` : 'Điểm sử dụng'}
+													{point.actions !== "useScore" ? `Tích điểm` : 'Điểm sử dụng'}
 												</Text>
 												<Text
 													size='xSmall'
-													className={`font-semibold ${point.value > 0 ? 'text-green-500' : 'text-red-500'}`}>
-													{point.value > 0 ? '+' : ''}
+													className={`font-semibold ${point.actions !== "useScore" ? 'text-green-500' : 'text-red-500'}`}>
+													{point.actions !== "useScore" ? '+' : '-'}
 													{convertPrice(point.value)}
 												</Text>
 											</div>
