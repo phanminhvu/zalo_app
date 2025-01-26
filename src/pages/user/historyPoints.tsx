@@ -95,6 +95,17 @@ const HistoryPoints = () => {
 					) : null}
 					{Array.isArray(data) &&
 						data?.map((point, index) => {
+							console.log(point)
+							const date = new Date(point.time);
+							const formattedDate = date.toLocaleString('en-US', {
+								year: 'numeric',
+								month: '2-digit',
+								day: '2-digit',
+								hour: '2-digit',
+								minute: '2-digit',
+								second: '2-digit',
+								hour12: false
+							});
 							return (
 								<Box
 									p={4}
@@ -108,17 +119,17 @@ const HistoryPoints = () => {
 												<Text
 													size='large'
 													className='flex-1 flex-row flex items-center content-end font-semibold text-blue-500'>
-													{`${point.name}`}
+													{`${point.actions === "buy" ? "mua hàng" : "liên kết"}`}
 													<Text size='small' className='ml-2 font-medium'>
-														{' '}
-														- {point?.idOrder?.split('_')?.[1]}
+														-
+														{point?.idOrder?.orderId?.split('_')?.[1]}
 													</Text>
 												</Text>
 											</div>
 											<div className='flex justify-between flex-1 mb-1'>
 												<Text size='xxSmall' className='flex-1 content-end text-gray-400'>{`Thời gian giao dịch`}</Text>
 												<Text size='xxSmall' className='font-medium text-gray-400'>
-													{point.time}
+													{formattedDate}
 												</Text>
 											</div>
 											<div className='flex justify-between flex-1'>

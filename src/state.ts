@@ -30,6 +30,10 @@ export const productState = selector<Product[]>({
 		return store.listProducts
 	},
 })
+export const useScoreState = atom<boolean>({
+	key: 'useScore',
+	default: false,
+})
 
 export const cartState = atom<StoreOrder>({
 	key: 'cart',

@@ -11,7 +11,7 @@ import {
 } from '../states/cart'
 import { convertPrice } from '../utils'
 import React, { useEffect, useState } from 'react'
-import { branchTypeState, branchValState, currenTabState, headerState, pageGlobalState, noteState } from '../state'
+import { branchTypeState, branchValState, useScoreState, currenTabState, headerState, pageGlobalState, noteState } from '../state'
 import { Address, CartData, Coupon, Order, PaymentMethod, ShippingDate, Branch } from '../models'
 import { branchsState } from '../states/home'
 import moment from 'moment'
@@ -27,7 +27,7 @@ const CheckoutNav = () => {
 
 	const { showTotalCart, showBottomBar } = useRecoilValue(headerState)
 	const authDt = useRecoilValue(authState)
-
+	const [useScore, setUseScore] =  useRecoilState<boolean>(useScoreState)
 	console.log(authDt)
 	const [cart, setCart] = useRecoilState<CartData>(cartState)
 	const [selectedPaymentMethod, setSelectedPaymentMethod] = useRecoilState<PaymentMethod>(selectedPaymentMethodState)
@@ -150,6 +150,7 @@ const CheckoutNav = () => {
 											: Number(selectedCoupon?.amount || 0)
 										: 0,
 								discount_tax: '',
+								useScore,
 								shipping_total: Number(cart?.deliveryFee || 0),
 								total: Number(cart?.totalCart || 0) + Number(cart?.deliveryFee || 0),
 								customer_id: authDt.profile?.id || '',
@@ -197,6 +198,7 @@ const CheckoutNav = () => {
 								amount: newOrder.total, //newOrder.total,
 								extradata: JSON.stringify(extraData),
 								method: JSON.stringify(paymentMethod),
+							
 							}
 
 							const getMac = await createMac(orderData)

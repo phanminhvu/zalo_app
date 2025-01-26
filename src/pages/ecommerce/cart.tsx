@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useSetHeader from '../../hooks/useSetHeader'
-import { Box, Picker, Tabs, Text, useNavigate, Page, List, Icon, Button, Input, Modal } from 'zmp-ui'
+import { Box, Picker, Tabs, Text, useNavigate, Page, List, Icon, Button, Input, Modal, Checkbox } from 'zmp-ui'
 import { HiLocationMarker, HiMap, HiOutlineArrowRight, HiOutlineClock } from 'react-icons/hi'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
@@ -36,6 +36,7 @@ import {
 	openPaymentMethodPickerState,
 	openProductPickerState,
 	openProductsPickerState,
+	useScoreState,
 	openStoresPickerState,
 	pageGlobalState,
 	productInfoPickedState,
@@ -135,7 +136,7 @@ const UserCart = () => {
 	const [buyMinute, setBuyMinute] = useState(0)
 
 	const [openAddressSSheet, setOpenAddressSheet] = useRecoilState<boolean>(openAddressPickerState)
-
+	const [point, setPoint] = useState(0)
 	const [selectedPaymentMethod, setSelectedPaymentMethod] = useRecoilState<PaymentMethod>(selectedPaymentMethodState)
 
 	const [userAddresses, setUserAddresses] = useRecoilState<Address[]>(userAddressesState)
@@ -156,6 +157,9 @@ const UserCart = () => {
 
 	const [branchLng, setBranchLng] = useRecoilState<number>(branchLngState)
 	const [popupVisible, setPopupVisible] = useState(false)
+	const [useScore, setUseScore] =  useRecoilState<boolean>(useScoreState)
+
+	console.log(useScore , 'useScore')
 
 	useEffect(() => {
 		// setBranchType(0);
@@ -333,6 +337,21 @@ const UserCart = () => {
 			minute: buyMinute,
 		})
 	}, [buyDate, buyHour, buyMinute])
+
+	useEffect(() => {
+		const userId = authDt?.profile?.id
+		if (userId) {
+			fetch(`https://quequan.vn:8081/customer/zalo-customer-point?userid=${userId}`)
+				.then((response) => {
+					return response.json()
+				})
+				.then((result) => {
+					console.log(result,)
+					if (result?.point) setPoint(result?.point)
+				})
+				.catch((error) => console.log(JSON.stringify(error)))
+		}
+	}, [authDt?.profile?.id])
 
 	useEffect(() => {
 		setShippingDatea({
@@ -623,7 +642,7 @@ const UserCart = () => {
 									<Text bold size={'xLarge'} className={`mb-2`}>{`Tổng cộng`}</Text>
 
 									<List noSpacing>
-										<List.Item title='Thành tiền' suffix={`${convertPrice(Number(cart?.totalCart || 0))} đ`} />
+										<List.Item title='Thành tiền' suffix={`${convertPrice(Number(useScore ? cart?.totalCart - point > 0 ? cart?.totalCart - point : 0 : cart?.totalCart || 0))} đ`} />
 										<List.Item
 											title='Mã giảm giá'
 											suffix={
@@ -641,10 +660,14 @@ const UserCart = () => {
 										/>
 										<List.Item
 											title={<Text className={'font-bold'}>{`Số tiền thanh toán`}</Text>}
-											suffix={`${convertPrice(Number((cart?.totalCart || 0) + (deliveryFee || 0)))} đ`}
+											suffix={`${convertPrice(Number((useScore ? cart?.totalCart - point > 0 ? cart?.totalCart - point : 0 : cart?.totalCart || 0) + (deliveryFee || 0)))} đ`}
 										// subTitle={(distance && (distance / 1000).toFixed(2) + ' km')}
 										/>
 									</List>
+
+									<Checkbox checked={useScore} onChange={(e) => { setUseScore(e.target.checked) }}
+										label={<p>Bạn đang có <span className={'font-bold'}  >{`${point} đ`}</span> tiền thưởng. Bạn có muốn sử dụng?</p>} />
+
 								</div>
 							</Box>
 
