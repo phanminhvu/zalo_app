@@ -87,7 +87,7 @@ const CheckoutNav = () => {
 						{cart.cartItems.length} Món ăn
 					</Text>
 					<Text size='xLarge' className={`font-semibold`}>{`${convertPrice(
-						Number(cart?.totalCart || 0) + (cart?.deliveryFee || 0),
+						Number(cart?.totalCartAfter || 0) + (cart?.deliveryFee || 0),
 					)} đ`}</Text>
 				</Box>
 				<Button

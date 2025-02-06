@@ -66,10 +66,10 @@ import { getSetting } from 'zmp-sdk'
 const UserCart = () => {
 	const navigate = useNavigate()
 	const [cart, setCart] = useRecoilState<CartData>(cartState)
-	const totalCart = cart.cartItems.reduce((acc, item) => {
+	const totalCart = cart?.cartItems.reduce((acc, item) => {
 		const price = item.sale_price || item.price
 		return acc + price * item.quantity
-	}, 0)
+	}, 0) | 0
 
 	const [distance, setDistance] = useState<number>(0)
 	const [deliveryFee, setDeliveryFee] = useState<number | null>(null)
@@ -309,7 +309,7 @@ const UserCart = () => {
 		setCart({
 			...cart,
 			deliveryFee: phiGiaohang(distance / 1000),
-			totalCart : useScore ? totalCart - point > 0 ? totalCart - point : 0 : totalCart
+			totalCartAfter : useScore ? totalCart - point > 0 ? totalCart - point : 0 : totalCart
 		})
 	}, [distance, useScore])
 	const genDateData = () => {
