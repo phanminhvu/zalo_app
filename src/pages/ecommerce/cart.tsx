@@ -66,15 +66,14 @@ import { getSetting } from 'zmp-sdk'
 const UserCart = () => {
 	const navigate = useNavigate()
 	const [cart, setCart] = useRecoilState<CartData>(cartState)
+	const totalCart = cart.cartItems.reduce((acc, item) => {
+		const price = item.sale_price || item.price
+		return acc + price * item.quantity
+	}, 0)
+
 	const [distance, setDistance] = useState<number>(0)
 	const [deliveryFee, setDeliveryFee] = useState<number | null>(null)
-	useEffect(() => {
-		setDeliveryFee(phiGiaohang(distance / 1000))
-		setCart({
-			...cart,
-			deliveryFee: phiGiaohang(distance / 1000),
-		})
-	}, [distance])
+
 
 	const [currenTab, setCurrentTab] = useRecoilState<string>(currenTabState)
 	const [note, setNote] = useRecoilState<string>(noteState)
@@ -159,7 +158,6 @@ const UserCart = () => {
 	const [popupVisible, setPopupVisible] = useState(false)
 	const [useScore, setUseScore] =  useRecoilState<boolean>(useScoreState)
 
-	console.log(useScore , 'useScore')
 
 	useEffect(() => {
 		// setBranchType(0);
@@ -170,7 +168,6 @@ const UserCart = () => {
 		}
 
 		getSetting().then((value) => {
-			console.log(value)
 			if (!value.authSetting?.['scope.userPhonenumber']) {
 				// authorizeV2()
 				setPopupVisible(true)
@@ -307,7 +304,14 @@ const UserCart = () => {
 	}
 
 	const [genMmDataState, setgenMmDataState] = useState(genMinuteData('Hôm nay', deftime(mintime, maxtime).hh))
-
+	useEffect(() => {
+		setDeliveryFee(phiGiaohang(distance / 1000))
+		setCart({
+			...cart,
+			deliveryFee: phiGiaohang(distance / 1000),
+			totalCart : useScore ? totalCart - point > 0 ? totalCart - point : 0 : totalCart
+		})
+	}, [distance, useScore])
 	const genDateData = () => {
 		let listDate = generateDateListFromToday(3)
 		let daysOfYear: { value: string; displayName: string }[] = []
@@ -346,7 +350,6 @@ const UserCart = () => {
 					return response.json()
 				})
 				.then((result) => {
-					console.log(result,)
 					if (result?.point) setPoint(result?.point)
 				})
 				.catch((error) => console.log(JSON.stringify(error)))

@@ -53,7 +53,6 @@ const CheckoutNav = () => {
 				checkBranch = !!(shippingAddress && shippingAddress.id > 0 && branchVal && shippingDatea.hour !== 0)
 				break
 			case 'tai_cua_hang':
-				console.log('alo', shippingDate)
 				checkBranch = !!(shippingDate.hour !== 0 && branchVal)
 				break
 			default:

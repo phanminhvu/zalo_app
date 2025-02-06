@@ -12,8 +12,6 @@ const ActiveReferral = () => {
 	let { code } = useParams()
 	const [popupVisible, setPopupVisible] = useState(false)
 
-	console.log(code)
-
 	useEffect(() => {
 		setHeader({
 			customTitle: 'Giới thiệu tài khoản',
@@ -24,7 +22,6 @@ const ActiveReferral = () => {
 		})
 
 		getSetting().then((value) => {
-			console.log(value)
 			if (!value.authSetting?.['scope.userPhonenumber']) {
 				// authorizeV2()
 				setPopupVisible(true)
@@ -35,9 +32,10 @@ const ActiveReferral = () => {
 	const createZaloCustomer = async () => {
 		showToast({ message: 'Đang kích hoạt tài khoản...' })
 		const accessToken = await getAccessToken()
+		console.log(JSON.stringify({ accessToken , isReferral : true }), 'alooo')
 		fetch('https://quequan.vn:8081/customer/zalocustomer', {
 			method: 'POST',
-			body: JSON.stringify({ accessToken }),
+			body: JSON.stringify({ accessToken , isReferral : true }),
 			headers: {
 				'Content-Type': 'application/json',
 			},
@@ -111,7 +109,7 @@ const ActiveReferral = () => {
 					</div>
 				</div>
 				<div className='flex flex-col gap-2'>
-					<Button size='medium' onClick={createZaloCustomer}>
+					<Button size='medium' onClick={activeReferralCode}>
 						{'Kích hoạt tài khoản'}
 					</Button>
 					<Button size='medium' variant='secondary' onClick={() => navigate('/')}>
