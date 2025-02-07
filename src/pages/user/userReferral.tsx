@@ -36,7 +36,7 @@ const UserReferral = () => {
             showBottomBar: true,
         })
     }, [])
-
+//?action=active-referral&code=84967538033
     const onShareLink = () => {
         // https://zalo.me/s/3330579448132307150/active-referral/ABCXYZ
         const link = `https://zalo.me/s/3330579448132307150/?action=active-referral&code=${code}`

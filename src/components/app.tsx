@@ -47,33 +47,36 @@ const MyApp = () => {
 	//const navigate = useNavigate();
 	const [currentPath, setCurrentPath] = useState()
 
-	useEffect(() => {
-		console.log('Get access token')
-		Promise.all([getAccessToken()])
-			.then((values) => {
-				const accessToken = values?.[0]
-				if (accessToken) {
-					fetch('https://quequan.vn:8081/customer/zalocustomer', {
-						method: 'POST',
-						body: window.location.pathname.includes('active-referral')? 
-						JSON.stringify({ accessToken, isReferral : true }) :
-						 JSON.stringify({ accessToken }),
-						headers: {
-							'Content-Type': 'application/json',
-						},
-					})
-						.then((value) => {
-							console.log('post user info success', value)
-						})
-						.catch((err) => {
-							console.log(err)
-						})
-				}
-			})
-			.catch((error) => {
-				console.log(error)
-			})
-	}, [])
+	// useEffect(() => {
+	// 	console.log('Get access token')
+	// 	console.log(window.location, 'aloo')
+	// 	console.log(window.location.pathname, 'aloo')
+	// 	console.log(window.location.pathname.includes('active-referral'), 'aloo')
+	// 	Promise.all([getAccessToken()])
+	// 		.then((values) => {
+	// 			const accessToken = values?.[0]
+	// 			if (accessToken) {
+	// 				fetch('https://quequan.vn:8081/customer/zalocustomerss', {
+	// 					method: 'POST',
+	// 					body: window.location.pathname.includes('active-referral')? 
+	// 					JSON.stringify({ accessToken, isReferral : true }) :
+	// 					 JSON.stringify({ accessToken }),
+	// 					headers: {
+	// 						'Content-Type': 'application/json',
+	// 					},
+	// 				})
+	// 					.then((value) => {
+	// 						console.log('post user info success', value)
+	// 					})
+	// 					.catch((err) => {
+	// 						console.log(err)
+	// 					})
+	// 			}
+	// 		})
+	// 		.catch((error) => {
+	// 			console.log(error)
+	// 		})
+	// }, [])
 
 	return (
 		<RecoilRoot>
