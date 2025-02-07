@@ -20,11 +20,12 @@ import { resetCartCache, saveOrderToCache, loadUserFromCache } from '../services
 import { createMac } from '../services/zalo'
 import { Payment } from 'zmp-sdk'
 import { createOrder } from '../services/ApiClient'
-
+import useSetHeader from '../hooks/useSetHeader'
 const CheckoutNav = () => {
 	const navigate = useNavigate()
 	const setErrMsg = useSetRecoilState(pageGlobalState)
 
+	const setHeader = useSetHeader()
 	const { showTotalCart, showBottomBar } = useRecoilValue(headerState)
 	const authDt = useRecoilValue(authState)
 	const [useScore, setUseScore] =  useRecoilState<boolean>(useScoreState)
@@ -79,6 +80,22 @@ const CheckoutNav = () => {
 	}, [branchVal])
 	//const location = useLocation();
 	//console.log(location.pathname)
+
+	useEffect(() => {
+		console.log(window.location.pathname, 'ádlaosdkasl')
+		if(window.location.pathname.includes('cart')){
+			setHeader({
+				customTitle: 'Giỏ hàng',
+				hasLeftIcon: true,
+				type: 'secondary',
+				showBottomBar: true,
+				showTotalCart: true,
+			})
+		}
+	
+	}, [window.location.pathname])
+
+
 	return cart && cart?.cartItems && cart?.cartItems?.length > 0 && showTotalCart ? (
 		<div className={`w-full fixed ${showBottomBar ? `bottom-[55px]` : `bottom-0`} left-0 shadow-btn-fixed`}>
 			<div className='flex bg-white p-4 items-start justify-between'>
@@ -192,9 +209,9 @@ const CheckoutNav = () => {
 							// const totalAmount = item.reduce((acc, curentItem) => acc + curentItem.weight *curentItem.quantity, 0)
 
 							let orderData = {
-								desc: `Thanh toan ${newOrder.total}`,
+								desc: `Thanh toan ${cart?.totalCartAfter || newOrder.total}`,
 								item,
-								amount: newOrder.total, //newOrder.total,
+								amount: cart?.totalCartAfter || newOrder.total, //newOrder.total,
 								extradata: JSON.stringify(extraData),
 								method: JSON.stringify(paymentMethod),
 							

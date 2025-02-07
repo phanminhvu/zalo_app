@@ -12,6 +12,7 @@ import { createShortcut } from 'zmp-sdk/apis'
 import { openWebview } from 'zmp-sdk/apis'
 import { convertPrice } from '../../utils'
 import { getSetting } from 'zmp-sdk'
+import { getAccessToken } from 'zmp-sdk/apis'
 
 const openUrlInWebview = async () => {
     try {
@@ -101,9 +102,38 @@ const UserProfile = () => {
         await authorizeV2()
         const setting = await getSetting()
         if (setting.authSetting['scope.userPhonenumber']) {
+            await createUser()
             getPhoneNumberUser()
         }
     }
+
+    const createUser = async () => {
+		console.log('Get access token')
+		Promise.all([getAccessToken()])
+			.then((values) => {
+				const accessToken = values?.[0]
+				if (accessToken) {
+					fetch('https://quequan.vn:8081/customer/zalocustomer', {
+						method: 'POST',
+						body: window.location.pathname.includes('active-referral')? 
+						JSON.stringify({ accessToken, isReferral : true }) :
+						 JSON.stringify({ accessToken }),
+						headers: {
+							'Content-Type': 'application/json',
+						},
+					})
+						.then((value) => {
+							console.log('post user info success', value)
+						})
+						.catch((err) => {
+							console.log(err)
+						})
+				}
+			})
+			.catch((error) => {
+				console.log(error)
+			})
+	}
 
     return (
         <Container className={'zui-container-background-color'}>

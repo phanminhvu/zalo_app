@@ -24,6 +24,7 @@ import {
 	ShippingDate,
 } from '../../models'
 import { useAddProductToCart } from '../../hooks'
+import { getAccessToken } from 'zmp-sdk/apis'
 import {
 	branchLatState,
 	currenTabState,
@@ -66,7 +67,7 @@ import { getSetting } from 'zmp-sdk'
 const UserCart = () => {
 	const navigate = useNavigate()
 	const [cart, setCart] = useRecoilState<CartData>(cartState)
-	const totalCart = cart?.cartItems.reduce((acc, item) => {
+	const totalCart = cart?.cartItems?.reduce((acc, item) => {
 		const price = item.sale_price || item.price
 		return acc + price * item.quantity
 	}, 0) | 0
@@ -483,6 +484,7 @@ const UserCart = () => {
 
 		let zaloSettings = await getSettingV2()
 		if (zaloSettings['authSetting']['scope.userInfo'] === true) {
+			 await createUser()
 			setAuthDt({
 				...authDt,
 				profile: userInfo,
@@ -517,6 +519,34 @@ const UserCart = () => {
 		setCart(cachedCart)
 		const cachedOrders = await loadOrderFromCache()
 		setUserOrders(cachedOrders)
+	}
+
+	const createUser = async () => {
+		console.log('Get access token')
+		Promise.all([getAccessToken()])
+			.then((values) => {
+				const accessToken = values?.[0]
+				if (accessToken) {
+					fetch('https://quequan.vn:8081/customer/zalocustomer', {
+						method: 'POST',
+						body: window.location.pathname.includes('active-referral')? 
+						JSON.stringify({ accessToken, isReferral : true }) :
+						 JSON.stringify({ accessToken }),
+						headers: {
+							'Content-Type': 'application/json',
+						},
+					})
+						.then((value) => {
+							console.log('post user info success', value)
+						})
+						.catch((err) => {
+							console.log(err)
+						})
+				}
+			})
+			.catch((error) => {
+				console.log(error)
+			})
 	}
 
 	return (

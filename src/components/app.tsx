@@ -49,12 +49,9 @@ const MyApp = () => {
 
 	useEffect(() => {
 		console.log('Get access token')
-		console.log(window.location.pathname, 'location')
-		console.log(window.location.pathname.includes('active-referral'), 'include')
 		Promise.all([getAccessToken()])
 			.then((values) => {
 				const accessToken = values?.[0]
-
 				if (accessToken) {
 					fetch('https://quequan.vn:8081/customer/zalocustomer', {
 						method: 'POST',

@@ -27,7 +27,7 @@ const UserReferral = () => {
             })
             .catch((error) => console.log(JSON.stringify(error)))
     }
-
+    
     useEffect(() => {
         setHeader({
             customTitle: 'Mã giới thiệu',

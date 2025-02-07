@@ -109,7 +109,7 @@ const ActiveReferral = () => {
 					</div>
 				</div>
 				<div className='flex flex-col gap-2'>
-					<Button size='medium' onClick={activeReferralCode}>
+					<Button size='medium' onClick={createZaloCustomer}>
 						{'Kích hoạt tài khoản'}
 					</Button>
 					<Button size='medium' variant='secondary' onClick={() => navigate('/')}>
@@ -120,5 +120,6 @@ const ActiveReferral = () => {
 		</Page>
 	)
 }
+// 
 export default ActiveReferral
 
