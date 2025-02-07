@@ -75,10 +75,11 @@ const UserProfile = () => {
         //         }
 
         getSetting().then((value) => {
-            console.log(value)
             if (!value.authSetting?.['scope.userPhonenumber']) {
                 // authorizeV2()
                 setPopupVisible(true)
+            }else{
+                getPhoneNumberUser();
             }
         })
     }, [])

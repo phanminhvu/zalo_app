@@ -172,7 +172,9 @@ const UserCart = () => {
 			if (!value.authSetting?.['scope.userPhonenumber']) {
 				// authorizeV2()
 				setPopupVisible(true)
-			}
+			}else{
+							getPhoneNumberUser();
+						}
 		})
 	}, [])
 
