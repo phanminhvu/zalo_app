@@ -516,12 +516,12 @@ const UserCart = () => {
 				token: '',
 			})
 		}
-
 		const cachedCart = await loadCartFromCache()
 		setCart(cachedCart)
 		const cachedOrders = await loadOrderFromCache()
 		setUserOrders(cachedOrders)
 	}
+	
 
 	const createUser = async () => {
 		console.log('Get access token')
@@ -531,9 +531,7 @@ const UserCart = () => {
 				if (accessToken) {
 					fetch('https://quequan.vn:8081/customer/zalocustomer', {
 						method: 'POST',
-						body: window.location.pathname.includes('active-referral')? 
-						JSON.stringify({ accessToken, isReferral : true }) :
-						 JSON.stringify({ accessToken }),
+						body:  JSON.stringify({ accessToken }),
 						headers: {
 							'Content-Type': 'application/json',
 						},

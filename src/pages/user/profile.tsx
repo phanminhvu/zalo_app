@@ -6,14 +6,20 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { authState } from '../../states/auth'
 import useSetHeader from '../../hooks/useSetHeader'
 import { showOAWidget } from 'zmp-sdk/apis'
-import { authorizeV2, getPhoneNumberUser } from '../../services/zalo'
+import { authorizeV2, getPhoneNumberUser,getSettingV2 } from '../../services/zalo'
 import { isFromSettingState, isMappingState } from '../../state'
 import { createShortcut } from 'zmp-sdk/apis'
 import { openWebview } from 'zmp-sdk/apis'
 import { convertPrice } from '../../utils'
 import { getSetting } from 'zmp-sdk'
 import { getAccessToken } from 'zmp-sdk/apis'
+import {
+	AuthData,
 
+} from '../../models'
+import {
+	saveUserToCache,loadOrderFromCache,loadCartFromCache
+} from '../../services/storage'
 const openUrlInWebview = async () => {
     try {
         await openWebview({
@@ -45,12 +51,13 @@ const createMiniAppShortcut = async () => {
 const { Item } = List
 const UserProfile = () => {
     const navigate = useNavigate()
-    const authDt = useRecoilValue(authState)
+    // const authDt = useRecoilValue(authState)
     const setHeader = useSetHeader()
     const [point, setPoint] = useState(0)
     const [phoneNumber, setPhoneNumber] = useState<string | null>(null)
     const [isMapping, setIsMapping] = useRecoilState<boolean>(isFromSettingState)
     const [popupVisible, setPopupVisible] = useState(false)
+    const [authDt, setAuthDt] = useRecoilState<AuthData>(authState)
 
     useEffect(() => {
         setHeader({
@@ -78,7 +85,7 @@ const UserProfile = () => {
             if (!value.authSetting?.['scope.userPhonenumber']) {
                 // authorizeV2()
                 setPopupVisible(true)
-            }else{
+            } else {
                 getPhoneNumberUser();
             }
         })
@@ -99,42 +106,83 @@ const UserProfile = () => {
         }
     }, [authDt?.profile?.id])
 
-    const getPhoneNumber = async () => {
-        await authorizeV2()
-        const setting = await getSetting()
-        if (setting.authSetting['scope.userPhonenumber']) {
-            await createUser()
-            getPhoneNumberUser()
-        }
-    }
+    // const getPhoneNumber = async () => {
+    //     await authorizeV2()
+    //     const setting = await getSettingV2()
+    //     if (setting.authSetting['scope.userPhonenumber']) {
+    //         await createUser()
+    //         getPhoneNumberUser()
+    //     }
+    // }
+
+   
+
 
     const createUser = async () => {
-		console.log('Get access token')
-		Promise.all([getAccessToken()])
-			.then((values) => {
-				const accessToken = values?.[0]
-				if (accessToken) {
-					fetch('https://quequan.vn:8081/customer/zalocustomer', {
-						method: 'POST',
-						body: window.location.pathname.includes('active-referral')? 
-						JSON.stringify({ accessToken, isReferral : true }) :
-						 JSON.stringify({ accessToken }),
-						headers: {
-							'Content-Type': 'application/json',
-						},
-					})
-						.then((value) => {
-							console.log('post user info success', value)
-						})
-						.catch((err) => {
-							console.log(err)
-						})
-				}
-			})
-			.catch((error) => {
-				console.log(error)
-			})
-	}
+        console.log('Get access token')
+        Promise.all([getAccessToken()])
+            .then((values) => {
+                const accessToken = values?.[0]
+                if (accessToken) {
+                    fetch('https://quequan.vn:8081/customer/zalocustomer', {
+                        method: 'POST',
+                        body: JSON.stringify({ accessToken }),
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                        .then((value) => {
+                            console.log('post user info success', value)
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+    const getPhoneNumber = async () => {
+        const userInfo = await authorizeV2()
+
+        let zaloSettings = await getSettingV2()
+        if (zaloSettings['authSetting']['scope.userInfo'] === true) {
+            await createUser()
+            setAuthDt({
+                ...authDt,
+                profile: userInfo,
+            })
+            saveUserToCache(userInfo)
+            getPhoneNumberUser()
+        } else {
+            setAuthDt({
+                ...authDt,
+                profile: {
+                    birthday: '',
+                    email: '',
+                    id: null,
+                    name: '',
+                    sex: 0,
+                    phone: '',
+                    picture: '',
+                    zalo_data: {
+                        avatar: '',
+                        followedOA: false,
+                        id: '',
+                        isSensitive: false,
+                        name: '',
+                    },
+                    zalo_id: '',
+                },
+                token: '',
+            })
+        }
+        const cachedCart = await loadCartFromCache()
+
+        const cachedOrders = await loadOrderFromCache()
+
+    }
 
     return (
         <Container className={'zui-container-background-color'}>

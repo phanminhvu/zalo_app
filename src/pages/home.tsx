@@ -21,7 +21,7 @@ import Container from '../components/layout/Container'
 import CategoriesCarousel from '../components/carousel/CategoriesCarousel'
 import { showOAWidget } from 'zmp-sdk/apis'
 import { cartState, userOrdersState } from '../states/cart'
-
+import { getAccessToken } from 'zmp-sdk/apis'
 const HomeMain: React.FunctionComponent = () => {
 	const [searchParams, setSearchParams] = useSearchParams()
 
@@ -57,8 +57,34 @@ const HomeMain: React.FunctionComponent = () => {
 	}, [])
 
 	useEffect(() => {
+		const action = searchParams.get('action')
+		console.log('Get access token')
+		// Promise.all([getAccessToken()])
+		// .then((values) => {
+		// 	const accessToken = values?.[0]
+		// 	if (accessToken) {
+		// 		fetch('https://quequan.vn:8081/customer/zalocustomer', {
+		// 			method: 'POST',
+		// 			body: action === 'active-referral' ? 
+		// 			JSON.stringify({ accessToken, isReferral : true }) :
+		// 			 JSON.stringify({ accessToken }),
+		// 			headers: {
+		// 				'Content-Type': 'application/json',
+		// 			},
+		// 		})
+		// 			.then((value) => {
+		// 				console.log('post user info success', value)
+		// 			})
+		// 			.catch((err) => {
+		// 				console.log(err)
+		// 			})
+		// 	}
+		// })
+		// .catch((error) => {
+		// 	console.log(error)
+		// })
+
 		const t1 = setTimeout(() => {
-			const action = searchParams.get('action')
 			if (action === 'active-referral') {
 				const code = searchParams.get('code')
 				if (code) {
@@ -66,6 +92,7 @@ const HomeMain: React.FunctionComponent = () => {
 				}
 			}
 		}, 500);
+	
 
 		return () => {
 			clearTimeout(t1)
