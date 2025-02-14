@@ -7,15 +7,24 @@ import { Box, Button, Header, Page, Text, useNavigate } from 'zmp-ui'
 import { convertPrice } from '../../utils'
 import { openChat } from 'zmp-sdk'
 import { ZALO_OA_ID } from '../../utils/constants'
+import { statusArray } from '../../utils/constants'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { authState } from '../../states/auth'
+import {
+	AuthData,
 
+} from '../../models'
 const OrderDetail = () => {
 	const setHeader = useSetHeader()
 	const { state } = useLocation()
 	const navigate = useNavigate()
 	const order: Order = state?.order
+	const point: Number = state?.point
 	const orderId = order?.id?.split('_')?.[1]
 	const orderShipType = order?.branch_type
+	const [authDt, setAuthDt] = useRecoilState<AuthData>(authState)
 
+	console.log(authDt?.profile?.id, 'authDt?.profile?.id')
 	useEffect(() => {
 		setHeader({
 			customTitle: 'Chi tiết đơn hàng',
@@ -28,10 +37,17 @@ const OrderDetail = () => {
 
 	console.log(order, 'alo')
 
+	const maskPhoneNumber = (phone) => {
+		if (!phone) return ''
+		return phone.slice(0, -3).replace(/./g, '*') + phone.slice(-3)
+	}
+
 	return (
 		<Page className='bg-gray-200 overflow-auto pb-20'>
 			<Box className='rounded-lg bg-white m-4 overflow-hidden'>
-				<Text className='text-xl text-white bggreen p-3'>{'Đơn hàng đã tạo'}</Text>
+				<Text className='text-xl text-white bggreen p-3'>{'Đơn hàng đã tạo'} - {
+					statusArray.find((s) => s.key === order.status)?.label
+				}</Text>
 				<Box className='p-3'>
 					<Box>
 						<Text className='text-lg font-medium'>{`Mã đơn hàng: ${orderId}`}</Text>
@@ -46,10 +62,23 @@ const OrderDetail = () => {
 						<Box>
 							<Text className='font-medium text-lg'>{'Giao hàng tận nơi'}</Text>
 							<Text className='font-regular'>
-								{`${order.shipping?.name ?? '#'}`}
-								<span className='text-sm text-gray-500 ml-2'>{order.shipping?.phone ?? ''}</span>
+								{
+									authDt?.profile?.id === order?.customer_id.toString() ?
+										`${order.shipping?.name ?? '#'}` :
+										`*****`
+								}
+								<span className='text-sm text-gray-500 ml-2'>
+									{
+										authDt?.profile?.id === order?.customer_id.toString() ?
+											order.shipping?.phone ?? '' : maskPhoneNumber(order.shipping?.phone)
+									}
+								</span>
 							</Text>
-							<Text className='text-sm text-gray-600'>{`${order.shipping?.address ?? '#'}`}</Text>
+							{
+								authDt?.profile?.id === order?.customer_id.toString() ?
+									<Text className='text-sm text-gray-600'>{`${order.shipping?.address ?? '#'}`}</Text> :
+									<Text className='text-sm text-gray-600'>***************</Text>
+							}
 							<Text className='text-sm text-gray-600'>{`Thời gian giao hàng: ${order.shippingDate?.hour}:${order.shippingDate?.minute} ngày : ${order.shippingDate?.date} `}</Text>
 						</Box>
 					) : (
@@ -88,6 +117,10 @@ const OrderDetail = () => {
 						<Text className='text-sm text-gray-600'>{`Phí vận chuyển:`}</Text>
 						<Text className='text-sm text-gray-600'>{`${convertPrice(order.shipping_total)} đ`}</Text>
 					</Box>
+					<Box className='flex flex-row justify-between mt-1'>
+						<Text className='text-sm text-gray-600'>{`Điểm sử dụng :`}</Text>
+						<Text className='text-sm text-gray-600'>{`${convertPrice(point)} đ`}</Text>
+					</Box>
 				</Box>
 				<div className='h-px bg-gray-100 mt-2 mb-2' />
 				<Box className='mt-3'>
@@ -109,8 +142,8 @@ const OrderDetail = () => {
 							type: 'oa',
 							id: ZALO_OA_ID,
 							message: `Hỗ trợ/ khiếu nại về đơn hàng ${orderId}`,
-							success: () => {},
-							fail: (err) => {},
+							success: () => { },
+							fail: (err) => { },
 						})
 					}}>
 					{'Hỗ trợ/khiếu nại về đơn hàng'}

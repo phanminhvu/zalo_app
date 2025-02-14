@@ -66,8 +66,8 @@ const HistoryPoints = () => {
 				return response.json()
 			})
 			.then((result) => {
-				console.log(result)
-				if (result?.order?.order) navigate(`/my-orders/${id}`, { state: { order: result?.order?.order } })
+				console.log(result, 'aloo')
+				if (result?.order?.order) navigate(`/my-orders/${id}`, { state: { order: result?.order?.order, point: result?.order?.point } })
 				else {
 					showToast({ message: result?.message })
 				}
